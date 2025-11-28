@@ -22,7 +22,7 @@ export default function Blog() {
       title: 'Nutrición Equilibrada: La Base de la Salud de tu Mascota',
       category: 'nutricion',
       date: '15 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?auto=format&fit=crop&w=800&q=80',
+      image: 'https://kamanpet.cl/wp-content/uploads/2023/05/alimentacion-equilibrada-para-perros-1.jpg',
       excerpt: 'Una alimentación adecuada es fundamental para mantener a tu mascota saludable y feliz. Aprende qué nutrientes necesita tu perro o gato.',
       content: 'Una nutrición equilibrada es esencial para la salud de tu mascota. Los perros y gatos necesitan proteínas de alta calidad, grasas saludables, vitaminas y minerales. Alimenta a tu mascota con productos de calidad premium que contengan ingredientes naturales. Evita alimentos con exceso de conservantes o colorantes artificiales. Consulta con tu veterinario sobre la cantidad diaria recomendada según la edad y peso de tu mascota.'
     },
@@ -31,7 +31,7 @@ export default function Blog() {
       title: 'Ejercicio Diario: Mantén a tu Mascota Activa',
       category: 'salud',
       date: '12 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=800&q=80',
+      image: 'https://scontent.cdninstagram.com/v/t51.82787-15/539521894_18278696860275298_1414920783418309_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=MzcwOTg4MjE1NjU1NTgzNDM5Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTgwMi5zZHIuQzMifQ%3D%3D&_nc_ohc=fA8U23lXwNIQ7kNvwFgXpue&_nc_oc=AdlPrsPaAIfmVn-knptXKLH_PiaFmoJnkijdCtZ7PMeT9n1qSQGwJglXBlZa1tlB-ms&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=RgXHhtki0B3HcGyFranK0g&oh=00_Afj00G9FVrfOenaoI8UQhWk3mYkl2V_afHrhuHek_A4zqA&oe=692FEECA',
       excerpt: 'El ejercicio regular previene la obesidad y mantiene a tu mascota mental y físicamente estimulada. Descubre cuánto ejercicio necesita.',
       content: 'El ejercicio diario es crucial para la salud física y mental de tu mascota. Los perros necesitan al menos 30 minutos a 2 horas de ejercicio diario, dependiendo de su raza y edad. Los gatos también necesitan actividad física regular mediante juegos y juguetes interactivos. Usa juguetes como pelotas, frisbees o cuerdas para estimular el juego. El ejercicio ayuda a prevenir comportamientos destructivos y reduce la ansiedad.'
     },
@@ -40,7 +40,7 @@ export default function Blog() {
       title: 'Higiene Dental: Sonrisa Saludable para tu Mascota',
       category: 'salud',
       date: '10 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1589928046569-5a6af3d3c1eb?auto=format&fit=crop&w=800&q=80',
+      image: 'https://www.simbiosisveterinaria.com/sites/default/files/styles/convertir_webp/public/blog/2021-03/portada-higiene-salud-bucodental-perros-y-gatos.jpg?itok=RrJ_r0ev',
       excerpt: 'La salud dental es a menudo ignorada pero es vital. Te enseñamos cómo mantener los dientes de tu mascota limpios y saludables.',
       content: 'La higiene dental es fundamental para prevenir enfermedades bucales y mal aliento en tus mascotas. Cepilla los dientes de tu mascota al menos 3 veces por semana, idealmente diariamente, con cepillos y pastas especiales para animales. Usa juguetes de goma o snacks diseñados para limpiar los dientes naturalmente. Realiza limpiezas profesionales con tu veterinario una vez al año. Una boca saludable es clave para una vida larga y feliz.'
     },
@@ -49,7 +49,7 @@ export default function Blog() {
       title: 'Accesorios Imprescindibles para tu Mascota',
       category: 'productos',
       date: '8 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80',
+      image: 'https://media.istockphoto.com/id/877490114/es/foto/accesorios-del-perro-sobre-fondo-amarillo-vista-superior-concepto-de-animales-y-mascotas.webp?s=1024x1024&w=is&k=20&c=BMrfK10NL7FneDKKg6OQMxFynjGuXVrTn0Fb7wGHURA=',
       excerpt: 'Descubre los accesorios esenciales que todo dueño de mascota debe tener para garantizar comodidad y seguridad.',
       content: 'Los accesorios adecuados hacen la vida más cómoda tanto para ti como para tu mascota. Algunos esenciales incluyen: correa resistente y collar reflectante, transportín seguro para viajar, cama cómoda, comedero y bebedero, juguetes variados, cepillo para el pelaje, y una maceta con pasto gatera para gatos. Invierte en productos de calidad que duren más tiempo y proporcionen mayor seguridad y comodidad a tu mascota.'
     },
@@ -58,7 +58,7 @@ export default function Blog() {
       title: 'Primeros Auxilios Básicos para Mascotas',
       category: 'salud',
       date: '5 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
+      image: 'https://unamglobal.unam.mx/wp-content/uploads/2024/09/destacada-primeros-auxilios-perros-y-gatos-1024x605.jpg',
       excerpt: 'Aprende técnicas básicas de primeros auxilios para estar preparado ante emergencias con tu mascota.',
       content: 'Saber primeros auxilios básicos puede salvar la vida de tu mascota en una emergencia. Ten siempre a mano un botiquín de primeros auxilios con vendas, antiséptico, gasas estériles y termómetro. Aprende a controlar hemorragias, reconocer signos de shock, y hacer RCP básico. En caso de envenenamiento o accidente grave, contacta inmediatamente al veterinario. Mantén los números de emergencia veterinaria en tu teléfono. La prevención y preparación son clave.'
     },
@@ -67,7 +67,7 @@ export default function Blog() {
       title: 'Socialización: Crianza de Mascotas Felices',
       category: 'comportamiento',
       date: '2 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1611003228941-98852ba62227?auto=format&fit=crop&w=800&q=80',
+      image: 'https://purina.com.co/sites/default/files/2022-10/purina-brand-que-pasa-si-mi-cachorro-come-croquetas-de-adulto-0.png',
       excerpt: 'La socialización temprana es fundamental para que tu mascota sea equilibrada y confiada. Conoce cómo hacerlo correctamente.',
       content: 'La socialización es el proceso de exponer a tu mascota a diferentes personas, animales y entornos de manera segura y positiva. Comienza desde cachorro o gatito, durante las primeras semanas de vida. Expón a tu mascota a sonidos diferentes, lugares nuevos, personas variadas y otros animales. Usa refuerzo positivo con premios y caricias. Una mascota bien socializada es menos propensa a miedos, agresión y comportamientos destructivos. Es una inversión en su bienestar emocional.'
     },
