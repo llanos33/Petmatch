@@ -40,7 +40,7 @@ export default function Blog() {
       title: 'Higiene Dental: Sonrisa Saludable para tu Mascota',
       category: 'salud',
       date: '10 Nov 2024',
-      image: 'https://mascoterias.com/blog/wp-content/uploads/2025/02/LIMPIEZA-DENTAL-1300x754.jpg',
+      image: 'https://images.unsplash.com/photo-1589928046569-5a6af3d3c1eb?auto=format&fit=crop&w=800&q=80',
       excerpt: 'La salud dental es a menudo ignorada pero es vital. Te enseñamos cómo mantener los dientes de tu mascota limpios y saludables.',
       content: 'La higiene dental es fundamental para prevenir enfermedades bucales y mal aliento en tus mascotas. Cepilla los dientes de tu mascota al menos 3 veces por semana, idealmente diariamente, con cepillos y pastas especiales para animales. Usa juguetes de goma o snacks diseñados para limpiar los dientes naturalmente. Realiza limpiezas profesionales con tu veterinario una vez al año. Una boca saludable es clave para una vida larga y feliz.'
     },
@@ -49,7 +49,7 @@ export default function Blog() {
       title: 'Accesorios Imprescindibles para tu Mascota',
       category: 'productos',
       date: '8 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1579945235975-1ef5f126585f?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80',
       excerpt: 'Descubre los accesorios esenciales que todo dueño de mascota debe tener para garantizar comodidad y seguridad.',
       content: 'Los accesorios adecuados hacen la vida más cómoda tanto para ti como para tu mascota. Algunos esenciales incluyen: correa resistente y collar reflectante, transportín seguro para viajar, cama cómoda, comedero y bebedero, juguetes variados, cepillo para el pelaje, y una maceta con pasto gatera para gatos. Invierte en productos de calidad que duren más tiempo y proporcionen mayor seguridad y comodidad a tu mascota.'
     },
@@ -108,7 +108,7 @@ export default function Blog() {
       category: 'premium',
       isPremium: true,
       date: '11 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1508022785014-e7f4a5a8e42c?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80',
       excerpt: '💎 Exclusivo Premium: Todo lo que necesitas saber para viajar con tu mascota: documentos, transportines, destinos pet-friendly.',
       content: 'Preparación para viajar - Documentos necesarios: Carnet de vacunación actualizado, certificado de salud veterinario (máx. 10 días), microchip registrado. Transportín: Mínimo 1.5x el tamaño de tu mascota, ventilación adecuada. Destinos pet-friendly en Colombia: Cartagena, Eje Cafetero, Villa de Leyva. Hoteles que aceptan mascotas, restaurantes con áreas exteriores. Tips de vuelo: Reserva cabina si el peso lo permite (<8kg). Hidratación constante. Collar con identificación y contacto.'
     }
