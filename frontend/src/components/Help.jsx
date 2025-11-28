@@ -54,22 +54,22 @@ function Help() {
             <div className="contact-card">
               <div className="contact-icon">📞</div>
               <h3>Teléfono</h3>
-              <p>01-8000-123-456</p>
+              <p>3202826022</p>
               <p className="contact-hours">Lun - Vie: 8:00 AM - 6:00 PM<br />Sáb: 9:00 AM - 2:00 PM</p>
             </div>
 
             <div className="contact-card">
               <div className="contact-icon">✉️</div>
               <h3>Email</h3>
-              <p>contacto@petmatch.com</p>
+              <p>petmatch@gmail.com</p>
               <p className="contact-hours">Respuesta en 24 horas</p>
             </div>
 
             <div className="contact-card">
               <div className="contact-icon">📍</div>
               <h3>Dirección</h3>
-              <p>Calle 123 #45-67</p>
-              <p>Bogotá, Colombia</p>
+              <p>Calle 43 #15-39</p>
+              <p>Dosquebradas, Colombia</p>
             </div>
           </div>
         </section>
