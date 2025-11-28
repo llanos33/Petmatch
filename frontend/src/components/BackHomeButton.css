@@ -1,0 +1,43 @@
+.back-home-button {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 1100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.back-home-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(37, 99, 235, 0.4);
+  border-color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+}
+
+.back-home-button:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.32);
+}
+
+.back-home-button svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .back-home-button {
+    bottom: 0.9rem;
+    left: 0.9rem;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.95rem;
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Juan Camilo Arias",
+    "email": "juancamilo.arias@utp.edu.co",
+    "password": "$2a$10$UUQtT3OXwstPFfkbZ7Qo8.V77mYFzUfbdrACmzAqvsZz9OQ2u5TpW",
+    "phone": "3202826022",
+    "address": "calle 32 #45-77",
+    "createdAt": "2025-11-23T23:57:26.420Z",
+    "isPremium": true,
+    "premiumSince": "2025-11-23T23:58:18.577Z",
+    "subscription": {
+      "plan": "yearly",
+      "price": 420000
+    }
+  },
+  {
+    "id": 2,
+    "name": "Kevin Arias",
+    "email": "ariasjuancamilo14@gmail.com",
+    "password": "$2a$10$N0M5pkouJc.xGhughAXk0uP93BQtHMn9HfiJwuZS5TCdewuKaRwEi",
+    "phone": "3136914054",
+    "address": "calle 32 #45-77",
+    "createdAt": "2025-11-23T23:57:58.471Z"
+  },
+  {
+    "id": 3,
+    "name": "Daniel Perez",
+    "email": "losgptcuatro@gmail.com",
+    "password": "$2a$10$UDz.bqtuSCFv6/iH.RhnjeF6nnM/NhUytpgk7nXbsSSuE6Cb4NuTq",
+    "phone": "3136914054",
+    "createdAt": "2025-11-24T00:20:16.873Z"
+  }
+]

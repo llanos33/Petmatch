@@ -1,0 +1,261 @@
+.pet-products-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.breadcrumb-section {
+  margin-bottom: 1rem;
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: #64748B;
+  font-size: 0.875rem;
+}
+
+.breadcrumb a {
+  color: #2563EB;
+  text-decoration: none;
+}
+
+.breadcrumb span:last-child {
+  color: #1E293B;
+  font-weight: 600;
+}
+
+.pet-products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #4f46e5 0%, #2563EB 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
+  margin-bottom: 1.75rem;
+}
+
+.pet-products-header h1 {
+  margin: 0;
+  font-size: 2.1rem;
+  color: white;
+}
+
+.pet-products-subtitle {
+  margin: 0.35rem 0 0 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pet-products-count {
+  margin: 0;
+  color: white;
+  font-weight: 800;
+}
+
+.pet-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pet-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pet-icon-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.pet-filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.pet-filter-btn {
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  border: 2px solid #E2E8F0;
+  background: white;
+  color: #334155;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pet-filter-btn:hover {
+  border-color: #2563EB;
+  color: #2563EB;
+}
+
+.pet-filter-btn.active {
+  background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%);
+  color: white;
+  border-color: #2563EB;
+  box-shadow: 0 6px 16px rgba(37,99,235,0.25);
+}
+
+.pet-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.pet-product-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pet-product-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pet-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.pet-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pet-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #EF4444;
+  color: white;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.pet-info {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pet-category {
+  font-size: 0.85rem;
+  color: #64748B;
+}
+
+.pet-name {
+  font-size: 1.1rem;
+  color: #1E293B;
+  margin: 0;
+  font-weight: 700;
+}
+
+.pet-description {
+  font-size: 0.92rem;
+  color: #64748B;
+  margin: 0;
+  line-height: 1.45;
+  height: 2.7rem;
+  overflow: hidden;
+}
+
+.pet-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.pet-original-price {
+  color: #94A3B8;
+  text-decoration: line-through;
+  font-size: 0.95rem;
+}
+
+.pet-current-price {
+  color: #2563EB;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.pet-stock {
+  font-size: 0.9rem;
+  color: #10B981;
+  margin: 0.25rem 0 0 0;
+}
+
+.pet-stock.out {
+  color: #EF4444;
+}
+
+.pet-add-to-cart {
+  margin: 0 1.25rem 1.25rem 1.25rem;
+  padding: 0.85rem 1rem;
+  background: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-add-to-cart:hover:not(:disabled) {
+  background: #1E3A8A;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.25);
+}
+
+.pet-add-to-cart:disabled {
+  background: #CBD5E1;
+  cursor: not-allowed;
+  color: #94A3B8;
+}
+
+@media (max-width: 768px) {
+  .pet-products-page {
+    padding: 1rem;
+  }
+
+  .pet-products-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pet-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}

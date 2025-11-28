@@ -1,0 +1,267 @@
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { Crown, Truck, Percent, BookOpen, Sparkles } from 'lucide-react'
+import './Profile.css'
+import { apiPath } from '../config/api'
+
+function Profile() {
+  const { user, logout } = useAuth()
+  const [orders, setOrders] = useState([])
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+
+    fetchProducts()
+    fetchOrders()
+  }, [user, navigate])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(apiPath('/api/products'))
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error al cargar productos:', error)
+    }
+  }
+
+  const fetchOrders = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(apiPath('/api/auth/orders'), {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setOrders(data)
+      }
+    } catch (error) {
+      console.error('Error al cargar Ã³rdenes:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP'
+    }).format(price)
+  }
+
+  const getItemPrice = (item) => {
+    const product = products.find(p => p.id === item.productId)
+    const basePrice = product?.price || 0
+    return item.price ?? basePrice
+  }
+
+  const getOrderTotal = (order) => {
+    const itemsTotal = order.items.reduce((total, item) => {
+      const price = getItemPrice(item)
+      return total + price * item.quantity
+    }, 0)
+
+    const shipping = typeof order.shippingCost === 'number'
+      ? order.shippingCost
+      : (user?.isPremium ? 0 : 8000)
+    const premiumDiscountStored = typeof order.premiumDiscount === 'number' ? order.premiumDiscount : null
+
+    // Si el backend ya guardó total, úsalo cuando existan shipping/premiumDiscount coherentes
+    if (typeof order.total === 'number' && premiumDiscountStored !== null) {
+      return order.total
+    }
+
+    // Si no hay premiumDiscount almacenado pero el usuario es premium, aplica el 10% sobre los precios ya descontados
+    const premiumDiscount = premiumDiscountStored !== null
+      ? premiumDiscountStored
+      : (user?.isPremium ? Math.round(itemsTotal * 0.10) : 0)
+
+    return itemsTotal - premiumDiscount + shipping
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('es-CO', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
+  const getProductName = (productId) => {
+    const product = products.find(p => p.id === productId)
+    return product ? product.name : `Producto ID: ${productId}`
+  }
+
+  if (!user) {
+    return null
+  }
+
+  return (
+    <div className="profile-container">
+      <div className="profile-header">
+        <h1>Mi Perfil</h1>
+        <button onClick={handleLogout} className="logout-button">
+          Cerrar Sesion
+        </button>
+      </div>
+
+      <div className="profile-content">
+        <div className="profile-info-card">
+          <h2>Informacion Personal</h2>
+          <div className="info-item">
+            <span className="info-label">Estado de cuenta:</span>
+            <span className={`info-value premium-status ${user.isPremium ? 'premium' : 'no-premium'}`}>
+              {user.isPremium ? 'Premium' : 'No-Premium'}
+            </span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Nombre:</span>
+            <span className="info-value">{user.name}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Email:</span>
+            <span className="info-value">{user.email}</span>
+          </div>
+          {user.phone && (
+            <div className="info-item">
+              <span className="info-label">Telefono:</span>
+              <span className="info-value">{user.phone}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Sección de Beneficios Premium */}
+        {user.isPremium ? (
+          <div className="premium-benefits-card">
+            <div className="premium-benefits-header">
+              <Crown size={28} className="crown-icon" />
+              <h2>Tus Beneficios Premium</h2>
+            </div>
+            <p className="benefits-subtitle">Disfruta de ventajas exclusivas como miembro Premium</p>
+            <div className="benefits-grid">
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Percent size={24} />
+                </div>
+                <div className="benefit-content">
+                  <h3>10% Descuento Extra</h3>
+                  <p>Ahorro adicional en productos con descuento</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Truck size={24} />
+                </div>
+                <div className="benefit-content">
+                  <h3>Envío Gratis</h3>
+                  <p>En todas tus compras, sin mínimo</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <BookOpen size={24} />
+                </div>
+                <div className="benefit-content">
+                  <h3>Contenido Exclusivo</h3>
+                  <p>Acceso a artículos premium en el Blog</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Sparkles size={24} />
+                </div>
+                <div className="benefit-content">
+                  <h3>Soporte Prioritario</h3>
+                  <p>Atención preferencial en tus consultas</p>
+                </div>
+              </div>
+            </div>
+            <div className="premium-since">
+              <p>Miembro Premium desde {user.premiumSince ? formatDate(user.premiumSince) : 'hoy'}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="premium-cta-card">
+            <Crown size={40} className="cta-crown" />
+            <h2>Hazte Premium</h2>
+            <p>Desbloquea beneficios exclusivos: descuentos adicionales, envío gratis y contenido premium</p>
+            <Link to="/premium" className="upgrade-button">
+              Ver Planes Premium
+            </Link>
+          </div>
+        )}
+
+        <div className="orders-section">
+          <h2>Mis Compras</h2>
+          {loading ? (
+            <p>Cargando...</p>
+          ) : orders.length === 0 ? (
+            <div className="no-orders">
+              <p>No has realizado ninguna compra aún</p>
+              <button onClick={() => navigate('/')} className="shop-button">
+                Ir a Comprar
+              </button>
+            </div>
+          ) : (
+            <div className="orders-list">
+              {orders.map(order => (
+                <div key={order.id} className="order-card">
+                  <div className="order-header">
+                    <div>
+                      <h3>Orden #{order.id}</h3>
+                      <p className="order-date">Fecha: {formatDate(order.date)}</p>
+                    </div>
+                    <div className="order-status">
+                      <span className={`status-badge status-${order.status}`}>
+                        {order.status}
+                      </span>
+                      <span className="order-total">{formatPrice(getOrderTotal(order))}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="order-items">
+                    <h4>Productos:</h4>
+                    <ul>
+                      {order.items.map((item, index) => (
+                        <li key={index}>
+                          <span>{item.quantity}x</span>
+                          <span>{getProductName(item.productId)}</span>
+                          <span className="order-item-price">{formatPrice(getItemPrice(item))}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="order-address">
+                    <h4>Dirección de entrega:</h4>
+                    <p>{order.customerInfo.address}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Profile
+
+

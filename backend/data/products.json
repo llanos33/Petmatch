@@ -1,0 +1,884 @@
+[
+  {
+    "id": 1,
+    "name": "Alimento Premium para Perros",
+    "description": "Croquetas premium ricas en proteínas de pollo y pescado, con Omega-3 para piel y pelaje, prebióticos para la salud digestiva y antioxidantes para el sistema inmune. Ideal para perros adultos de mantenimiento. Indicaciones de alimento: 20-30g por kg de peso al día, ajustar según actividad. Contenido: 3 kg.",
+    "price": 45000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/9f5fc6101e66358e499af3e92c12fcfc_1753368247.jpg",
+    "exclusive": true,
+    "stock": 46
+  },
+  {
+    "id": 2,
+    "name": "Alimento Premium para Gatos",
+    "description": "Fórmula completa con proteína de pescado como primer ingrediente, enriquecida con taurina esencial, Omega-3 y vitaminas para salud cardiovascular y ocular. Ayuda al manejo de bolas de pelo y mantiene masa muscular. Porciones: 25-35g por día según tamaño y actividad. Contenido: 1.5 kg.",
+    "price": 42000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/674e0f2550ddf04569f97326e317108b_1673048730.jpg",
+    "exclusive": true,
+    "stock": 43
+  },
+  {
+    "id": 3,
+    "name": "Alimento para Cachorros",
+    "description": "Fórmula de crecimiento con niveles aumentados de proteína y energía, DHA para el desarrollo cognitivo, calcio y fósforo balanceados para huesos y dientes fuertes, y antioxidantes para la resistencia. Recomendado desde destete hasta 12-18 meses. Ración según peso: consultar tabla en empaque. Contenido: 3 kg.",
+    "price": 48000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/d7ef6dac7abc43935522d31298a91d91_1756849549.png",
+    "stock": 32
+  },
+  {
+    "id": 4,
+    "name": "Alimento Húmedo para Gatos",
+    "description": "Paté húmedo de atún y carnes seleccionadas, alto en proteína y con textura húmeda que favorece la hidratación. Ideal como complemento de la dieta seca o para gatos con apetito selectivo. Proporciona ácidos grasos esenciales y es fácil de digerir. Contenido: 85 g (lata).",
+    "price": 8500,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/f3ccdd27d2000e3f9255a7e3e2c48800_1687988660.jpg",
+    "stock": 79
+  },
+  {
+    "id": 5,
+    "name": "Alimento Senior para Perros",
+    "description": "Fórmula para perros senior con menor densidad calórica, niveles ajustados de proteína de alta calidad, glucosamina y condroitina para soporte articular, y antioxidantes para la salud celular. Diseñado para mantener peso y movilidad en perros mayores (7+ años). Contenido: 3 kg.",
+    "price": 46000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/80911e511db59068a5e8ad49daa3fa79_1718287280.jpg",
+    "stock": 30
+  },
+  {
+    "id": 6,
+    "name": "Alimento Sin Granos para Gatos",
+    "description": "Receta libre de granos con proteína de pollo/ pescado como fuente principal, carbohidratos de fácil digestión (batata), y ácidos grasos Omega para piel y pelaje. Recomendado para gatos con sensibilidad a cereales o digestiones delicadas. Contenido: 1.5 kg.",
+    "price": 55000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/d12e1de0f91039669a797f6ee55512c2_1710165428.jpg",
+    "exclusive": true,
+    "stock": 25
+  },
+  {
+    "id": 7,
+    "name": "Alimento para Perros de Raza Pequeña",
+    "description": "Croquetas de tamaño reducido y alta densidad energética formuladas para razas pequeñas; favorece la masticación y reduce la acumulación de sarro. Contiene nutrientes balanceados para mantener energía y piel saludable en perros pequeños. Contenido: 1.5 kg.",
+    "price": 44000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/1824_160444_Monello_Raza_Peque__a_1652893035_500x500.png",
+    "stock": 40
+  },
+  {
+    "id": 8,
+    "name": "Snacks Dentales para Gatos",
+    "description": "Snacks crujientes con textura diseñada para ayudar a reducir la placa y el sarro. Contienen ingredientes seguros para gatos y sabores naturales; usar como complemento, no sustituyen el cepillado dental profesional. Frecuencia recomendada: 1-2 piezas al día. Contenido: 120 g.",
+    "price": 12000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/80202_Emerald_Pet___Cat_Snack_Dental_Pollo_1658436808_0_500x500.jpg",
+    "stock": 60
+  },
+  {
+    "id": 9,
+    "name": "Alimento Light para Perros",
+    "description": "Fórmula baja en grasa y calorías con fibra y L-carnitina para promover la pérdida de peso gradual y mantener la masa muscular. Ideal para perros con sobrepeso o con tendencia a ganar peso. Seguir plan de ración y monitorear progreso con el veterinario. Contenido: 3 kg.",
+    "price": 47000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/41f7ed2bd1fdb04f49b942b53e07be7e_1675094800.jpg",
+    "stock": 28
+  },
+  {
+    "id": 10,
+    "name": "Alimento para Gatos Castrados",
+    "description": "Fórmula para gatos castrados con control de calorías, ingredientes que favorecen la salud del tracto urinario y fibra moderada para control de peso. Ayuda a prevenir acumulación de grasa y mantiene función urinaria saludable. Contenido: 1.5 kg.",
+    "price": 50000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/6b4343def9939fa7ce273933966f6385_1760626247.jpg",
+    "stock": 32
+  },
+  {
+    "id": 11,
+    "name": "Juguete Interactivo para Perros",
+    "description": "Juguete resistente que mantiene a tu perro entretenido",
+    "price": 25000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/c9f63fa19b6a6720c39e41b2a4d66b90_1696261507.jpg",
+    "stock": 25
+  },
+  {
+    "id": 12,
+    "name": "Pelota de Tenis para Perros",
+    "description": "Pack de 3 pelotas de tenis resistentes",
+    "price": 15000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/5197_117956_Kong___Squeak_Air_Pelota_1637950218_500x500.png",
+    "stock": 48
+  },
+  {
+    "id": 13,
+    "name": "Rascador para Gatos",
+    "description": "Rascador alto con plataformas múltiples",
+    "price": 85000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/11c018a9f79574fcb30cf3b34ec7074f_1715713469.jpg",
+    "exclusive": true,
+    "stock": 19
+  },
+  {
+    "id": 14,
+    "name": "Varita con Plumas para Gatos",
+    "description": "Varita interactiva con plumas para jugar con tu gato",
+    "price": 12000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://img-1.kwcdn.com/product/fancy/3af025b3-b2bd-405a-bf29-cc6a4318439b.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 45
+  },
+  {
+    "id": 15,
+    "name": "Kong Clásico para Perros",
+    "description": "Juguete masticable rellenable, ideal para perros activos",
+    "price": 32000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/22588_118659_Kong___Extreme_Portapasabocas_1638217408_500x500.png",
+    "stock": 35
+  },
+  {
+    "id": 16,
+    "name": "Ratoncitos de Tela para Gatos",
+    "description": "Pack de 5 ratoncitos de tela con hierba gatera",
+    "price": 18000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/16823_131305_Petstages___Ratones_Con_Catnip__1643124645_500x500.png",
+    "stock": 40
+  },
+  {
+    "id": 17,
+    "name": "Frisbee para Perros",
+    "description": "Frisbee volador resistente, perfecto para jugar al aire libre",
+    "price": 22000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/795e5dbc24b41e43905e470af06ec9a6_1741106171.jpg",
+    "stock": 25
+  },
+  {
+    "id": 18,
+    "name": "Túneles para Gatos",
+    "description": "Túnel plegable para que tu gato juegue y se esconda",
+    "price": 45000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/15074_TUNEL_GATO_1595567874_500x500.jpg",
+    "stock": 18
+  },
+  {
+    "id": 19,
+    "name": "Soga para Morder",
+    "description": "Soga resistente para perros que aman morder",
+    "price": 16000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/22525_Kong_Perro_Caucho_Classic_Pelota_Con_Lazo_Small_1607088266_900x900.jpg",
+    "stock": 42
+  },
+  {
+    "id": 20,
+    "name": "Puzzle Interactivo para Gatos",
+    "description": "Juguete puzzle que estimula mentalmente a tu gato",
+    "price": 38000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://img.kwcdn.com/product/open/7125fcf170874e37a39d24cd528b142b-goods.jpeg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 22
+  },
+  {
+    "id": 21,
+    "name": "Correa Retráctil",
+    "description": "Correa retráctil de 5 metros, ideal para paseos",
+    "price": 35000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/67162_kong_correa_retractil_terrain_1622827328_0_500x500.jpg",
+    "exclusive": true,
+    "stock": 38
+  },
+  {
+    "id": 22,
+    "name": "Collar Antipulgas",
+    "description": "Collar con protección antipulgas y garrapatas, duración 8 meses",
+    "price": 28000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/75986_201630_Elanco___Seresto_Collar_Para_Perros_De_Hasta_8_kg_1666977465_800x800.jpg",
+    "stock": 50
+  },
+  {
+    "id": 23,
+    "name": "Arnés para Perros",
+    "description": "Arnés ajustable cómodo y seguro para paseos",
+    "price": 32000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/b140e580bd92f3ecbd5f439320ff44f4_1712612561.jpg",
+    "stock": 38
+  },
+  {
+    "id": 24,
+    "name": "Plato Comedor Elevado",
+    "description": "Comedero elevado para perros, reduce problemas digestivos",
+    "price": 25000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/98acaa01101387c88881189c3f8fe5d4_1761653359.jpg",
+    "exclusive": true,
+    "stock": 30
+  },
+  {
+    "id": 25,
+    "name": "Bebedero Automático",
+    "description": "Fuente de agua automática para gatos y perros pequeños",
+    "price": 65000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/4572cdb1690b56eafee72b060c16165b_1705421231.jpg",
+    "stock": 25
+  },
+  {
+    "id": 26,
+    "name": "Collar con Campana para Gatos",
+    "description": "Collar ajustable con campana, ayuda a localizar a tu gato",
+    "price": 8000,
+    "category": "Accesorios",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/16811_COASTAL_COLLAR_GATO_FASHION_1600215845_220x286.jpg",
+    "stock": 60
+  },
+  {
+    "id": 27,
+    "name": "Bolsa Transportadora para Gatos",
+    "description": "Transportadora cómoda y ventilada para viajes",
+    "price": 55000,
+    "category": "Accesorios",
+    "petType": "gato",
+    "image": "https://img-1.kwcdn.com/product/fancy/0ba81829-49f6-43ae-91b3-899336e22064.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 28
+  },
+  {
+    "id": 28,
+    "name": "Comedero Automático",
+    "description": "Comedero programable con temporizador",
+    "price": 120000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://img-1.kwcdn.com/product/fancy/4c4e06e4-0a6a-4a9c-b388-57c7c09fc73b.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 15
+  },
+  {
+    "id": 29,
+    "name": "Pechera Reflejante",
+    "description": "Pechera con cinta reflectiva para paseos nocturnos",
+    "price": 18000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://img.kwcdn.com/product/fancy/279a2705-c2d6-4018-86d8-31d0f6e8e4da.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 35
+  },
+  {
+    "id": 30,
+    "name": "Plato de Silicona Plegable",
+    "description": "Plato plegable ideal para viajes, fácil de guardar",
+    "price": 15000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://img-1.kwcdn.com/product/open/2023-08-09/1691561520993-a63f704a837949db9f293f77a53adff5-goods.jpeg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 48
+  },
+  {
+    "id": 31,
+    "name": "Desparasitante Oral para Perros",
+    "description": "Tabletas antiparasitarias de amplio espectro",
+    "price": 25000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/10958_144692_Endogard_10___Antiparasitorio_para_perros__1647352066_500x500.jpg",
+    "stock": 37
+  },
+  {
+    "id": 32,
+    "name": "Desparasitante para Gatos",
+    "description": "Pastillas antiparasitarias para gatos adultos",
+    "price": 22000,
+    "category": "Medicamentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/2969_139001_Total_Full_LC___Gatos__1645652954_500x500.jpg",
+    "stock": 35
+  },
+  {
+    "id": 33,
+    "name": "Antipulgas y Garrapatas",
+    "description": "Gotas spot-on para perros, protección mensual",
+    "price": 45000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/77357_Agromilenio____Puloff__2__10_kg__Perros_1649878589_0_500x500.png",
+    "stock": 50
+  },
+  {
+    "id": 34,
+    "name": "Antipulgas para Gatos",
+    "description": "Solución tópica mensual contra pulgas",
+    "price": 42000,
+    "category": "Medicamentos",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/384a0a8dc77e8ab517896f44bcf7e9fb_1743695100.jpg",
+    "stock": 45
+  },
+  {
+    "id": 35,
+    "name": "Vitaminas para Perros",
+    "description": "Complejo vitamínico para el bienestar general",
+    "price": 38000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/3bdadca06a3aaa89d44169e99a67ecd1_1669216147.jpg",
+    "stock": 30
+  },
+  {
+    "id": 36,
+    "name": "Suplemento de Omega 3",
+    "description": "Aceite de pescado rico en omega 3 para perros y gatos",
+    "price": 32000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/97ff155365953e2d18c418ccd347a529_1705521528.jpg",
+    "stock": 38
+  },
+  {
+    "id": 37,
+    "name": "Probióticos para Mascotas",
+    "description": "Suplemento probiótico para la salud digestiva",
+    "price": 28000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_916824-MLA96150741459_102025-F.webp",
+    "stock": 42
+  },
+  {
+    "id": 38,
+    "name": "Shampoo Medicado",
+    "description": "Shampoo con ingredientes activos para problemas de piel",
+    "price": 22000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/6008_145023_Virbac___Shampoo_Clorhexin_1647359084_500x500.jpg",
+    "stock": 28
+  },
+  {
+    "id": 39,
+    "name": "Suplemento Articular",
+    "description": "Glucosamina y condroitina para articulaciones",
+    "price": 55000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/2728_145074_Zoo_Calcin___Suplemento__1647359981_500x500.jpg",
+    "stock": 25
+  },
+  {
+    "id": 40,
+    "name": "Antiséptico para Heridas",
+    "description": "Solución tópica para limpieza de heridas",
+    "price": 15000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/13ee215fdd1b26c159842b4214fd6a4e_1706908927.jpg",
+    "stock": 55
+  },
+  {
+    "id": 41,
+    "name": "Shampoo para Mascotas",
+    "description": "Shampoo suave con avena, hipoalergénico",
+    "price": 18000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/4ebd6071d17aeb594fcb35f9f47ba756_1743697769.jpg",
+    "stock": 57
+  },
+  {
+    "id": 42,
+    "name": "Arenero para Gatos",
+    "description": "Arenero grande con borde alto para evitar derrames",
+    "price": 55000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/060c565f53bf8d0a23ed1c8c97b85de0_1748277799.jpeg",
+    "stock": 25
+  },
+  {
+    "id": 43,
+    "name": "Arena Sanitaria Aglomerante",
+    "description": "Saco de 20kg de arena aglomerante premium",
+    "price": 32000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/2cf114e3069648c608df290b47bef0c1_1689980225.jpg",
+    "stock": 40
+  },
+  {
+    "id": 44,
+    "name": "Cepillo para Perros",
+    "description": "Cepillo de cerdas suaves, ideal para todo tipo de pelo",
+    "price": 15000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/22732_Lil_Pals_Perro_Grooming_Cepillo_Doble_1607109277_1100x1100.jpg",
+    "stock": 45
+  },
+  {
+    "id": 45,
+    "name": "Rastrillo para Gatos",
+    "description": "Rastrillo deslanador para eliminar pelo muerto",
+    "price": 12000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://img-1.kwcdn.com/product/fancy/739cc71a-eaff-41cd-ba00-6bf54dddf154.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 50
+  },
+  {
+    "id": 46,
+    "name": "Cortauñas para Mascotas",
+    "description": "Cortauñas profesional con limitador de seguridad",
+    "price": 18000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://img-1.kwcdn.com/product/fancy/c38ed77e-f44a-42b4-8475-24aaf48bef34.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 35
+  },
+  {
+    "id": 47,
+    "name": "Secador de Mascotas",
+    "description": "Secador de pelo portátil con temperatura regulable",
+    "price": 95000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_681864-MLA93498305537_092025-F.webp",
+    "stock": 18
+  },
+  {
+    "id": 48,
+    "name": "Toallitas Húmedas para Patas",
+    "description": "Toallitas limpiadoras para patas y pelo",
+    "price": 14000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/69809_Basic_Din_Toallas_1630957446_0_500x425.png",
+    "stock": 55
+  },
+  {
+    "id": 49,
+    "name": "Dentífrico para Perros",
+    "description": "Pasta dental enzimática con sabor a pollo",
+    "price": 22000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/69816_147923_Basic_Farm___Dentyfarm_Tubo_1648226008_500x500.jpg",
+    "stock": 32
+  },
+  {
+    "id": 50,
+    "name": "Cepillo de Dientes para Gatos",
+    "description": "Cepillo de dientes suave especialmente para gatos",
+    "price": 10000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/16980_KIT_FRESH_BREATH_DE_CUIDADO_ORAL_PARA_CACHORRO_1600643257_500x500.jpg",
+    "stock": 40
+  },
+  {
+    "id": 51,
+    "name": "Cama Ortopédica para Perros",
+    "description": "Cama cómoda con soporte ortopédico para perros de todas las edades",
+    "price": 120000,
+    "category": "Camas y Casas",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/313d824f327e18ac57ca976c7559436f_1705677205.jpg",
+    "stock": 13
+  },
+  {
+    "id": 52,
+    "name": "Cama Redonda para Gatos",
+    "description": "Cama suave y acogedora en forma de nido",
+    "price": 45000,
+    "category": "Camas y Casas",
+    "petType": "gato",
+    "image": "https://img.kwcdn.com/product/open/c6096a2e192f41d99cdcba0d3c17d40b-goods.jpeg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 28
+  },
+  {
+    "id": 53,
+    "name": "Casa para Perros",
+    "description": "Casa de plástico resistente al agua, tamaño mediano",
+    "price": 180000,
+    "category": "Camas y Casas",
+    "petType": "perro",
+    "image": "https://media.falabella.com/sodimacCO/3002192/w=1036,h=832,f=webp,fit=contain,q=85",
+    "stock": 12
+  },
+  {
+    "id": 54,
+    "name": "Cama Elevada para Mascotas",
+    "description": "Cama elevada con base de acero, ideal para el calor",
+    "price": 65000,
+    "category": "Camas y Casas",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/11138_151102_Cama_Asoleadora_Gato_1649432855_500x500.jpg",
+    "stock": 22
+  },
+  {
+    "id": 55,
+    "name": "Casa para Gatos con Ventanas",
+    "description": "Casa de tela con múltiples accesos y ventanas",
+    "price": 75000,
+    "category": "Camas y Casas",
+    "petType": "gato",
+    "image": "https://www.tiendanimal.es/dw/image/v2/BDLQ_PRD/on/demandware.static/-/Sites-kiwoko-master-catalog/default/dwbef1ae9b/images/large/32adc8a00c3e4964be04e6583b12b8bb.jpg?sw=780&sh=780&sm=fit&q=85",
+    "stock": 20
+  },
+  {
+    "id": 56,
+    "name": "Cama de Felpa para Perros",
+    "description": "Cama extra suave y acogedora, fácil de lavar",
+    "price": 55000,
+    "category": "Camas y Casas",
+    "petType": "perro",
+    "image": "https://petopet.com.co/cdn/shop/products/5_1024x1024.png?v=1637932249",
+    "stock": 30
+  },
+  {
+    "id": 57,
+    "name": "Túnel Cama para Gatos",
+    "description": "Cama en forma de túnel donde tu gato puede jugar y descansar",
+    "price": 58000,
+    "category": "Camas y Casas",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/a746027f1998e66a1ef9fd5755657a5d_1751987534.jpg",
+    "stock": 18
+  },
+  {
+    "id": 58,
+    "name": "Colchoneta para Mascotas",
+    "description": "Colchoneta delgada, ideal para viajes",
+    "price": 28000,
+    "category": "Camas y Casas",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/18775_154123_SofistiPets_Colchoneta_Peque__a_Doble_Faz_1650648232_500x500.jpg",
+    "stock": 42
+  },
+  {
+    "id": 59,
+    "name": "Casa de Madera para Perros",
+    "description": "Casa de madera resistente, tamaño grande",
+    "price": 250000,
+    "category": "Camas y Casas",
+    "petType": "perro",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_632476-MCO96796054811_102025-F.webp",
+    "stock": 8
+  },
+  {
+    "id": 60,
+    "name": "Hamaca para Gatos",
+    "description": "Hamaca que se instala en ventanas, ideal para gatos curiosos",
+    "price": 35000,
+    "category": "Camas y Casas",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/23622_Sofistipets_Hamaca_para_Ventana_1607795247_800x800.jpg",
+    "stock": 25
+  },
+  {
+    "id": 61,
+    "name": "Alimento Hipoalergénico para Perros 4kg",
+    "description": "Receta con proteína hidrolizada, prebióticos y aceite de salmón para perros con piel sensible o alergias alimentarias.",
+    "price": 200000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/1/1/111100168-v1-min.jpg",
+    "exclusive": true,
+    "stock": 26
+  },
+  {
+    "id": 62,
+    "name": "Pouch Gourmet de Salmón para Gatos",
+    "description": "Latas individuales con filetes de salmón en salsa, alta palatabilidad y taurina añadida para gatos exigentes.",
+    "price": 7800,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://exitocol.vteximg.com.br/arquivos/ids/26956948/Alimento-Gato-Filetes-De-Salmon-En-Salsa-Lata-X-156-gr-695841_a.jpg?v=638767286704070000",
+    "stock": 85
+  },
+  {
+    "id": 63,
+    "name": "Snack Liofilizado de Pollo",
+    "description": "Patas de pollo 100% naturales liofilizado, ricos en proteína y perfectos como premio de entrenamiento.",
+    "price": 26000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://exitocol.vtexassets.com/arquivos/ids/24871215/snack-liofilizado-patas-de-pollo-para-perros.jpg?v=638629816743470000",
+    "stock": 48
+  },
+  {
+    "id": 64,
+    "name": "Alimento Renal Veterinario para Gatos 2kg",
+    "description": "Fórmula de soporte renal con fósforo controlado, ácidos grasos omega 3 y humedad elevada para fomentar la ingesta de agua.",
+    "price": 170000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://pawsplace.com.co/cdn/shop/files/RoyalGatoRenalPawsPlace_2000x.png?v=1754326699",
+    "stock": 29
+  },
+  {
+    "id": 65,
+    "name": "Barritas Funcionales Joint Care 180Gr",
+    "description": "Golosinas blandas con glucosamina, condroitina y c?rcuma para fortalecer articulaciones de perros y gatos senior.",
+    "price": 30000,
+    "category": "Alimentos",
+    "petType": "ambos",
+    "image": "https://www.supermarpet.co/cdn/shop/products/npc-empaque-treats-joint-373x450_large.png?v=1602097714",
+    "stock": 52
+  },
+  {
+    "id": 66,
+    "name": "Cuerda Trenzada con Bola",
+    "description": "Cuerda de algod?n con esfera de caucho para juegos de jalar y limpiar los dientes.",
+    "price": 20000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/1/8/188000168-min.jpg",
+    "stock": 44
+  },
+  {
+    "id": 67,
+    "name": "Pelota Inteligente Recargable Juguete Para Gato Interactivo",
+    "description": "Mantén a tu gato activo y entretenido con la Pelota Interactiva Cat Ball 2.0, diseñada para estimular su instinto de caza y juego. Con movimientos aleatorios y una textura ondulada, este innovador juguete imita el comportamiento de una presa real, despertando la curiosidad de tu mascota y manteniéndola en movimiento.",
+    "price": 29900,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_909366-MCO97671625835_112025-F.webp",
+    "exclusive": true,
+    "stock": 22
+  },
+  {
+    "id": 68,
+    "name": "Pelota Dispensadora de Alimento o Snacks Snacky de 11 cm",
+    "description": "Celebremos la pasión futbolera de tu fiel amigo con la pelota de fútbol flotante de Trixie; diseñada para perros pequeños, garantiza diversión segura con su gomaespuma. Jueguen juntos en el parque o en emocionantes partidos individuales, manteniendo la limpieza fácil después de cada partido.",
+    "price": 24000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/_/3/_3_3_333310072-_4__ed-min.jpg",
+    "stock": 37
+  },
+  {
+    "id": 69,
+    "name": "Nylabone Kit Hueso Mordedor Tocineta/carne",
+    "description": "El Nylabone Kit Hueso Mordedor Tocineta/carne S/m es el complemento ideal para mantener a tu perro entretenido y feliz. Diseñado específicamente para perros pequeños y medianos, este hueso mordedor está fabricado con material de nylon resistente, lo que lo convierte en un juguete duradero que soporta las ganas de morder de tu mascota.",
+    "price": 77000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_932749-MLA96683398727_102025-O.webp",
+    "stock": 41
+  },
+  {
+    "id": 70,
+    "name": "Plumas Giratorias USB",
+    "description": "Juguete autom?tico recargable con plumas intercambiables y modo de apagado inteligente para gatos indoor.",
+    "price": 33000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://img.kwcdn.com/product/fancy/f34cd2d1-2f5e-4961-9cd3-3aa24847cebb.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 29
+  },
+  {
+    "id": 71,
+    "name": "Mochila Transparente Ventilada",
+    "description": "Mochila con c?pula r?gida, entradas de aire y base acolchada para transportar gatos o perros peque?os con seguridad.",
+    "price": 90000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://media.falabella.com/sodimacCO/3043407/w=1036,h=832,f=webp,fit=contain,q=85",
+    "exclusive": true,
+    "stock": 14
+  },
+  {
+    "id": 72,
+    "name": "Impermeable Reflectante para Perros",
+    "description": "Chaqueta ligera con costuras selladas y franjas reflectivas para paseos nocturnos bajo la lluvia.",
+    "price": 40000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://img-1.kwcdn.com/product/fancy/c71cb9e6-ea38-4e2b-85df-9b0153663d6e.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 36
+  },
+  {
+    "id": 73,
+    "name": "Bata de baño para perro, de secado rápido",
+    "description": "Bata de baño para perro, fabricada con material de secado rápido que facilita el cuidado y la limpieza después del baño.",
+    "price": 15000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://m.media-amazon.com/images/I/71pO4ivmTfL._AC_SX679_.jpg",
+    "stock": 60
+  },
+  {
+    "id": 74,
+    "name": "Collar GPS para Gatos",
+    "description": "Collar liviano con rastreo en tiempo real, alerta de zonas seguras y batería recargable de larga duración.",
+    "price": 120000,
+    "category": "Accesorios",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/71QURXrai-L._AC_SX679_.jpg",
+    "exclusive": true,
+    "stock": 10
+  },
+  {
+    "id": 75,
+    "name": "Tapete Refrigerante Autoenfriable",
+    "description": "Tapete con gel de enfriamiento activado por presión que ayuda a regular la temperatura en clima cálido.",
+    "price": 60000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://m.media-amazon.com/images/I/71cLxhxdGLL._AC_SX679_.jpg",
+    "stock": 33
+  },
+  {
+    "id": 76,
+    "name": "Suplemento Calming con L-triptófano",
+    "description": "Tabletas masticables con L-triptófano, manzanilla y vitamina B12 que ayudan a reducir estrés en viajes o tormentas.",
+    "price": 80000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/5/9/5959459405940000013-min.jpg",
+    "stock": 34
+  },
+  {
+    "id": 77,
+    "name": "Jarabe Multivitamínico para Perros",
+    "description": "Jarabe palatable con vitaminas A, D3 y complejo B que apoya crecimiento y apetito en cachorros.",
+    "price": 36000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://acdn-us.mitiendanube.com/stores/001/049/402/products/me0286-1c2372140d845301cc17162564426495-1024-1024.webp",
+    "stock": 27
+  },
+  {
+    "id": 78,
+    "name": "Gotas Oculares Estériles",
+    "description": "Solución oftálmica estéril con ácido hialurónico para hidratar y limpiar ojos irritados.",
+    "price": 40000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://m.media-amazon.com/images/I/61Rl292QCxL._AC_SY879_.jpg",
+    "stock": 46
+  },
+  {
+    "id": 79,
+    "name": "Antidiarreico Oral para Gatos",
+    "description": "Suspensión oral con prebióticos y electrolitos para episodios digestivos agudos en gatos.",
+    "price": 28000,
+    "category": "Medicamentos",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/71yxug9QypL._AC_SX679_.jpg",
+    "stock": 31
+  },
+  {
+    "id": 80,
+    "name": "Spray Antiinflamatorio Tópico",
+    "description": "Spray dermatológico con corticoide de rápida acción para áreas con picazón o dermatitis localizada.",
+    "price": 20000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://pawsplace.com.co/cdn/shop/files/MeloxipetPawsPlace_2000x.png?v=1754326859",
+    "exclusive": true,
+    "stock": 19
+  },
+  {
+    "id": 81,
+    "name": "Shampoo Seco en Espuma 200ml",
+    "description": "Espuma sin enjuague con aloe y vitamina E que limpia entre ba?os y aporta brillo.",
+    "price": 70000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_966159-MCO83216441492_042025-F.webp",
+    "stock": 34
+  },
+  {
+    "id": 82,
+    "name": "Limpia Oídos con Aloe 100ml",
+    "description": "Solución suave con aloe vera y ácido láctico que elimina cerumen y controla el mal olor.",
+    "price": 120000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_714348-MCO92466018640_092025-F.webp",
+    "stock": 40
+  },
+  {
+    "id": 83,
+    "name": "Neutralizador de Olores, etiqueta adhesiva de carbón, paquete de 2",
+    "description": "Desodorizante enzimático seguro para textiles, elimina olores de orina sin perfumes fuertes.",
+    "price": 40000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://m.media-amazon.com/images/I/51A-3+5SOdL._AC_SX679_.jpg",
+    "stock": 46
+  },
+  {
+    "id": 84,
+    "name": "Toallitas de limpieza de dientes para perros y gatos,",
+    "description": "Limpieza suave y sin desorden: Sáltate la lucha con cepillos de dientes, simplemente limpia el sarro y la placa con nuestras toallitas dentales suaves y sin pelusas. ",
+    "price": 75000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://m.media-amazon.com/images/I/71eqt0l1a1L._AC_SL1500_.jpg",
+    "exclusive": true,
+    "stock": 16
+  },
+  {
+    "id": 85,
+    "name": "Tapete Entrenador Grande Con Grama + Repuesto + Guante",
+    "description": "Tapete Grande Entrenador de CachorrosSuperficie de uso 76.5 Cm x 51 Cm + Repuesto de grama (Ideal para cuando realices limpieza a una de las gramas",
+    "price": 90000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_972417-MCO85217265878_062025-F.webp",
+    "stock": 70
+  },
+  {
+    "id": 86,
+    "name": "Iglú Acolchado para Gatos",
+    "description": "Iglú forrado en peluche con cojín removible y base antideslizante, ideal para gatos tímidos.",
+    "price": 68000,
+    "category": "Camas y Casas",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/91LF6Xy86UL._AC_SX679_.jpg",
+    "stock": 24
+  },
+  {
+    "id": 87,
+    "name": "Cama Tipo Sofá para Perros",
+    "description": "Cama con apoyabrazos y relleno ortopédico que protege articulaciones de razas medianas y grandes.",
+    "price": 280000,
+    "category": "Camas y Casas",
+    "petType": "perro",
+    "image": "https://www.nuku.pe/wp-content/uploads/2020/02/camas-para-perros-lima-peru-nukuquuen-vino.jpg",
+    "stock": 19
+  }
+]

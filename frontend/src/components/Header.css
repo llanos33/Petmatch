@@ -1,0 +1,456 @@
+.header {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Fijo para que siempre esté visible */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  /* Altura aproximada del header (barra superior + principal + menú) */
+  --header-height: 110px;
+}
+
+/* Barra superior */
+.header-top {
+  background: #1E3A8A;
+  color: white;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.header-top-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.header-top-left {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.guarantee-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.guarantee-icon {
+  font-size: 1rem;
+}
+
+
+.header-top-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.phone-text {
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.social-icon {
+  color: white;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+}
+
+.social-icon:hover {
+  opacity: 0.7;
+}
+
+/* Header principal */
+.header-main {
+  padding: 0.9rem 0;
+  background: #1E3A8A;
+}
+
+.header-main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.logo-icon {
+  font-size: 2.5rem;
+}
+
+.logo-text {
+  letter-spacing: -0.5px;
+}
+
+/* Barra de búsqueda */
+.search-container {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 50px 0 0 50px;
+  font-size: 1rem;
+  outline: none;
+  background: white;
+  color: #1E3A8A;
+}
+
+.search-input::placeholder {
+  color: #94A3B8;
+}
+
+.search-button {
+  padding: 0.875rem 1.5rem;
+  background: white;
+  border: none;
+  border-radius: 0 50px 50px 0;
+  color: #1E3A8A;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  opacity: 0.8;
+}
+
+/* Acciones del header */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.wishlist-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: background 0.3s, border-color 0.3s;
+  white-space: nowrap;
+}
+
+.wishlist-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.wishlist-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.earn-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #FCD34D;
+  color: #1E3A8A;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.earn-button:hover {
+  background: #FBBF24;
+}
+
+.earn-icon {
+  font-size: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg,#FCD34D 0%,#FBBF24 100%);
+  color: #1E3A8A;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  margin-left: 6px;
+}
+
+.user-icon {
+  color: white;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+  position: relative; /* para posicionar la estrella */
+}
+
+.user-icon:hover {
+  opacity: 0.8;
+}
+
+.premium-star {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg,#FCD34D 0%,#FBBF24 100%);
+  color: #1E3A8A;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(252, 211, 77, 0.3);
+  font-size: 0.75rem;
+}
+
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.cart-link:hover {
+  opacity: 0.8;
+}
+
+.cart-badge-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #EF4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+
+/* Menú de categorías */
+.header-menu {
+  background: #2563EB;
+  padding: 0;
+}
+
+.header-menu-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 0;
+}
+
+.menu-item {
+  color: white;
+  text-decoration: none;
+  padding: 0.9rem 1.25rem;
+  font-weight: 500;
+  transition: background 0.3s;
+  border-bottom: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-color: white;
+}
+
+.category-icon-svg {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .header-main-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .header-actions {
+    justify-content: center;
+  }
+
+  .header-menu-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .menu-item {
+    white-space: nowrap;
+    padding: 1rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-top-container,
+  .header-main-container,
+  .header-menu-container {
+    padding: 0 1rem;
+  }
+
+  .header-top-left {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .guarantee-item {
+    font-size: 0.75rem;
+  }
+
+  .guarantee-item span:last-child {
+    display: none;
+  }
+
+  .phone-text {
+    display: none;
+  }
+
+  .header-top-right {
+    gap: 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .logo-icon {
+    font-size: 2rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .header-actions {
+    gap: 0.75rem;
+  }
+
+  .wishlist-label {
+    display: none;
+  }
+
+  .earn-button span:last-child {
+    display: none;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+
+/* evita que el panel se recorte */
+.header-main { position: relative; z-index: 10; }
+
+/* Ajuste de altura del header en pantallas pequeñas */
+@media (max-width: 768px) {
+  .header { --header-height: 180px; }
+}
+
+/* el wrapper que ahora contiene el botón del mega-menú */
+.mega-wrapper { 
+  display: inline-flex; 
+  align-items: center;
+  height: 100%;
+}
+
+/* estilos del botón del mega-menú para la barra azul */
+.header-menu .mega-wrapper .mega-trigger {
+  background: transparent;
+  border: 0;
+  padding: 1rem 1.5rem;
+  font: inherit;
+  font-weight: 500;
+  color: white;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-bottom: 1px solid transparent;
+  height: 100%;
+}
+
+/* hover del mega-trigger en la barra azul */
+.header-menu .mega-wrapper .mega-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-color: white;
+  text-decoration: none;
+}
+
+/* ajusta el alineado del label */
+.mega-label { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px; 
+}
