@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Auth.css'
@@ -20,6 +20,49 @@ function Register() {
     'Recomendaciones según la edad y estilo de vida de tu mascota.'
   ]
 
+  const passwordRules = useMemo(() => ([
+    {
+      id: 'minLength',
+      label: 'Min. 8 caracteres',
+      test: (value) => value.length >= 8
+    },
+    {
+      id: 'hasUpper',
+      label: '1 mayúscula',
+      test: (value) => /[A-Z]/.test(value)
+    },
+    {
+      id: 'hasLower',
+      label: '1 minúscula',
+      test: (value) => /[a-z]/.test(value)
+    },
+    {
+      id: 'hasNumber',
+      label: '1 número',
+      test: (value) => /\d/.test(value)
+    },
+    {
+      id: 'noSpaces',
+      label: 'Sin espacios',
+      test: (value) => !/\s/.test(value)
+    },
+    {
+      id: 'noQuotes',
+      label: "Sin usar ' \" `",
+      test: (value) => !/["'`]/.test(value)
+    }
+  ]), [])
+
+  const passwordChecks = useMemo(
+    () => passwordRules.map(rule => ({ ...rule, isValid: rule.test(password) })),
+    [password, passwordRules]
+  )
+
+  const isPasswordValid = useMemo(
+    () => passwordChecks.every(rule => rule.isValid),
+    [passwordChecks]
+  )
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -36,9 +79,8 @@ function Register() {
       return
     }
 
-    const passwordPolicy = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/
-    if (!passwordPolicy.test(password)) {
-      setError('La contraseña debe tener mínimo 6 caracteres, con 1 mayúscula, 1 número y 1 caracter especial')
+    if (!isPasswordValid) {
+      setError('La contraseña no cumple con los requisitos indicados')
       return
     }
 
@@ -49,7 +91,8 @@ function Register() {
 
     setLoading(true)
 
-    const result = await register(trimmedName, email, password, numericPhone)
+    const normalizedEmail = email.trim().toLowerCase()
+    const result = await register(trimmedName, normalizedEmail, password, numericPhone)
 
     if (result.success) {
       navigate('/')
@@ -133,8 +176,21 @@ function Register() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Mínimo 6 caracteres, 1 mayúscula, 1 número y 1 símbolo"
+                placeholder="Debe cumplir con los requisitos indicados"
               />
+              <div className="password-rules" aria-live="polite">
+                <ul className="password-rules-list">
+                  {passwordChecks.map(rule => (
+                    <li
+                      key={rule.id}
+                      className={`password-rule ${rule.isValid ? 'valid' : 'invalid'}`}
+                    >
+                      <span className="password-rule-indicator" aria-hidden="true" />
+                      {rule.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <div className="form-group">

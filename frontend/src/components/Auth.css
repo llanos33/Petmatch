@@ -171,6 +171,45 @@
   background: #ffffff;
 }
 
+.password-rules {
+  margin-top: 0.75rem;
+}
+
+.password-rules-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.45rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.password-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #dc2626;
+  transition: color 0.2s ease;
+}
+
+.password-rule-indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.06);
+}
+
+.password-rule.valid {
+  color: #16a34a;
+}
+
+.password-rule.invalid {
+  color: #dc2626;
+}
+
 .auth-button {
   padding: 0.95rem;
   background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
