@@ -713,6 +713,10 @@ function writeUsers(users) {
   fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
 }
 
+function normalizeEmail(email) {
+  return typeof email === 'string' ? email.trim().toLowerCase() : '';
+}
+
 // Rutas API
 
 // Obtener todos los productos
@@ -818,16 +822,17 @@ app.get('/api/orders', authenticateToken, (req, res) => {
 
 // Registrar nuevo usuario
 app.post('/api/auth/register', async (req, res) => {
-  const { name, email, password, phone } = req.body;
+  const { name, email, password, phone } = req.body || {};
+  const normalizedEmail = normalizeEmail(email);
 
-  if (!name || !email || !password) {
+  if (!name || !normalizedEmail || !password) {
     return res.status(400).json({ error: 'Nombre, email y contraseña son requeridos' });
   }
 
   const users = readUsers();
 
   // Verificar si el email ya existe
-  if (users.find(u => u.email === email)) {
+  if (users.find(u => normalizeEmail(u.email) === normalizedEmail)) {
     return res.status(400).json({ error: 'El email ya está registrado' });
   }
 
@@ -838,7 +843,7 @@ app.post('/api/auth/register', async (req, res) => {
   const newUser = {
     id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
     name,
-    email,
+    email: normalizedEmail,
     password: hashedPassword,
     phone: phone || '',
     createdAt: new Date().toISOString(),
@@ -872,14 +877,15 @@ app.post('/api/auth/register', async (req, res) => {
 
 // Iniciar sesión
 app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
+  const normalizedEmail = normalizeEmail(email);
 
-  if (!email || !password) {
+  if (!normalizedEmail || !password) {
     return res.status(400).json({ error: 'Email y contraseña son requeridos' });
   }
 
   const users = readUsers();
-  const user = users.find(u => u.email === email);
+  const user = users.find(u => normalizeEmail(u.email) === normalizedEmail);
 
   if (!user) {
     return res.status(401).json({ error: 'Credenciales inválidas' });
