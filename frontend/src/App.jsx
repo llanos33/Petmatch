@@ -34,6 +34,7 @@ import FAQ from "./pages/FAQ";
 import DeliveryPolicy from "./pages/DeliveryPolicy";
 import SiteMap from "./pages/SiteMap";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminContentManager from "./pages/AdminContentManager";
 
 function App() {
   const [cart, setCart] = useState([])
@@ -229,6 +230,10 @@ function App() {
               <Route
                 path="/admin/dashboard"
                 element={<AdminDashboard />}
+              />
+              <Route
+                path="/admin/contenido"
+                element={<AdminContentManager />}
               />
               </Routes>
           </main>

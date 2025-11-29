@@ -81,7 +81,8 @@
   color: #2563eb;
 }
 
-.admin-dashboard__refresh {
+.admin-dashboard__refresh,
+.admin-dashboard__refresh-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -93,9 +94,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
+.admin-dashboard__refresh-link {
+  text-decoration: none;
 }
 
-.admin-dashboard__refresh:hover {
+.admin-dashboard__refresh:hover,
+.admin-dashboard__refresh-link:hover {
   background: #1e3a8a;
 }
 

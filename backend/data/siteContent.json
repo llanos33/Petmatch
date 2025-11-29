@@ -1,0 +1,72 @@
+{
+  "categories": [
+    {
+      "id": "alimentos",
+      "name": "Alimentos",
+      "description": "",
+      "image": "https://laikapp.s3.amazonaws.com/dev_images_products/9f5fc6101e66358e499af3e92c12fcfc_1753368247.jpg",
+      "enabled": true
+    },
+    {
+      "id": "juguetes",
+      "name": "Juguetes",
+      "description": "",
+      "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/c9f63fa19b6a6720c39e41b2a4d66b90_1696261507.jpg",
+      "enabled": true
+    },
+    {
+      "id": "accesorios",
+      "name": "Accesorios",
+      "description": "",
+      "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/67162_kong_correa_retractil_terrain_1622827328_0_500x500.jpg",
+      "enabled": true
+    },
+    {
+      "id": "medicamentos",
+      "name": "Medicamentos",
+      "description": "",
+      "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/10958_144692_Endogard_10___Antiparasitorio_para_perros__1647352066_500x500.jpg",
+      "enabled": true
+    },
+    {
+      "id": "higiene",
+      "name": "Higiene",
+      "description": "",
+      "image": "https://laikapp.s3.amazonaws.com/dev_images_products/4ebd6071d17aeb594fcb35f9f47ba756_1743697769.jpg",
+      "enabled": true
+    },
+    {
+      "id": "camas-y-casas",
+      "name": "Camas y Casas",
+      "description": "",
+      "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/313d824f327e18ac57ca976c7559436f_1705677205.jpg",
+      "enabled": true
+    }
+  ],
+  "homepageFeatured": {
+    "categories": [
+      "alimentos",
+      "juguetes",
+      "accesorios"
+    ],
+    "products": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "promotionalSliders": [
+    {
+      "id": "bienvenida",
+      "title": "Bienvenido a PetMatch",
+      "subtitle": "Encuentra todo para el bienestar de tu mascota",
+      "image": "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=1200",
+      "ctaText": "Comprar ahora",
+      "ctaLink": "/",
+      "order": 1,
+      "active": true
+    }
+  ],
+  "updatedAt": "2025-11-29T21:22:05.452Z"
+}
