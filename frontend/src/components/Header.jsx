@@ -135,15 +135,9 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
                 </Link>
               </div>
             ) : (
-              <div className="user-dropdown">
-                <button type="button" className="user-icon" aria-haspopup="true" aria-expanded="false">
-                  <User size={24} />
-                </button>
-                <div className="user-dropdown-menu" role="menu">
-                  <Link to="/login" className="user-dropdown-item" role="menuitem">Iniciar sesión</Link>
-                  <Link to="/register" className="user-dropdown-item" role="menuitem">Crear cuenta</Link>
-                </div>
-              </div>
+              <Link to="/login" className="user-icon">
+                <User size={24} />
+              </Link>
             )}
 
             <Link to="/cart" className="cart-link">
