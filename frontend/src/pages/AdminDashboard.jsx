@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { TrendingUp, ShoppingBag, Users, Package, RefreshCw, AlertCircle, Star, Image } from 'lucide-react'
+import { TrendingUp, ShoppingBag, Users, Package, RefreshCw, AlertCircle, Star } from 'lucide-react'
 import './AdminDashboard.css'
 import { useAuth } from '../context/AuthContext'
 import { apiPath } from '../config/api'
@@ -147,10 +147,6 @@ const AdminDashboard = () => {
           <p>Monitorea las métricas clave de PetMatch en tiempo real.</p>
         </div>
         <div className="admin-dashboard__header-actions">
-          <Link to="/admin/contenido" className="admin-dashboard__refresh admin-dashboard__refresh-link">
-            <Image size={18} />
-            <span>Gestionar contenido</span>
-          </Link>
           {lastFetched && (
             <span className="admin-dashboard__timestamp">
               Última actualización: {dateFormatter.format(lastFetched)}

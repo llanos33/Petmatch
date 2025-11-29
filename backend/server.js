@@ -21,7 +21,6 @@ const dataDir = path.join(__dirname, 'data');
 const productsFile = path.join(dataDir, 'products.json');
 const ordersFile = path.join(dataDir, 'orders.json');
 const usersFile = path.join(dataDir, 'users.json');
-const siteContentFile = path.join(dataDir, 'siteContent.json');
 
 // Asegurar que el directorio data existe
 if (!fs.existsSync(dataDir)) {
@@ -651,11 +650,6 @@ if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, JSON.stringify([], null, 2));
 }
 
-if (!fs.existsSync(siteContentFile)) {
-  const defaultContent = generateDefaultSiteContent();
-  fs.writeFileSync(siteContentFile, JSON.stringify(defaultContent, null, 2));
-}
-
 // Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -733,169 +727,6 @@ function writeUsers(users) {
 
 function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
-}
-
-function slugify(value) {
-  return (value || '')
-    .toString()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '')
-    .trim() || `cat-${Date.now()}`;
-}
-
-function generateDefaultSiteContent() {
-  try {
-    const raw = fs.readFileSync(productsFile, 'utf8');
-    const products = JSON.parse(raw);
-    const unique = new Map();
-    products.forEach(product => {
-      const categoryName = product?.category || 'General';
-      if (!unique.has(categoryName)) {
-        const id = slugify(categoryName);
-        unique.set(categoryName, {
-          id,
-          name: categoryName,
-          description: '',
-          image: product?.image || '',
-          enabled: true
-        });
-      }
-    });
-    return {
-      categories: Array.from(unique.values()),
-      homepageFeatured: {
-        categories: Array.from(unique.values()).slice(0, 3).map(item => item.id),
-        products: products.slice(0, 4).map(product => product.id)
-      },
-      promotionalSliders: [
-        {
-          id: 'bienvenida',
-          title: 'Bienvenido a PetMatch',
-          subtitle: 'Encuentra todo para el bienestar de tu mascota',
-          image: 'https://images.unsplash.com/photo-1560807707-8cc77767d783?w=1200',
-          ctaText: 'Comprar ahora',
-          ctaLink: '/',
-          order: 1,
-          active: true
-        }
-      ],
-      updatedAt: new Date().toISOString()
-    };
-  } catch (error) {
-    return {
-      categories: [],
-      homepageFeatured: { categories: [], products: [] },
-      promotionalSliders: [],
-      updatedAt: new Date().toISOString()
-    };
-  }
-}
-
-function readSiteContent() {
-  try {
-    const raw = fs.readFileSync(siteContentFile, 'utf8');
-    return sanitizeSiteContent(JSON.parse(raw));
-  } catch (error) {
-    return generateDefaultSiteContent();
-  }
-}
-
-function writeSiteContent(content) {
-  fs.writeFileSync(siteContentFile, JSON.stringify(content, null, 2));
-}
-
-function sanitizeSiteContent(payload) {
-  const safePayload = payload && typeof payload === 'object' ? payload : {};
-
-  const categories = Array.isArray(safePayload.categories)
-    ? safePayload.categories
-        .map((category, index) => normalizeCategory(category, index))
-        .reduce((acc, category) => {
-          if (!acc.some(existing => existing.id === category.id)) {
-            acc.push(category);
-          }
-          return acc;
-        }, [])
-    : [];
-
-  const categoryIds = new Set(categories.map(category => category.id));
-
-  const homepageFeaturedRaw = safePayload.homepageFeatured && typeof safePayload.homepageFeatured === 'object'
-    ? safePayload.homepageFeatured
-    : {};
-
-  const homepageFeatured = {
-    categories: Array.isArray(homepageFeaturedRaw.categories)
-      ? homepageFeaturedRaw.categories
-          .map(item => slugify(item))
-          .filter(id => categoryIds.has(id))
-      : [],
-    products: Array.isArray(homepageFeaturedRaw.products)
-      ? homepageFeaturedRaw.products
-          .map(productId => Number(productId))
-          .filter(productId => Number.isFinite(productId))
-          .reduce((acc, productId) => {
-            if (!acc.includes(productId)) {
-              acc.push(productId);
-            }
-            return acc;
-          }, [])
-      : []
-  };
-
-  const promotionalSliders = Array.isArray(safePayload.promotionalSliders)
-    ? safePayload.promotionalSliders
-        .map((slider, index) => normalizeSlider(slider, index))
-        .reduce((acc, slider) => {
-          if (!acc.some(existing => existing.id === slider.id)) {
-            acc.push(slider);
-          }
-          return acc;
-        }, [])
-    : [];
-
-  const updatedAt = safePayload.updatedAt || new Date().toISOString();
-
-  return {
-    categories,
-    homepageFeatured,
-    promotionalSliders,
-    updatedAt
-  };
-}
-
-function normalizeCategory(category, index) {
-  const base = category && typeof category === 'object' ? category : {};
-  const name = typeof base.name === 'string' && base.name.trim() ? base.name.trim() : `Categoría ${index + 1}`;
-  const providedId = typeof base.id === 'string' && base.id.trim() ? base.id.trim() : slugify(name);
-
-  return {
-    id: slugify(providedId),
-    name,
-    description: typeof base.description === 'string' ? base.description.trim() : '',
-    image: typeof base.image === 'string' ? base.image.trim() : '',
-    enabled: base.enabled !== false
-  };
-}
-
-function normalizeSlider(slider, index) {
-  const base = slider && typeof slider === 'object' ? slider : {};
-  const title = typeof base.title === 'string' ? base.title.trim() : `Promoción ${index + 1}`;
-  const providedId = typeof base.id === 'string' && base.id.trim() ? base.id.trim() : slugify(title || `slider-${index + 1}`);
-
-  return {
-    id: slugify(providedId),
-    title,
-    subtitle: typeof base.subtitle === 'string' ? base.subtitle.trim() : '',
-    image: typeof base.image === 'string' ? base.image.trim() : '',
-    ctaText: typeof base.ctaText === 'string' ? base.ctaText.trim() : '',
-    ctaLink: typeof base.ctaLink === 'string' ? base.ctaLink.trim() : '',
-    order: Number.isFinite(Number(base.order)) ? Number(base.order) : index + 1,
-    active: base.active !== false
-  };
 }
 
 async function ensureAdminUser() {
@@ -1102,28 +933,6 @@ app.get('/api/admin/dashboard', authenticateToken, requireAdmin, (req, res) => {
       lastUpdated: new Date().toISOString()
     }
   });
-});
-
-app.get('/api/admin/site-content', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const content = readSiteContent();
-    res.json({ success: true, data: content });
-  } catch (error) {
-    console.error('Error al obtener configuración del sitio:', error);
-    res.status(500).json({ success: false, error: 'No fue posible obtener la configuración del sitio.' });
-  }
-});
-
-app.put('/api/admin/site-content', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const sanitized = sanitizeSiteContent(req.body || {});
-    sanitized.updatedAt = new Date().toISOString();
-    writeSiteContent(sanitized);
-    res.json({ success: true, data: sanitized });
-  } catch (error) {
-    console.error('Error al guardar configuración del sitio:', error);
-    res.status(400).json({ success: false, error: 'Datos inválidos para actualizar la configuración del sitio.' });
-  }
 });
 
 // Rutas de autenticación
