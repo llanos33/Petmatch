@@ -198,6 +198,7 @@
   outline: none;
   transition: border-color 0.2s ease;
   font-size: 0.95rem;
+  color: #1f2937;
 }
 
 .admin-products__form textarea {
@@ -225,6 +226,12 @@
   border: none;
   padding: 0;
   background: transparent;
+  color: #1f2937;
+}
+
+.admin-products__form input::placeholder,
+.admin-products__form textarea::placeholder {
+  color: #64748b;
 }
 
 .admin-products__grid-two {
