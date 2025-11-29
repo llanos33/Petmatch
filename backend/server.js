@@ -717,6 +717,57 @@ function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
 
+async function ensureAdminUser() {
+  const adminEmail = normalizeEmail(process.env.ADMIN_EMAIL);
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminName = process.env.ADMIN_NAME || 'Administrador';
+
+  if (!adminEmail || !adminPassword) {
+    console.warn('ADMIN_EMAIL o ADMIN_PASSWORD no configurados. No se creó usuario administrador.');
+    return;
+  }
+
+  const users = readUsers();
+  const existingAdmin = users.find(user => normalizeEmail(user.email) === adminEmail);
+
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const adminUser = {
+      id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+      name: adminName,
+      email: adminEmail,
+      password: hashedPassword,
+      phone: '',
+      createdAt: new Date().toISOString(),
+      isPremium: false,
+      premiumSince: null,
+      subscription: null,
+      isAdmin: true
+    };
+    users.push(adminUser);
+    writeUsers(users);
+    console.log('Usuario administrador creado automáticamente.');
+  } else {
+    let updated = false;
+    if (!existingAdmin.isAdmin) {
+      existingAdmin.isAdmin = true;
+      updated = true;
+    }
+    if (adminName && existingAdmin.name !== adminName) {
+      existingAdmin.name = adminName;
+      updated = true;
+    }
+    if (process.env.ADMIN_FORCE_RESET === 'true' && adminPassword) {
+      existingAdmin.password = await bcrypt.hash(adminPassword, 10);
+      console.log('La contraseña del administrador fue regenerada por ADMIN_FORCE_RESET.');
+      updated = true;
+    }
+    if (updated) {
+      writeUsers(users);
+    }
+  }
+}
+
 // Rutas API
 
 // Obtener todos los productos
@@ -849,7 +900,8 @@ app.post('/api/auth/register', async (req, res) => {
     createdAt: new Date().toISOString(),
     isPremium: false,
     premiumSince: null,
-    subscription: null
+    subscription: null,
+    isAdmin: false
   };
 
   users.push(newUser);
@@ -870,7 +922,8 @@ app.post('/api/auth/register', async (req, res) => {
       email: newUser.email,
       phone: newUser.phone,
       isPremium: newUser.isPremium,
-      premiumSince: newUser.premiumSince
+      premiumSince: newUser.premiumSince,
+      isAdmin: newUser.isAdmin
     }
   });
 });
@@ -913,7 +966,8 @@ app.post('/api/auth/login', async (req, res) => {
       email: user.email,
       phone: user.phone,
       isPremium: !!user.isPremium,
-      premiumSince: user.premiumSince || null
+      premiumSince: user.premiumSince || null,
+      isAdmin: !!user.isAdmin
     }
   });
 });
@@ -934,7 +988,8 @@ app.get('/api/auth/profile', authenticateToken, (req, res) => {
     phone: user.phone,
     createdAt: user.createdAt,
     isPremium: !!user.isPremium,
-    premiumSince: user.premiumSince || null
+    premiumSince: user.premiumSince || null,
+    isAdmin: !!user.isAdmin
   });
 });
 
@@ -968,7 +1023,8 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
       name: users[userIndex].name,
       email: users[userIndex].email,
       isPremium: users[userIndex].isPremium,
-      premiumSince: users[userIndex].premiumSince
+      premiumSince: users[userIndex].premiumSince,
+      isAdmin: !!users[userIndex].isAdmin
     };
 
     res.json({ success: true, user: safeUser });
@@ -986,6 +1042,8 @@ if (fs.existsSync(clientBuildPath)) {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
+
+await ensureAdminUser();
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
