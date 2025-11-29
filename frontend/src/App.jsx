@@ -36,13 +36,102 @@ import SiteMap from "./pages/SiteMap";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 
+const CART_STORAGE_KEY = 'petmatch_cart_v1'
+
+const serializeProductForCart = (product) => {
+  if (!product || typeof product !== 'object') return null
+  const {
+    id,
+    name,
+    description,
+    price,
+    category,
+    petType,
+    image,
+    stock,
+    exclusive,
+    isOnSale,
+    salePrice
+  } = product
+
+  return {
+    id,
+    name,
+    description,
+    price,
+    category,
+    petType,
+    image,
+    stock,
+    exclusive,
+    isOnSale,
+    salePrice
+  }
+}
+
+const loadStoredCart = () => {
+  if (typeof window === 'undefined') return []
+
+  try {
+    const raw = window.localStorage.getItem(CART_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+
+    return parsed
+      .map(item => {
+        const productId = Number(item?.productId)
+        if (!Number.isInteger(productId) || productId <= 0) return null
+
+        const rawQuantity = Number(item?.quantity)
+        const quantity = Number.isInteger(rawQuantity) ? Math.max(1, rawQuantity) : 1
+
+        const priceValue = Number(item?.price)
+        const price = Number.isFinite(priceValue) ? priceValue : undefined
+
+        return {
+          productId,
+          quantity,
+          price,
+          product: serializeProductForCart(item?.product) || null
+        }
+      })
+      .filter(Boolean)
+  } catch (error) {
+    console.warn('No se pudo restaurar el carrito guardado', error)
+    return []
+  }
+}
+
 function App() {
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState(() => loadStoredCart())
   const [products, setProducts] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
+    } catch (error) {
+      console.warn('No se pudo guardar el carrito', error)
+    }
+  }, [cart])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const handleStorage = (event) => {
+      if (event.key === CART_STORAGE_KEY) {
+        setCart(loadStoredCart())
+      }
+    }
+
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
   const fetchProducts = async () => {
@@ -77,16 +166,32 @@ function App() {
   const addToCart = (product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.productId === product.id)
-      // Usar el precio del producto (que puede incluir descuento aplicado en ProductList)
-      const priceToStore = product.price
+      const parsedPrice = Number(product.price)
+      const priceToStore = Number.isFinite(parsedPrice) ? parsedPrice : existingItem?.price || 0
+      const productSnapshot = serializeProductForCart(product)
+
       if (existingItem) {
         return prevCart.map(item =>
           item.productId === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+                price: priceToStore,
+                product: productSnapshot || item.product || null
+              }
             : item
         )
       }
-      return [...prevCart, { productId: product.id, quantity: 1, price: priceToStore, product }]
+
+      return [
+        ...prevCart,
+        {
+          productId: product.id,
+          quantity: 1,
+          price: priceToStore,
+          product: productSnapshot
+        }
+      ]
     })
   }
 
