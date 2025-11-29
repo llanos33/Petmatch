@@ -2,30 +2,46 @@
 // Esta función asigna descuentos de forma consistente en toda la plataforma
 
 export const getProductDiscount = (product) => {
-  // Solo los primeros 15 productos tienen descuento
+  const basePrice = Number(product.price) || 0
+  const hasManualSale = product?.isOnSale && Number(product.salePrice) > 0 && Number(product.salePrice) < basePrice
+
+  if (hasManualSale) {
+    const discountedPrice = Math.round(Number(product.salePrice))
+    const discountPercentage = Math.max(0, Math.round((1 - discountedPrice / basePrice) * 100))
+    return {
+      discountPercentage,
+      originalPrice: basePrice,
+      discountedPrice,
+      hasDiscount: true,
+      totalDiscountPercentage: discountPercentage,
+      discountSource: 'manual'
+    }
+  }
+
+  // Solo los primeros 15 productos tienen descuento automático
   const discountPercentages = [15, 20, 25, 30, 20, 15, 10, 25, 20, 15, 30, 20, 15, 25, 20]
-  
-  // Si el producto está dentro de los 15 primeros, aplicar descuento
+
   if (product.id > 15) {
     return {
       discountPercentage: 0,
-      originalPrice: product.price,
-      discountedPrice: product.price,
-      hasDiscount: false
+      originalPrice: basePrice,
+      discountedPrice: basePrice,
+      hasDiscount: false,
+      totalDiscountPercentage: 0,
+      discountSource: null
     }
   }
-  
-  // Usar el ID del producto para determinar el descuento de forma consistente
+
   const discountPercentage = discountPercentages[product.id - 1]
-  
-  const originalPrice = product.price
-  const discountedPrice = Math.round(product.price * (1 - discountPercentage / 100))
-  
+  const discountedPrice = Math.round(basePrice * (1 - discountPercentage / 100))
+
   return {
     discountPercentage,
-    originalPrice,
+    originalPrice: basePrice,
     discountedPrice,
-    hasDiscount: true
+    hasDiscount: true,
+    totalDiscountPercentage: discountPercentage,
+    discountSource: 'automatic'
   }
 }
 

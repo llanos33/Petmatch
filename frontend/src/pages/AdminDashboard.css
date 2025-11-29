@@ -76,6 +76,23 @@
   gap: 1rem;
 }
 
+.admin-dashboard__header-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.admin-dashboard__header-link:hover {
+  background: #1e3a8a;
+}
+
 .admin-dashboard__timestamp {
   font-size: 0.85rem;
   color: #2563eb;

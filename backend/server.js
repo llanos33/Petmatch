@@ -729,6 +729,128 @@ function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
 
+function parseBoolean(value, fallback = false) {
+  if (value === undefined) return fallback;
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (['true', '1', 'yes', 'si', 'on'].includes(normalized)) return true;
+    if (['false', '0', 'no', 'off'].includes(normalized)) return false;
+  }
+  return fallback;
+}
+
+function parseNumber(value) {
+  if (value === null || value === undefined) return null;
+  const num = Number(value);
+  if (!Number.isFinite(num)) return null;
+  return num;
+}
+
+function parseNonNegativeInt(value) {
+  if (value === null || value === undefined) return null;
+  const num = parseInt(value, 10);
+  if (!Number.isFinite(num) || num < 0) return null;
+  return num;
+}
+
+function buildProductPayload(existingProduct, payload, { requireAll = false } = {}) {
+  const errors = [];
+  const result = existingProduct ? { ...existingProduct } : {};
+
+  const assignString = (key, label) => {
+    if (payload[key] === undefined) {
+      if (requireAll && !result[key]) {
+        errors.push(`${label || key} es requerido`);
+      }
+      return;
+    }
+    const value = typeof payload[key] === 'string' ? payload[key].trim() : payload[key];
+    if (!value) {
+      errors.push(`${label || key} no puede estar vacío`);
+      return;
+    }
+    result[key] = value;
+  };
+
+  assignString('name', 'Nombre');
+  assignString('description', 'Descripción');
+  assignString('category', 'Categoría');
+  assignString('petType', 'Tipo de mascota');
+
+  if (payload.image !== undefined) {
+    result.image = typeof payload.image === 'string' ? payload.image.trim() : '';
+  } else if (requireAll && !result.image) {
+    result.image = '';
+  }
+
+  if (payload.tags !== undefined) {
+    if (Array.isArray(payload.tags)) {
+      result.tags = payload.tags.map(tag => typeof tag === 'string' ? tag.trim() : tag).filter(Boolean);
+    } else {
+      errors.push('Tags debe ser un arreglo de texto');
+    }
+  }
+
+  if (payload.exclusive !== undefined) {
+    result.exclusive = parseBoolean(payload.exclusive, false);
+  } else if (!Object.prototype.hasOwnProperty.call(result, 'exclusive')) {
+    result.exclusive = false;
+  }
+
+  const priceProvided = payload.price !== undefined;
+  if (priceProvided || requireAll) {
+    const parsedPrice = parseNumber(priceProvided ? payload.price : result.price);
+    if (parsedPrice === null || parsedPrice <= 0) {
+      errors.push('Precio debe ser un número mayor a cero');
+    } else {
+      result.price = Math.round(parsedPrice);
+    }
+  }
+
+  const stockProvided = payload.stock !== undefined;
+  if (stockProvided || requireAll) {
+    const parsedStock = parseNonNegativeInt(stockProvided ? payload.stock : result.stock);
+    if (parsedStock === null) {
+      errors.push('Stock debe ser un número entero igual o mayor a cero');
+    } else {
+      result.stock = parsedStock;
+    }
+  }
+
+  const isOnSaleProvided = payload.isOnSale !== undefined || payload.onSale !== undefined;
+  const salePriceProvided = payload.salePrice !== undefined;
+
+  if (isOnSaleProvided) {
+    const raw = payload.isOnSale !== undefined ? payload.isOnSale : payload.onSale;
+    result.isOnSale = parseBoolean(raw, false);
+  } else if (!Object.prototype.hasOwnProperty.call(result, 'isOnSale')) {
+    result.isOnSale = false;
+  }
+
+  if (salePriceProvided || result.isOnSale) {
+    const parsedSale = parseNumber(salePriceProvided ? payload.salePrice : result.salePrice);
+    if (result.isOnSale) {
+      if (parsedSale === null || parsedSale <= 0) {
+        errors.push('Precio de oferta debe ser un número mayor a cero');
+      } else if (result.price && parsedSale >= result.price) {
+        errors.push('Precio de oferta debe ser menor que el precio normal');
+      } else {
+        result.salePrice = Math.round(parsedSale);
+      }
+    } else if (salePriceProvided) {
+      result.salePrice = parsedSale === null ? null : Math.round(parsedSale);
+    }
+  }
+
+  if (!result.isOnSale) {
+    delete result.salePrice;
+  }
+
+  return { product: result, errors };
+}
+
 async function ensureAdminUser() {
   const adminEmail = normalizeEmail(process.env.ADMIN_EMAIL);
   const adminPassword = process.env.ADMIN_PASSWORD;
@@ -881,6 +1003,125 @@ app.get('/api/orders', authenticateToken, (req, res) => {
   const isAdmin = !!requester?.isAdmin;
   const visibleOrders = isAdmin ? orders : orders.filter(order => order.userId === req.user.userId);
   res.json(visibleOrders);
+});
+
+app.get('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {
+  const products = readProducts();
+  res.json({ success: true, data: products });
+});
+
+app.post('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {
+  const products = readProducts();
+  const { product, errors } = buildProductPayload(null, req.body || {}, { requireAll: true });
+
+  if (errors.length) {
+    return res.status(400).json({ success: false, errors, error: errors[0] });
+  }
+
+  const nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+  const now = new Date().toISOString();
+  const newProduct = {
+    id: nextId,
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    category: product.category,
+    petType: product.petType,
+    image: product.image || '',
+    stock: product.stock,
+    exclusive: !!product.exclusive,
+    isOnSale: !!product.isOnSale,
+    salePrice: product.isOnSale ? product.salePrice : undefined,
+    tags: product.tags || [],
+    createdAt: now,
+    updatedAt: now
+  };
+
+  products.push(newProduct);
+  writeProducts(products);
+
+  res.status(201).json({ success: true, data: newProduct });
+});
+
+app.put('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  const products = readProducts();
+  const index = products.findIndex(p => p.id === productId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+  }
+
+  const { product, errors } = buildProductPayload(products[index], req.body || {}, { requireAll: true });
+
+  if (errors.length) {
+    return res.status(400).json({ success: false, errors, error: errors[0] });
+  }
+
+  const now = new Date().toISOString();
+  const updatedProduct = {
+    ...products[index],
+    ...product,
+    id: productId,
+    updatedAt: now
+  };
+
+  if (!updatedProduct.createdAt) {
+    updatedProduct.createdAt = products[index].createdAt || now;
+  }
+
+  products[index] = updatedProduct;
+  writeProducts(products);
+
+  res.json({ success: true, data: updatedProduct });
+});
+
+app.patch('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  const products = readProducts();
+  const index = products.findIndex(p => p.id === productId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+  }
+
+  const { product, errors } = buildProductPayload(products[index], req.body || {}, { requireAll: false });
+
+  if (errors.length) {
+    return res.status(400).json({ success: false, errors, error: errors[0] });
+  }
+
+  const now = new Date().toISOString();
+  const updatedProduct = {
+    ...products[index],
+    ...product,
+    id: productId,
+    updatedAt: now
+  };
+
+  if (!updatedProduct.createdAt) {
+    updatedProduct.createdAt = products[index].createdAt || now;
+  }
+
+  products[index] = updatedProduct;
+  writeProducts(products);
+
+  res.json({ success: true, data: updatedProduct });
+});
+
+app.delete('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  const products = readProducts();
+  const index = products.findIndex(p => p.id === productId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+  }
+
+  const [removed] = products.splice(index, 1);
+  writeProducts(products);
+
+  res.json({ success: true, data: removed });
 });
 
 app.get('/api/admin/dashboard', authenticateToken, requireAdmin, (req, res) => {

@@ -147,6 +147,9 @@ const AdminDashboard = () => {
           <p>Monitorea las métricas clave de PetMatch en tiempo real.</p>
         </div>
         <div className="admin-dashboard__header-actions">
+          <Link to="/admin/products" className="admin-dashboard__header-link">
+            Gestionar productos
+          </Link>
           {lastFetched && (
             <span className="admin-dashboard__timestamp">
               Última actualización: {dateFormatter.format(lastFetched)}

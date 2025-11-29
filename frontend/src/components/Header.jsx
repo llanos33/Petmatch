@@ -24,7 +24,8 @@ import {
   Stethoscope,
   Gift,
   FileText,
-  LayoutDashboard
+  LayoutDashboard,
+  Boxes
 } from 'lucide-react'
 
 function Header({ cartItemCount, searchTerm, setSearchTerm }) {
@@ -185,6 +186,12 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             <Link to="/admin/dashboard" className="menu-item">
               <LayoutDashboard size={18} />
               <span>Dashboard</span>
+            </Link>
+          )}
+          {user?.isAdmin && (
+            <Link to="/admin/products" className="menu-item">
+              <Boxes size={18} />
+              <span>Productos</span>
             </Link>
           )}
           {user?.isPremium && (
