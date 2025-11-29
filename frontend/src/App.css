@@ -6,29 +6,18 @@
 
 .main-content {
   flex: 1;
-  /* mantén un relleno superior adicional para evitar que el contenido quede detrás del header fijo */
-  padding: calc(var(--header-height, 110px) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 3.5rem);
+  /* dejar espacio arriba para el header fijo */
+  padding: 2rem 2rem 2rem;
+  padding-top: var(--header-height, 110px);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
   background: #F8FAFC;
 }
 
-@media (max-width: 1024px) {
-  .main-content {
-    padding: calc(var(--header-height, 110px) + 0.75rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 6vw, 3rem);
-  }
-}
-
 @media (max-width: 768px) {
   .main-content {
-    padding: calc(var(--header-height, 180px) + 0.5rem) 1rem 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content {
-    padding: calc(var(--header-height, 180px) + 0.25rem) 0.75rem 1.75rem;
+    padding: 1rem;
   }
 }
 
