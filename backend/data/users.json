@@ -12,7 +12,8 @@
     "subscription": {
       "plan": "yearly",
       "price": 420000
-    }
+    },
+    "isAdmin": false
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@
     "password": "$2a$10$N0M5pkouJc.xGhughAXk0uP93BQtHMn9HfiJwuZS5TCdewuKaRwEi",
     "phone": "3136914054",
     "address": "calle 32 #45-77",
-    "createdAt": "2025-11-23T23:57:58.471Z"
+    "createdAt": "2025-11-23T23:57:58.471Z",
+    "isAdmin": false
   },
   {
     "id": 3,
@@ -29,6 +31,7 @@
     "email": "losgptcuatro@gmail.com",
     "password": "$2a$10$UDz.bqtuSCFv6/iH.RhnjeF6nnM/NhUytpgk7nXbsSSuE6Cb4NuTq",
     "phone": "3136914054",
-    "createdAt": "2025-11-24T00:20:16.873Z"
+    "createdAt": "2025-11-24T00:20:16.873Z",
+    "isAdmin": false
   }
 ]

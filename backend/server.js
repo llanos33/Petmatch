@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
@@ -717,6 +718,66 @@ function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
 
+const DEFAULT_ADMIN_EMAIL = 'admin@petmatch.com';
+const DEFAULT_ADMIN_PASSWORD = 'PetmatchAdmin123!';
+const ADMIN_NAME = process.env.ADMIN_NAME || 'Administrador PetMatch';
+const ADMIN_EMAIL = normalizeEmail(process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
+
+function ensureAdminUser() {
+  if (process.env.NODE_ENV === 'production' && (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD)) {
+    console.warn('⚠️ Usa variables de entorno ADMIN_EMAIL y ADMIN_PASSWORD para personalizar las credenciales del administrador.');
+  }
+
+  const users = readUsers();
+  const existingAdmin = users.find(u => normalizeEmail(u.email) === ADMIN_EMAIL);
+
+  if (!existingAdmin) {
+    const hashedPassword = bcrypt.hashSync(ADMIN_PASSWORD, 10);
+    const adminUser = {
+      id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+      name: ADMIN_NAME,
+      email: ADMIN_EMAIL,
+      password: hashedPassword,
+      phone: '',
+      createdAt: new Date().toISOString(),
+      isPremium: false,
+      premiumSince: null,
+      subscription: null,
+      isAdmin: true
+    };
+
+    users.push(adminUser);
+    writeUsers(users);
+    console.log('Usuario administrador inicial creado.');
+    return;
+  }
+
+  let updated = false;
+
+  if (!existingAdmin.isAdmin) {
+    existingAdmin.isAdmin = true;
+    updated = true;
+  }
+
+  if (ADMIN_NAME && existingAdmin.name !== ADMIN_NAME) {
+    existingAdmin.name = ADMIN_NAME;
+    updated = true;
+  }
+
+  if (!existingAdmin.password || !bcrypt.compareSync(ADMIN_PASSWORD, existingAdmin.password)) {
+    existingAdmin.password = bcrypt.hashSync(ADMIN_PASSWORD, 10);
+    updated = true;
+  }
+
+  if (updated) {
+    writeUsers(users);
+    console.log('Usuario administrador sincronizado.');
+  }
+}
+
+ensureAdminUser();
+
 // Rutas API
 
 // Obtener todos los productos
@@ -849,7 +910,8 @@ app.post('/api/auth/register', async (req, res) => {
     createdAt: new Date().toISOString(),
     isPremium: false,
     premiumSince: null,
-    subscription: null
+    subscription: null,
+    isAdmin: false
   };
 
   users.push(newUser);
@@ -870,7 +932,8 @@ app.post('/api/auth/register', async (req, res) => {
       email: newUser.email,
       phone: newUser.phone,
       isPremium: newUser.isPremium,
-      premiumSince: newUser.premiumSince
+      premiumSince: newUser.premiumSince,
+      isAdmin: !!newUser.isAdmin
     }
   });
 });
@@ -913,7 +976,8 @@ app.post('/api/auth/login', async (req, res) => {
       email: user.email,
       phone: user.phone,
       isPremium: !!user.isPremium,
-      premiumSince: user.premiumSince || null
+      premiumSince: user.premiumSince || null,
+      isAdmin: !!user.isAdmin
     }
   });
 });
@@ -934,7 +998,8 @@ app.get('/api/auth/profile', authenticateToken, (req, res) => {
     phone: user.phone,
     createdAt: user.createdAt,
     isPremium: !!user.isPremium,
-    premiumSince: user.premiumSince || null
+    premiumSince: user.premiumSince || null,
+    isAdmin: !!user.isAdmin
   });
 });
 
