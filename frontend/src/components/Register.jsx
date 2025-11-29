@@ -14,6 +14,11 @@ function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
 
+  const handlePhoneChange = (event) => {
+    const onlyDigits = event.target.value.replace(/\D/g, '')
+    setPhone(onlyDigits.slice(0, 10))
+  }
+
   const perks = [
     'Descuentos especiales y regalos de bienvenida.',
     'Seguimiento de pedidos en tiempo real y recordatorios.',
@@ -156,13 +161,12 @@ function Register() {
             <div className="form-group">
               <label htmlFor="phone">Teléfono</label>
               <input
-                type="tel"
+                type="text"
                 id="phone"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
                 required
                 inputMode="numeric"
-                pattern="\d{10}"
                 maxLength={10}
                 placeholder="3001234567"
               />
