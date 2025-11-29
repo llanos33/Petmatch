@@ -668,6 +668,18 @@ function authenticateToken(req, res, next) {
   });
 }
 
+function requireAdmin(req, res, next) {
+  const users = readUsers();
+  const currentUser = users.find(u => u.id === req.user.userId);
+
+  if (!currentUser || !currentUser.isAdmin) {
+    return res.status(403).json({ error: 'Acceso restringido a administradores' });
+  }
+
+  req.currentUser = currentUser;
+  next();
+}
+
 // Helper para leer productos
 function readProducts() {
   try {
@@ -864,9 +876,63 @@ app.post('/api/orders', authenticateToken, (req, res) => {
 // Obtener todas las órdenes (útil para administración)
 app.get('/api/orders', authenticateToken, (req, res) => {
   const orders = readOrders();
-  // Si es admin, devolver todas. Si no, solo las del usuario
-  const userOrders = orders.filter(order => order.userId === req.user.userId);
-  res.json(userOrders);
+  const users = readUsers();
+  const requester = users.find(u => u.id === req.user.userId);
+  const isAdmin = !!requester?.isAdmin;
+  const visibleOrders = isAdmin ? orders : orders.filter(order => order.userId === req.user.userId);
+  res.json(visibleOrders);
+});
+
+app.get('/api/admin/dashboard', authenticateToken, requireAdmin, (req, res) => {
+  const orders = readOrders();
+  const users = readUsers();
+  const products = readProducts();
+  const totalSales = orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+  const totalOrders = orders.length;
+  const totalUsers = users.length;
+  const premiumUsers = users.filter(user => user.isPremium).length;
+  const averageOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+  const recentOrders = [...orders]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 5)
+    .map(order => {
+      const owner = users.find(user => user.id === order.userId);
+      return {
+        id: order.id,
+        total: Number(order.total) || order.itemsTotal || 0,
+        date: order.date,
+        status: order.status || 'pendiente',
+        customer: order.customerInfo?.name || owner?.name || 'Cliente',
+        email: order.customerInfo?.email || owner?.email || null
+      };
+    });
+
+  const lowStockThreshold = Number(process.env.LOW_STOCK_THRESHOLD) || 10;
+  const lowStockProducts = products
+    .filter(product => Number(product.stock) <= lowStockThreshold)
+    .sort((a, b) => (Number(a.stock) || 0) - (Number(b.stock) || 0))
+    .slice(0, 10)
+    .map(product => ({
+      id: product.id,
+      name: product.name,
+      stock: Number(product.stock) || 0,
+      category: product.category || 'Sin categoría'
+    }));
+
+  return res.json({
+    success: true,
+    data: {
+      totalSales,
+      totalOrders,
+      totalUsers,
+      premiumUsers,
+      averageOrderValue,
+      recentOrders,
+      lowStockProducts,
+      lowStockThreshold,
+      lastUpdated: new Date().toISOString()
+    }
+  });
 });
 
 // Rutas de autenticación

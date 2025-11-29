@@ -33,6 +33,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import FAQ from "./pages/FAQ";
 import DeliveryPolicy from "./pages/DeliveryPolicy";
 import SiteMap from "./pages/SiteMap";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   const [cart, setCart] = useState([])
@@ -224,6 +225,10 @@ function App() {
               <Route
                 path="/sitemap"
                 element={<SiteMap />}
+              />
+              <Route
+                path="/admin/dashboard"
+                element={<AdminDashboard />}
               />
               </Routes>
           </main>

@@ -23,7 +23,8 @@ import {
   Cat,
   Stethoscope,
   Gift,
-  FileText
+  FileText,
+  LayoutDashboard
 } from 'lucide-react'
 
 function Header({ cartItemCount, searchTerm, setSearchTerm }) {
@@ -180,6 +181,12 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             <FileText size={18} />
             <span>Consejos</span>
           </Link>
+          {user?.isAdmin && (
+            <Link to="/admin/dashboard" className="menu-item">
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
+            </Link>
+          )}
           {user?.isPremium && (
             <Link to="/exclusivos" className="menu-item premium-only">
               <Star size={18} />
