@@ -159,6 +159,51 @@
   gap: 1.5rem;
 }
 
+.auth-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.auth-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: #ffffff;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 20px rgba(37, 99, 235, 0.22);
+}
+
+.auth-cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 26px rgba(37, 99, 235, 0.28);
+}
+
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  border: 1.6px solid rgba(37, 99, 235, 0.35);
+  color: #1e3a8a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ghost-button:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.6);
+  color: #1d4ed8;
+}
+
 .wishlist-link {
   display: flex;
   align-items: center;

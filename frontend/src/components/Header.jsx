@@ -125,7 +125,7 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             {user ? (
               <div className="user-info">
                 <span className="user-name">{user.name.split(' ')[0]}</span>
-                <Link to="/profile" className="user-icon">
+                <Link to="/profile" className="user-icon" aria-label="Ver perfil">
                   <User size={24} />
                   {user.isPremium && (
                     <span className="premium-star" title="Usuario Premium">
@@ -135,9 +135,13 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
                 </Link>
               </div>
             ) : (
-              <Link to="/login" className="user-icon">
-                <User size={24} />
-              </Link>
+              <div className="auth-cta-group">
+                <Link to="/login" className="ghost-button">Iniciar sesión</Link>
+                <Link to="/register" className="auth-cta-button">
+                  <User size={18} />
+                  <span>Crear cuenta</span>
+                </Link>
+              </div>
             )}
 
             <Link to="/cart" className="cart-link">
