@@ -33,5 +33,17 @@
     "phone": "3136914054",
     "createdAt": "2025-11-24T00:20:16.873Z",
     "isAdmin": false
+  },
+  {
+    "id": 4,
+    "name": "Admin PetMatch",
+    "email": "admin@petmatch.com",
+    "password": "$2a$10$SvREP2t7gr1fWKcEan7oiezbZka5TeSZ17k3GyvoN4QK9wQkDiUE.",
+    "phone": "",
+    "createdAt": "2025-11-29T20:59:08.674Z",
+    "isPremium": false,
+    "premiumSince": null,
+    "subscription": null,
+    "isAdmin": true
   }
 ]
