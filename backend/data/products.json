@@ -880,5 +880,345 @@
     "petType": "perro",
     "image": "https://www.nuku.pe/wp-content/uploads/2020/02/camas-para-perros-lima-peru-nukuquuen-vino.jpg",
     "stock": 19
+  },
+  {
+    "name": "Alimento Natural BARF de Pollo para Perros",
+    "description": "Dieta natural cruda biológicamente apropiada (BARF) congelada, a base de pollo, huesos carnosos y vegetales. Ideal para perros de todas las razas.",
+    "price": 15000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_787656-MCO45606868686_042021-F.webp",
+    "stock": 50,
+    "id": 88
+  },
+  {
+    "name": "Dieta Natural BARF de Pavo para Gatos",
+    "description": "Alimento natural BARF formulado específicamente para gatos, rico en taurina y proteínas de alta calidad. Paquete de 500g.",
+    "price": 18000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_968616-MCO44668686868_012021-F.webp",
+    "stock": 40,
+    "id": 89
+  },
+  {
+    "name": "Alimento Medicado Renal Care para Perros (Seco)",
+    "description": "Croquetas de prescripción veterinaria para el soporte de la función renal en perros. Bajo en fósforo y proteínas de alta calidad.",
+    "price": 180000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/1/1/111100168-v1-min.jpg",
+    "stock": 20,
+    "id": 90
+  },
+  {
+    "name": "Alimento Medicado Urinario para Gatos (Seco)",
+    "description": "Nutrición clínica para disolver piedras de estruvita y reducir su recurrencia. Cuidado urinario completo para gatos.",
+    "price": 165000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://pawsplace.com.co/cdn/shop/files/RoyalGatoRenalPawsPlace_2000x.png?v=1754326699",
+    "stock": 25,
+    "id": 91
+  },
+  {
+    "name": "Lata Medicada Gastrointestinal para Perros",
+    "description": "Alimento húmedo dietético para la reducción de los trastornos agudos de la absorción intestinal en perros.",
+    "price": 18000,
+    "category": "Alimentos",
+    "petType": "perro",
+    "image": "https://www.hillspet.co/content/dam/hills/images/us/en/pd/products/pd-canine-id-canned-product-shot-zoom.jpg",
+    "stock": 60,
+    "id": 92
+  },
+  {
+    "name": "Lata Medicada Renal para Gatos",
+    "description": "Alimento húmedo formulado para ayudar a mantener la función renal en caso de insuficiencia renal crónica en gatos.",
+    "price": 15000,
+    "category": "Alimentos",
+    "petType": "gato",
+    "image": "https://www.royalcanin.com/co/cats/products/vet-products/renal-with-chicken-wet",
+    "stock": 55,
+    "id": 93
+  },
+  {
+    "name": "Peluche Resistente con Sonido de Pato",
+    "description": "Juguete de peluche reforzado con costuras dobles y sonido squeaker interno para perros destructores.",
+    "price": 35000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://m.media-amazon.com/images/I/71pO4ivmTfL._AC_SX679_.jpg",
+    "stock": 30,
+    "id": 94
+  },
+  {
+    "name": "Peluche con Catnip en forma de Pez",
+    "description": "Juguete suave relleno de hierba gatera (catnip) orgánica para estimular el juego en gatos.",
+    "price": 12000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/61Rl292QCxL._AC_SY879_.jpg",
+    "stock": 80,
+    "id": 95
+  },
+  {
+    "name": "Juguete de Inteligencia Nivel 2",
+    "description": "Puzzle interactivo dispensador de premios para estimular la mente de tu perro. Nivel intermedio.",
+    "price": 55000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://m.media-amazon.com/images/I/71eqt0l1a1L._AC_SL1500_.jpg",
+    "stock": 15,
+    "id": 96
+  },
+  {
+    "name": "Torre de Circuitos Interactiva",
+    "description": "Pista de tres niveles con bolas giratorias para mantener a tu gato entretenido por horas.",
+    "price": 45000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://www.tierradegatos.com/terrcontenido/uploads/2017/08/481-Juguete-Giratoria-Pluma.jpg",
+    "stock": 25,
+    "id": 97
+  },
+  {
+    "name": "Cuerda Dental Resistente XL",
+    "description": "Juguete mordedor de cuerda de algodón natural, ayuda a limpiar los dientes mientras juegan a tirar.",
+    "price": 28000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/1/8/188000168-min.jpg",
+    "stock": 40,
+    "id": 98
+  },
+  {
+    "name": "Lanzador de Pelotas Automático",
+    "description": "Máquina lanzadora de pelotas para perros, ideal para jugar a buscar sin cansarte. Distancia ajustable.",
+    "price": 250000,
+    "category": "Juguetes",
+    "petType": "perro",
+    "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/_/3/_3_3_333310072-_4__ed-min.jpg",
+    "stock": 10,
+    "id": 99
+  },
+  {
+    "name": "Gimnasio Rascador Árbol 1.5m",
+    "description": "Torre rascador para gatos con múltiples plataformas, cueva y postes de sisal para afilar las uñas.",
+    "price": 180000,
+    "category": "Juguetes",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/11c018a9f79574fcb30cf3b34ec7074f_1715713469.jpg",
+    "stock": 8,
+    "id": 100
+  },
+  {
+    "name": "Analgésico Natural CBD para Mascotas",
+    "description": "Gotas de aceite de cáñamo para aliviar dolor crónico y ansiedad en perros y gatos.",
+    "price": 65000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://www.supermarpet.co/cdn/shop/products/npc-empaque-treats-joint-373x450_large.png?v=1602097714",
+    "stock": 30,
+    "id": 101
+  },
+  {
+    "name": "Spray Antibiótico Tópico",
+    "description": "Spray para el tratamiento de infecciones superficiales de la piel en perros y gatos.",
+    "price": 32000,
+    "category": "Medicamentos",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/13ee215fdd1b26c159842b4214fd6a4e_1706908927.jpg",
+    "stock": 45,
+    "id": 102
+  },
+  {
+    "name": "Tabletas Antiinflamatorias Naturales",
+    "description": "Suplemento antiinflamatorio a base de cúrcuma y omega 3 para el dolor articular.",
+    "price": 45000,
+    "category": "Medicamentos",
+    "petType": "perro",
+    "image": "https://pawsplace.com.co/cdn/shop/files/MeloxipetPawsPlace_2000x.png?v=1754326859",
+    "stock": 35,
+    "id": 103
+  },
+  {
+    "name": "Crema Dermatológica para Alergias",
+    "description": "Crema calmante para irritaciones de la piel, picazón y alergias en gatos.",
+    "price": 28000,
+    "category": "Medicamentos",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/6008_145023_Virbac___Shampoo_Clorhexin_1647359084_500x500.jpg",
+    "stock": 25,
+    "id": 104
+  },
+  {
+    "name": "Collar de Cuero Acolchado",
+    "description": "Collar de cuero genuino con forro suave para mayor comodidad del perro. Talla L.",
+    "price": 45000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/75986_201630_Elanco___Seresto_Collar_Para_Perros_De_Hasta_8_kg_1666977465_800x800.jpg",
+    "stock": 20,
+    "id": 105
+  },
+  {
+    "name": "Arnés Antitirones Easy Walk",
+    "description": "Arnés diseñado para evitar que el perro tire de la correa durante el paseo. Ajustable.",
+    "price": 55000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/b140e580bd92f3ecbd5f439320ff44f4_1712612561.jpg",
+    "stock": 25,
+    "id": 106
+  },
+  {
+    "name": "Correa de Adiestramiento 5m",
+    "description": "Correa larga de nylon para entrenamiento de obediencia y libertad controlada.",
+    "price": 30000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/67162_kong_correa_retractil_terrain_1622827328_0_500x500.jpg",
+    "stock": 30,
+    "id": 107
+  },
+  {
+    "name": "Buzo Térmico para Perros",
+    "description": "Ropa abrigada para perros, ideal para climas fríos. Diseño cómodo y lavable.",
+    "price": 35000,
+    "category": "Accesorios",
+    "petType": "perro",
+    "image": "https://img-1.kwcdn.com/product/fancy/c71cb9e6-ea38-4e2b-85df-9b0153663d6e.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 40,
+    "id": 108
+  },
+  {
+    "name": "Camiseta Post-Quirúrgica para Gatos",
+    "description": "Prenda de protección para evitar que el gato se lama heridas después de una cirugía.",
+    "price": 25000,
+    "category": "Accesorios",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/71pO4ivmTfL._AC_SX679_.jpg",
+    "stock": 20,
+    "id": 109
+  },
+  {
+    "name": "Guacal Transportador Aéreo",
+    "description": "Jaula transportadora aprobada por aerolíneas para viajes seguros con tu mascota.",
+    "price": 150000,
+    "category": "Accesorios",
+    "petType": "ambos",
+    "image": "https://media.falabella.com/sodimacCO/3043407/w=1036,h=832,f=webp,fit=contain,q=85",
+    "stock": 10,
+    "id": 110
+  },
+  {
+    "name": "Mochila Espacial para Gatos",
+    "description": "Mochila con ventana burbuja transparente para llevar a tu gato de paseo.",
+    "price": 95000,
+    "category": "Accesorios",
+    "petType": "gato",
+    "image": "https://img-1.kwcdn.com/product/fancy/0ba81829-49f6-43ae-91b3-899336e22064.jpg?imageView2/2/w/1300/q/80/format/avif",
+    "stock": 15,
+    "id": 111
+  },
+  {
+    "name": "Spray Educador para Cachorros",
+    "description": "Atrayente para enseñar a los cachorros dónde hacer sus necesidades en el hogar.",
+    "price": 22000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://m.media-amazon.com/images/I/51A-3+5SOdL._AC_SX679_.jpg",
+    "stock": 50,
+    "id": 112
+  },
+  {
+    "name": "Eliminador de Olores Enzimático",
+    "description": "Spray destructor de olores y manchas de orina de gato, fórmula enzimática.",
+    "price": 35000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://m.media-amazon.com/images/I/51A-3+5SOdL._AC_SX679_.jpg",
+    "stock": 40,
+    "id": 113
+  },
+  {
+    "name": "Pañales Absorbentes para Perros Machos",
+    "description": "Pañales tipo banda para perros machos con incontinencia o marcaje. Paquete x 12.",
+    "price": 42000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_972417-MCO85217265878_062025-F.webp",
+    "stock": 30,
+    "id": 114
+  },
+  {
+    "name": "Tapetes Absorbentes para Mascotas",
+    "description": "Alfombras sanitarias desechables con atrayente y bloqueo de olores. 60x60cm.",
+    "price": 38000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_972417-MCO85217265878_062025-F.webp",
+    "stock": 60,
+    "id": 115
+  },
+  {
+    "name": "Dispensador de Bolsas con Linterna",
+    "description": "Porta bolsas para recoger desechos, incluye linterna LED para paseos nocturnos.",
+    "price": 15000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://m.media-amazon.com/images/I/51A-3+5SOdL._AC_SX679_.jpg",
+    "stock": 70,
+    "id": 116
+  },
+  {
+    "name": "Kit Cepillo y Crema Dental",
+    "description": "Set completo para la higiene oral de tu perro, incluye cepillo doble y pasta sabor carne.",
+    "price": 25000,
+    "category": "Higiene",
+    "petType": "perro",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/69816_147923_Basic_Farm___Dentyfarm_Tubo_1648226008_500x500.jpg",
+    "stock": 45,
+    "id": 117
+  },
+  {
+    "name": "Bálsamo Hidratante para Huellas",
+    "description": "Cera protectora y reparadora para almohadillas y nariz seca en perros y gatos.",
+    "price": 18000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/69809_Basic_Din_Toallas_1630957446_0_500x425.png",
+    "stock": 35,
+    "id": 118
+  },
+  {
+    "name": "Perfume con Aroma a Talco",
+    "description": "Colonia de larga duración para mascotas, aroma fresco a talco de bebé.",
+    "price": 20000,
+    "category": "Higiene",
+    "petType": "ambos",
+    "image": "https://http2.mlstatic.com/D_NQ_NP_2X_966159-MCO83216441492_042025-F.webp",
+    "stock": 50,
+    "id": 119
+  },
+  {
+    "name": "Arena de Sílice Absorbente",
+    "description": "Arena para gatos de cristales de sílice, máxima absorción y control de olores. 3.8L.",
+    "price": 45000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/2cf114e3069648c608df290b47bef0c1_1689980225.jpg",
+    "stock": 30,
+    "id": 120
+  },
+  {
+    "name": "Pala Sanitaria Resistente",
+    "description": "Pala grande y resistente para limpiar el arenero del gato fácilmente.",
+    "price": 8000,
+    "category": "Higiene",
+    "petType": "gato",
+    "image": "https://laikapp.s3.amazonaws.com/dev_images_products/060c565f53bf8d0a23ed1c8c97b85de0_1748277799.jpeg",
+    "stock": 60,
+    "id": 121
   }
 ]
