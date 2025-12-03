@@ -915,9 +915,9 @@ async function ensureAdminUser() {
       password: hashedPassword,
       phone: '',
       createdAt: new Date().toISOString(),
-      isPremium: false,
-      premiumSince: null,
-      subscription: null,
+      isPremium: true,
+      premiumSince: new Date().toISOString(),
+      subscription: { plan: 'admin_lifetime', price: 0 },
       isAdmin: true
     };
     users.push(adminUser);
@@ -927,6 +927,12 @@ async function ensureAdminUser() {
     let updated = false;
     if (!existingAdmin.isAdmin) {
       existingAdmin.isAdmin = true;
+      updated = true;
+    }
+    if (!existingAdmin.isPremium) {
+      existingAdmin.isPremium = true;
+      existingAdmin.premiumSince = new Date().toISOString();
+      existingAdmin.subscription = { plan: 'admin_lifetime', price: 0 };
       updated = true;
     }
     if (adminName && existingAdmin.name !== adminName) {
