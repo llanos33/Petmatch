@@ -11,6 +11,7 @@ import {
 import { applyDiscountToProduct, applyPremiumDiscount } from '../utils/productDiscounts'
 import { useAuth } from '../context/AuthContext'
 import WishlistToggle from './WishlistToggle'
+import ProductReviews from './ProductReviews'
 
 function ProductDetail({ products, addToCart }) {
   const { id } = useParams()
@@ -151,6 +152,8 @@ function ProductDetail({ products, addToCart }) {
           )}
         </div>
       </div>
+      
+      <ProductReviews productId={product.id} />
     </div>
   )
 }

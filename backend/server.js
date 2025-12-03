@@ -21,6 +21,7 @@ const dataDir = path.join(__dirname, 'data');
 const productsFile = path.join(dataDir, 'products.json');
 const ordersFile = path.join(dataDir, 'orders.json');
 const usersFile = path.join(dataDir, 'users.json');
+const reviewsFile = path.join(dataDir, 'reviews.json');
 
 // Asegurar que el directorio data existe
 if (!fs.existsSync(dataDir)) {
@@ -650,6 +651,11 @@ if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, JSON.stringify([], null, 2));
 }
 
+// Inicializar reseñas si no existen
+if (!fs.existsSync(reviewsFile)) {
+  fs.writeFileSync(reviewsFile, JSON.stringify([], null, 2));
+}
+
 // Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -723,6 +729,21 @@ function readUsers() {
 // Helper para escribir usuarios
 function writeUsers(users) {
   fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+}
+
+// Helper para leer reseñas
+function readReviews() {
+  try {
+    const data = fs.readFileSync(reviewsFile, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+}
+
+// Helper para escribir reseñas
+function writeReviews(reviews) {
+  fs.writeFileSync(reviewsFile, JSON.stringify(reviews, null, 2));
 }
 
 function normalizeEmail(email) {
@@ -919,6 +940,43 @@ app.get('/api/products/:id', (req, res) => {
   } else {
     res.status(404).json({ error: 'Producto no encontrado' });
   }
+});
+
+// Obtener reseñas de un producto
+app.get('/api/products/:id/reviews', (req, res) => {
+  const productId = parseInt(req.params.id);
+  const reviews = readReviews();
+  const productReviews = reviews.filter(r => r.productId === productId);
+  res.json(productReviews);
+});
+
+// Agregar una reseña
+app.post('/api/products/:id/reviews', authenticateToken, (req, res) => {
+  const productId = parseInt(req.params.id);
+  const { rating, comment } = req.body;
+  const users = readUsers();
+  const user = users.find(u => u.id === req.user.userId);
+
+  if (!rating || !comment) {
+    return res.status(400).json({ error: 'Rating and comment are required' });
+  }
+
+  const reviews = readReviews();
+  
+  const newReview = {
+    id: reviews.length > 0 ? Math.max(...reviews.map(r => r.id)) + 1 : 1,
+    productId,
+    userId: req.user.userId,
+    userName: user ? user.name : 'Anonymous',
+    rating: Number(rating),
+    comment,
+    date: new Date().toISOString()
+  };
+
+  reviews.push(newReview);
+  writeReviews(reviews);
+
+  res.status(201).json(newReview);
 });
 
 // Crear una orden
