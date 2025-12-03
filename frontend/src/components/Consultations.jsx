@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiPath } from '../config/api';
-import { MessageCircle, User, ShieldCheck, Send } from 'lucide-react';
+import { MessageCircle, User, ShieldCheck, Send, Trash2 } from 'lucide-react';
 import './Consultations.css';
 import { Link } from 'react-router-dom';
 
@@ -89,6 +89,26 @@ function Consultations() {
         c.id === consultationId ? updatedConsultation : c
       ));
       setReplyText(prev => ({ ...prev, [consultationId]: '' }));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDelete = async (consultationId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta consulta?')) return;
+
+    try {
+      const token = getAuthToken();
+      const response = await fetch(apiPath(`/api/consultations/${consultationId}`), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error('Error al eliminar consulta');
+
+      setConsultations(consultations.filter(c => c.id !== consultationId));
     } catch (err) {
       alert(err.message);
     }
@@ -184,9 +204,20 @@ function Consultations() {
                       <span className="pet-tag">{consultation.petType}</span>
                     </div>
                   </div>
-                  <span className={`status-badge ${consultation.status}`}>
-                    {consultation.status === 'answered' ? 'Respondida' : 'Pendiente'}
-                  </span>
+                  <div className="consultation-actions">
+                    <span className={`status-badge ${consultation.status}`}>
+                      {consultation.status === 'answered' ? 'Respondida' : 'Pendiente'}
+                    </span>
+                    {user?.isAdmin && (
+                      <button 
+                        className="delete-btn"
+                        onClick={() => handleDelete(consultation.id)}
+                        title="Eliminar consulta"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="consultation-body">
