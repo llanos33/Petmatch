@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import React, { useMemo, useState, useEffect } from 'react'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import './CategoryPage.css'
 import WishlistToggle from './WishlistToggle'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
@@ -14,11 +14,26 @@ import {
 
 function CategoryPage({ products, addToCart }) {
   const { categoryName } = useParams()
+  const location = useLocation()
   const [sortBy, setSortBy] = useState('recomendados')
   const [currentPage, setCurrentPage] = useState(1)
   const [petFilter, setPetFilter] = useState('todos')
   const productsPerPage = 8
   
+  // Obtener filtro de tipo desde URL
+  const searchParams = new URLSearchParams(location.search)
+  const typeFilter = searchParams.get('type')
+  const petTypeParam = searchParams.get('pet')
+
+  // Resetear página cuando cambia la categoría o el filtro
+  useEffect(() => {
+    if (petTypeParam && ['perro', 'gato', 'todos'].includes(petTypeParam)) {
+      setPetFilter(petTypeParam)
+    } else {
+      setPetFilter('todos')
+    }
+    setCurrentPage(1)
+  }, [categoryName, typeFilter, petTypeParam])
 
   // Normalizar nombre de categoría
   const normalizedCategory = categoryName?.toLowerCase().replace(/-/g, ' ')
@@ -43,8 +58,132 @@ function CategoryPage({ products, addToCart }) {
     return true
   })
 
+  // Filtrar por tipo específico (subcategoría) si existe el parámetro en URL
+  const filteredByType = filteredByPet.filter(product => {
+    if (!typeFilter) return true
+    
+    const lowerName = (product.name || '').toLowerCase()
+    const lowerDesc = (product.description || '').toLowerCase()
+    const filter = typeFilter.toLowerCase()
+
+    // Lógica de filtrado por palabras clave según el tipo solicitado
+    if (filter === 'concentrado') {
+      return lowerName.includes('concentrado') || lowerName.includes('seco') || lowerDesc.includes('croquetas') || lowerDesc.includes('seco')
+    }
+    if (filter === 'humedo') {
+      return lowerName.includes('húmedo') || lowerName.includes('humedo') || lowerDesc.includes('lata') || lowerDesc.includes('paté') || lowerDesc.includes('pouch') || lowerDesc.includes('húmedo')
+    }
+    if (filter === 'natural') {
+      return lowerName.includes('natural') || lowerDesc.includes('natural') || lowerDesc.includes('barf')
+    }
+    if (filter === 'prescripcion-seco') {
+      return (lowerName.includes('prescripcion') || lowerName.includes('medicado') || lowerDesc.includes('veterinary')) && (lowerName.includes('seco') || lowerDesc.includes('croquetas'))
+    }
+    if (filter === 'prescripcion-humedo') {
+      return (lowerName.includes('prescripcion') || lowerName.includes('medicado') || lowerDesc.includes('veterinary')) && (lowerName.includes('húmedo') || lowerName.includes('humedo') || lowerDesc.includes('lata'))
+    }
+    if (filter === 'snacks') {
+      return lowerName.includes('snack') || lowerName.includes('premio') || lowerName.includes('galleta') || lowerDesc.includes('snack')
+    }
+    
+    // Filtros para Juguetes
+    if (filter === 'peluche') {
+      return lowerName.includes('peluche') || lowerDesc.includes('peluche') || lowerDesc.includes('suave')
+    }
+    if (filter === 'interactivo') {
+      return lowerName.includes('interactivo') || lowerDesc.includes('interactivo') || lowerDesc.includes('inteligencia') || lowerDesc.includes('puzzle')
+    }
+    if (filter === 'mordedor') {
+      return lowerName.includes('mordedor') || lowerName.includes('cuerda') || lowerDesc.includes('mordedor') || lowerDesc.includes('cuerda') || lowerDesc.includes('dental')
+    }
+    if (filter === 'pelota') {
+      return lowerName.includes('pelota') || lowerName.includes('lanzador') || lowerDesc.includes('pelota') || lowerDesc.includes('lanzador') || lowerDesc.includes('bola')
+    }
+    if (filter === 'rascador') {
+      return lowerName.includes('rascador') || lowerName.includes('gimnasio') || lowerDesc.includes('rascador') || lowerDesc.includes('torre')
+    }
+
+    // Filtros para Farmapet
+    if (filter === 'desparasitante') {
+      return lowerName.includes('desparasitante') || lowerDesc.includes('desparasitante') || lowerDesc.includes('vermifugo') || lowerDesc.includes('parasito')
+    }
+    if (filter === 'suplemento') {
+      return lowerName.includes('suplemento') || lowerName.includes('vitamina') || lowerDesc.includes('suplemento') || lowerDesc.includes('vitamina') || lowerDesc.includes('mineral') || lowerDesc.includes('omega')
+    }
+    if (filter === 'analgesico') {
+      return lowerName.includes('analgesico') || lowerName.includes('analgésico') || lowerDesc.includes('dolor') || lowerDesc.includes('calmante')
+    }
+    if (filter === 'antibiotico') {
+      return lowerName.includes('antibiotico') || lowerName.includes('antibiótico') || lowerDesc.includes('infeccion') || lowerDesc.includes('infección')
+    }
+    if (filter === 'antiinflamatorio') {
+      return lowerName.includes('antiinflamatorio') || lowerDesc.includes('inflamacion') || lowerDesc.includes('inflamación')
+    }
+    if (filter === 'antipulgas') {
+      return lowerName.includes('antipulgas') || lowerName.includes('garrapata') || lowerName.includes('pulga') || lowerDesc.includes('pipeta') || lowerDesc.includes('antipulgas')
+    }
+    if (filter === 'articulacion') {
+      return lowerName.includes('articulacion') || lowerName.includes('articulación') || lowerDesc.includes('articulacion') || lowerDesc.includes('movilidad') || lowerDesc.includes('condroitina') || lowerDesc.includes('glucosamina')
+    }
+    if (filter === 'dermatologico') {
+      return lowerName.includes('dermatologico') || lowerName.includes('dermatológico') || lowerDesc.includes('piel') || lowerDesc.includes('alergia') || lowerDesc.includes('dermis')
+    }
+
+    // Filtros para Accesorios
+    if (filter === 'collar') {
+      return lowerName.includes('collar') || lowerName.includes('bozal') || lowerDesc.includes('collar') || lowerDesc.includes('bozal')
+    }
+    if (filter === 'arnes') {
+      return lowerName.includes('arnes') || lowerName.includes('arnés') || lowerName.includes('pechera') || lowerDesc.includes('arnes') || lowerDesc.includes('pechera')
+    }
+    if (filter === 'correa') {
+      return lowerName.includes('correa') || lowerDesc.includes('correa') || lowerDesc.includes('trailla') || lowerDesc.includes('traílla')
+    }
+    if (filter === 'comedero') {
+      return lowerName.includes('comedero') || lowerName.includes('bebedero') || lowerDesc.includes('comedero') || lowerDesc.includes('bebedero') || lowerDesc.includes('plato')
+    }
+    if (filter === 'ropa') {
+      return lowerName.includes('ropa') || lowerName.includes('camisa') || lowerName.includes('buzo') || lowerDesc.includes('ropa') || lowerDesc.includes('vestido')
+    }
+    if (filter === 'guacal') {
+      return lowerName.includes('guacal') || lowerName.includes('maletin') || lowerName.includes('transportador') || lowerDesc.includes('guacal') || lowerDesc.includes('transport')
+    }
+
+    // Filtros para Cuidado e Higiene
+    if (filter === 'shampoo') {
+      return lowerName.includes('shampoo') || lowerName.includes('jabon') || lowerName.includes('jabón') || lowerDesc.includes('shampoo') || lowerDesc.includes('baño')
+    }
+    if (filter === 'hogar') {
+      return lowerName.includes('hogar') || lowerName.includes('entrenamiento') || lowerName.includes('educador') || lowerDesc.includes('limpiador') || lowerDesc.includes('desinfectante')
+    }
+    if (filter === 'panito') {
+      return lowerName.includes('pañito') || lowerName.includes('panito') || lowerName.includes('pañal') || lowerName.includes('panal') || lowerName.includes('tapete') || lowerDesc.includes('absorbente')
+    }
+    if (filter === 'bolsa') {
+      return lowerName.includes('bolsa') || lowerDesc.includes('bolsa') || lowerDesc.includes('residuo') || lowerDesc.includes('poop')
+    }
+    if (filter === 'oral') {
+      return lowerName.includes('oral') || lowerName.includes('dental') || lowerName.includes('diente') || lowerDesc.includes('cepillo') || lowerDesc.includes('crema')
+    }
+    if (filter === 'piel') {
+      return lowerName.includes('piel') || lowerName.includes('pata') || lowerDesc.includes('balsamo') || lowerDesc.includes('bálsamo') || lowerDesc.includes('hidratante')
+    }
+    if (filter === 'colonia') {
+      return lowerName.includes('colonia') || lowerName.includes('perfume') || lowerDesc.includes('locion') || lowerDesc.includes('loción') || lowerDesc.includes('aroma')
+    }
+    if (filter === 'arena') {
+      return lowerName.includes('arena') || lowerDesc.includes('arena') || lowerDesc.includes('aglomerante')
+    }
+    if (filter === 'arenero') {
+      return lowerName.includes('arenero') || lowerName.includes('pala') || lowerDesc.includes('bandeja') || lowerDesc.includes('sanitaria')
+    }
+
+    // Para otros tipos, búsqueda genérica
+    return lowerName.includes(filter) || lowerDesc.includes(filter)
+  })
+
   // Aplicar descuentos a los productos
-  const productsWithDiscounts = filteredByPet.map(product => applyDiscountToProduct(product))
+  const productsWithDiscounts = filteredByType.map(product => applyDiscountToProduct(product))
 
   // Ordenar productos (usando precio descontado si hay descuento)
   const sortedProducts = [...productsWithDiscounts].sort((a, b) => {

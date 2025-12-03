@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import MegaMenu from './MegaMenu'
+import { MENU } from '../data/menuData'
 import './Header.css'
 
 // ⬇️ Nuevo: mega menú + data
@@ -160,15 +162,25 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             <span>Inicio</span>
           </Link>
 
-          <Link to="/mascotas/perro" className="menu-item">
-            <Dog size={18} />
-            <span>Perro</span>
-          </Link>
+          <MegaMenu 
+            label={
+              <span className="mega-label">
+                <Dog size={18} />
+                <span>Perro</span>
+              </span>
+            }
+            sections={MENU.perro}
+          />
 
-          <Link to="/mascotas/gato" className="menu-item">
-            <Cat size={18} />
-            <span>Gato</span>
-          </Link>
+          <MegaMenu 
+            label={
+              <span className="mega-label">
+                <Cat size={18} />
+                <span>Gato</span>
+              </span>
+            }
+            sections={MENU.gato}
+          />
           
           <Link to="/servicios" className="menu-item">
             <Stethoscope size={18} />

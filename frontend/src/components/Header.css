@@ -300,6 +300,7 @@
   padding: 0 2rem;
   display: flex;
   gap: 0;
+  position: relative;
 }
 
 .menu-item {
@@ -418,14 +419,15 @@
 }
 
 /* el wrapper que ahora contiene el botón del mega-menú */
-.mega-wrapper { 
+.header-menu .mega-root { 
   display: inline-flex; 
   align-items: center;
   height: 100%;
+  position: static;
 }
 
 /* estilos del botón del mega-menú para la barra azul */
-.header-menu .mega-wrapper .mega-trigger {
+.header-menu .mega-root .mega-trigger {
   background: transparent;
   border: 0;
   padding: 1rem 1.5rem;
@@ -442,7 +444,7 @@
 }
 
 /* hover del mega-trigger en la barra azul */
-.header-menu .mega-wrapper .mega-trigger:hover {
+.header-menu .mega-root .mega-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
   border-bottom-color: white;
   text-decoration: none;
