@@ -12,6 +12,7 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Profile from './components/Profile'
 import Help from './components/Help'
+import Consultations from './components/Consultations'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
 import CategoryPage from './components/CategoryPage'
@@ -267,6 +268,10 @@ function App() {
               <Route
                 path="/help"
                 element={<Help />}
+              />
+              <Route
+                path="/consultations"
+                element={<Consultations />}
               />
               <Route
                 path="/lista-deseos"

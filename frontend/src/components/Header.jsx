@@ -26,6 +26,7 @@ import {
   Stethoscope,
   Gift,
   FileText,
+  MessageCircle,
   LayoutDashboard,
   Boxes
 } from 'lucide-react'
@@ -193,6 +194,10 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
           <Link to="/blog" className="menu-item">
             <FileText size={18} />
             <span>Consejos</span>
+          </Link>
+          <Link to="/consultations" className="menu-item">
+            <MessageCircle size={18} />
+            <span>Consultas</span>
           </Link>
           {user?.isAdmin && (
             <Link to="/admin/dashboard" className="menu-item">

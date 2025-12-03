@@ -22,6 +22,7 @@ const productsFile = path.join(dataDir, 'products.json');
 const ordersFile = path.join(dataDir, 'orders.json');
 const usersFile = path.join(dataDir, 'users.json');
 const reviewsFile = path.join(dataDir, 'reviews.json');
+const consultationsFile = path.join(dataDir, 'consultations.json');
 
 // Asegurar que el directorio data existe
 if (!fs.existsSync(dataDir)) {
@@ -656,6 +657,11 @@ if (!fs.existsSync(reviewsFile)) {
   fs.writeFileSync(reviewsFile, JSON.stringify([], null, 2));
 }
 
+// Inicializar consultas si no existen
+if (!fs.existsSync(consultationsFile)) {
+  fs.writeFileSync(consultationsFile, JSON.stringify([], null, 2));
+}
+
 // Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -744,6 +750,21 @@ function readReviews() {
 // Helper para escribir reseñas
 function writeReviews(reviews) {
   fs.writeFileSync(reviewsFile, JSON.stringify(reviews, null, 2));
+}
+
+// Helper para leer consultas
+function readConsultations() {
+  try {
+    const data = fs.readFileSync(consultationsFile, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+}
+
+// Helper para escribir consultas
+function writeConsultations(consultations) {
+  fs.writeFileSync(consultationsFile, JSON.stringify(consultations, null, 2));
 }
 
 function normalizeEmail(email) {
@@ -977,6 +998,88 @@ app.post('/api/products/:id/reviews', authenticateToken, (req, res) => {
   writeReviews(reviews);
 
   res.status(201).json(newReview);
+});
+
+// Obtener todas las consultas
+app.get('/api/consultations', (req, res) => {
+  const consultations = readConsultations();
+  // Ordenar por fecha descendente
+  consultations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(consultations);
+});
+
+// Crear una nueva consulta (pregunta)
+app.post('/api/consultations', authenticateToken, (req, res) => {
+  const { title, question, petType } = req.body;
+  
+  if (!title || !question) {
+    return res.status(400).json({ error: 'Título y pregunta son requeridos' });
+  }
+
+  const users = readUsers();
+  const user = users.find(u => u.id === req.user.userId);
+  const consultations = readConsultations();
+
+  const newConsultation = {
+    id: consultations.length > 0 ? Math.max(...consultations.map(c => c.id)) + 1 : 1,
+    userId: req.user.userId,
+    userName: user ? user.name : 'Usuario',
+    title,
+    question,
+    petType: petType || 'General',
+    createdAt: new Date().toISOString(),
+    status: 'pending', // pending, answered
+    answer: null,
+    answeredAt: null,
+    answeredBy: null
+  };
+
+  consultations.push(newConsultation);
+  writeConsultations(consultations);
+
+  res.status(201).json(newConsultation);
+});
+
+// Responder una consulta (Solo Admin)
+app.post('/api/consultations/:id/answer', authenticateToken, requireAdmin, (req, res) => {
+  const consultationId = parseInt(req.params.id);
+  const { answer } = req.body;
+
+  if (!answer) {
+    return res.status(400).json({ error: 'La respuesta es requerida' });
+  }
+
+  const consultations = readConsultations();
+  const index = consultations.findIndex(c => c.id === consultationId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Consulta no encontrada' });
+  }
+
+  consultations[index].answer = answer;
+  consultations[index].status = 'answered';
+  consultations[index].answeredAt = new Date().toISOString();
+  consultations[index].answeredBy = 'Admin'; // O el nombre del admin si se prefiere
+
+  writeConsultations(consultations);
+
+  res.json(consultations[index]);
+});
+
+// Eliminar una consulta (Solo Admin)
+app.delete('/api/consultations/:id', authenticateToken, requireAdmin, (req, res) => {
+  const consultationId = parseInt(req.params.id);
+  const consultations = readConsultations();
+  const index = consultations.findIndex(c => c.id === consultationId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Consulta no encontrada' });
+  }
+
+  const deleted = consultations.splice(index, 1);
+  writeConsultations(consultations);
+
+  res.json({ success: true, data: deleted[0] });
 });
 
 // Crear una orden

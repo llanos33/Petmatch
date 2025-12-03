@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { apiPath } from '../config/api';
 import { Star, User } from 'lucide-react';
 import './ProductReviews.css';
 
@@ -16,7 +17,7 @@ const ProductReviews = ({ productId }) => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${productId}/reviews`);
+      const response = await fetch(apiPath(`/api/products/${productId}/reviews`));
       if (response.ok) {
         const data = await response.json();
         setReviews(data);
@@ -34,7 +35,7 @@ const ProductReviews = ({ productId }) => {
 
     try {
       const token = getAuthToken();
-      const response = await fetch(`http://localhost:3001/api/products/${productId}/reviews`, {
+      const response = await fetch(apiPath(`/api/products/${productId}/reviews`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

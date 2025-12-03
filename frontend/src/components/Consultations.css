@@ -1,0 +1,274 @@
+.consultations-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 60vh;
+}
+
+.consultations-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.consultations-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.consultations-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Layout principal: Columna única centrada */
+.consultations-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 800px; /* Ancho máximo para lectura cómoda */
+  margin: 0 auto;
+}
+
+.consultations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Tarjeta del formulario */
+.consultation-form-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+  width: 100%;
+}
+
+.consultation-form-card h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Formulario vertical */
+.consultation-form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  background-color: #fff;
+}
+
+.form-control:focus {
+  border-color: #0066cc;
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 0.5rem;
+}
+
+.submit-btn:hover {
+  background: #0052a3;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Tarjetas de consultas existentes */
+.consultation-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  transition: transform 0.2s;
+}
+
+.consultation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.consultation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.consultation-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.consultation-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.pet-tag {
+  background: #f0f7ff;
+  color: #0066cc;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.answered {
+  background: #d4edda;
+  color: #155724;
+}
+
+.consultation-body {
+  margin-bottom: 1.5rem;
+}
+
+.question-text {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.admin-answer {
+  background: #f8f9fa;
+  border-left: 4px solid #28a745;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+}
+
+.answer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #28a745;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.answer-text {
+  color: #333;
+  line-height: 1.5;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #666;
+}
+
+.login-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.admin-reply-form {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.reply-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.reply-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.reply-btn:hover {
+  background: #218838;
+}
+
+@media (max-width: 768px) {
+  .consultations-container {
+    padding: 1rem;
+  }
+  
+  .consultation-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .status-badge {
+    align-self: flex-start;
+  }
+}
