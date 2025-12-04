@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiPath } from '../config/api';
-import { MessageCircle, User, ShieldCheck, Send, Trash2 } from 'lucide-react';
+import { MessageCircle, User, ShieldCheck, Send, Trash2, Lock, HelpCircle } from 'lucide-react';
 import './Consultations.css';
 import { Link } from 'react-router-dom';
 
@@ -175,9 +175,12 @@ function Consultations() {
             </>
           ) : (
             <div className="login-prompt">
-              <p>¿Tienes una duda sobre tu mascota?</p>
+              <div className="login-prompt-icon">
+                <Lock size={48} strokeWidth={1.5} />
+              </div>
+              <h3>¿Tienes una duda sobre tu mascota?</h3>
               <p>
-                <Link to="/login" className="login-link">Inicia sesión</Link> para realizar una consulta a nuestros expertos.
+                <Link to="/login" className="login-link">Inicia sesión</Link> para realizar una consulta a nuestros expertos veterinarios.
               </p>
             </div>
           )}
@@ -186,7 +189,11 @@ function Consultations() {
         <div className="consultations-list">
           {consultations.length === 0 ? (
             <div className="no-consultations">
-              <p>No hay consultas aún. ¡Sé el primero en preguntar!</p>
+              <div className="no-consultations-icon">
+                <HelpCircle size={48} strokeWidth={1.5} />
+              </div>
+              <h3>Aún no hay consultas</h3>
+              <p>Sé el primero en preguntar y recibe ayuda de nuestra comunidad.</p>
             </div>
           ) : (
             consultations.map(consultation => (
