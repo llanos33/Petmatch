@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { WishlistProvider } from './context/WishlistContext'
 import Header from './components/Header'
@@ -102,6 +102,152 @@ const loadStoredCart = () => {
     console.warn('No se pudo restaurar el carrito guardado', error)
     return []
   }
+}
+
+function AppContent({ 
+  cart, 
+  products, 
+  searchTerm, 
+  setSearchTerm, 
+  addToCart, 
+  removeFromCart, 
+  updateQuantity, 
+  clearCart,
+  getCartItemCount 
+}) {
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  return (
+    <div className="App">
+      <Header 
+        cartItemCount={getCartItemCount()} 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+      <main className={isAuthPage ? "main-content-full" : "main-content"}>
+        <Routes>
+          <Route
+            path="/"
+            element={<ProductList products={products} addToCart={addToCart} searchTerm={searchTerm} />}
+          />
+          <Route
+            path="/product/:id"
+            element={<ProductDetail products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/cart"
+            element={
+              <Cart
+                cart={cart}
+                products={products}
+                removeFromCart={removeFromCart}
+                updateQuantity={updateQuantity}
+              />
+            }
+          />
+          <Route
+            path="/checkout"
+            element={<Checkout cart={cart} products={products} clearCart={clearCart} />}
+          />
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+          <Route
+            path="/help"
+            element={<Help />}
+          />
+          <Route
+            path="/consultations"
+            element={<Consultations />}
+          />
+          <Route
+            path="/lista-deseos"
+            element={<Wishlist products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/category/:categoryName"
+            element={<CategoryPage products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/promociones"
+            element={<PromocionesPage products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/exclusivos"
+            element={<ExclusiveProducts products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/servicios"
+            element={<Servicios />}
+          />
+          <Route
+            path="/blog"
+            element={<Blog />}
+          />
+          <Route
+            path="/blog/:id"
+            element={<BlogPost />}
+          />
+          <Route
+            path="/premium"
+            element={<Premium />}
+          />
+          <Route
+            path="/buscar"
+            element={<SearchResults products={products} addToCart={addToCart} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />}
+          />
+          <Route
+            path="/mascotas/:petType"
+            element={<PetProducts products={products} addToCart={addToCart} />}
+          />
+          <Route
+            path="/sobre"
+            element={<About />}
+          />
+          <Route
+            path="/terms"
+            element={<TermsAndConditions />}
+          />
+          <Route
+            path="/privacy"
+            element={<PrivacyPolicy />}
+          />
+          <Route
+            path="/faq"
+            element={<FAQ />}
+          />
+          <Route
+            path="/delivery"
+            element={<DeliveryPolicy />}
+          />
+          <Route
+            path="/sitemap"
+            element={<SiteMap />}
+          />
+          <Route
+            path="/admin/dashboard"
+            element={<AdminDashboard />}
+          />
+          <Route
+            path="/admin/products"
+            element={<AdminProducts />}
+          />
+        </Routes>
+      </main>
+      <BackHomeButton />
+      <Footer />
+    </div>
+  );
 }
 
 function App() {
@@ -222,134 +368,17 @@ function App() {
     <AuthProvider clearCart={clearCart}>
       <WishlistProvider>
         <Router>
-          <div className="App">
-            <Header 
-              cartItemCount={getCartItemCount()} 
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
-            <main className="main-content">
-              <Routes>
-              <Route
-                path="/"
-                element={<ProductList products={products} addToCart={addToCart} searchTerm={searchTerm} />}
-              />
-              <Route
-                path="/product/:id"
-                element={<ProductDetail products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/cart"
-                element={
-                  <Cart
-                    cart={cart}
-                    products={products}
-                    removeFromCart={removeFromCart}
-                    updateQuantity={updateQuantity}
-                  />
-                }
-              />
-              <Route
-                path="/checkout"
-                element={<Checkout cart={cart} products={products} clearCart={clearCart} />}
-              />
-              <Route
-                path="/login"
-                element={<Login />}
-              />
-              <Route
-                path="/register"
-                element={<Register />}
-              />
-              <Route
-                path="/profile"
-                element={<Profile />}
-              />
-              <Route
-                path="/help"
-                element={<Help />}
-              />
-              <Route
-                path="/consultations"
-                element={<Consultations />}
-              />
-              <Route
-                path="/lista-deseos"
-                element={<Wishlist products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/category/:categoryName"
-                element={<CategoryPage products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/promociones"
-                element={<PromocionesPage products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/exclusivos"
-                element={<ExclusiveProducts products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/servicios"
-                element={<Servicios />}
-              />
-              <Route
-                path="/blog"
-                element={<Blog />}
-              />
-              <Route
-                path="/blog/:id"
-                element={<BlogPost />}
-              />
-              <Route
-                path="/premium"
-                element={<Premium />}
-              />
-              <Route
-                path="/buscar"
-                element={<SearchResults products={products} addToCart={addToCart} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />}
-              />
-              <Route
-                path="/mascotas/:petType"
-                element={<PetProducts products={products} addToCart={addToCart} />}
-              />
-              <Route
-                path="/sobre"
-                element={<About />}
-              />
-              <Route
-                path="/terms"
-                element={<TermsAndConditions />}
-              />
-              <Route
-                path="/privacy"
-                element={<PrivacyPolicy />}
-              />
-              <Route
-                path="/faq"
-                element={<FAQ />}
-              />
-              <Route
-                path="/delivery"
-                element={<DeliveryPolicy />}
-              />
-              <Route
-                path="/sitemap"
-                element={<SiteMap />}
-              />
-              <Route
-                path="/admin/dashboard"
-                element={<AdminDashboard />}
-              />
-              <Route
-                path="/admin/products"
-                element={<AdminProducts />}
-              />
-              </Routes>
-          </main>
-          <BackHomeButton />
-          <Footer />
-        </div>
+          <AppContent 
+            cart={cart}
+            products={products}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+            updateQuantity={updateQuantity}
+            clearCart={clearCart}
+            getCartItemCount={getCartItemCount}
+          />
         </Router>
       </WishlistProvider>
     </AuthProvider>
