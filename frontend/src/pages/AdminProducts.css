@@ -18,7 +18,7 @@
   height: 56px;
   border-radius: 50%;
   border: 4px solid #dbeafe;
-  border-top-color: #2563eb;
+  border-top-color: var(--primary);
   animation: adminProductsSpin 1s linear infinite;
   margin-bottom: 1rem;
 }
@@ -55,7 +55,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #2563eb;
+  background: var(--primary);
   color: #ffffff;
   padding: 0.75rem 1.25rem;
   border-radius: 999px;
@@ -65,7 +65,7 @@
 }
 
 .admin-products__button:hover {
-  background: #1e3a8a;
+  background: var(--primary-dark);
 }
 
 .admin-products__header {
@@ -108,7 +108,7 @@
 }
 
 .admin-products__action-link:hover {
-  background: #1e3a8a;
+  background: var(--primary-dark);
 }
 
 .admin-products__content {
@@ -208,7 +208,7 @@
 .admin-products__form input:focus,
 .admin-products__form textarea:focus,
 .admin-products__form select:focus {
-  border-color: #2563eb;
+  border-color: var(--primary);
   background: #ffffff;
 }
 
@@ -264,7 +264,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #2563eb;
+  background: var(--primary);
   color: #ffffff;
   border: none;
   border-radius: 999px;
@@ -274,7 +274,7 @@
 }
 
 .admin-products__submit:hover {
-  background: #1e3a8a;
+  background: var(--primary-dark);
 }
 
 .admin-products__delete {
@@ -331,7 +331,7 @@
 }
 
 .admin-products__table thead {
-  background: #eff6ff;
+  background: var(--primary-light);
   color: #1d4ed8;
 }
 

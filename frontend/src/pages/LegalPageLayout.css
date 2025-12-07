@@ -6,7 +6,7 @@
 }
 
 .legal-hero {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #38bdf8 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #38bdf8 100%);
   color: #ffffff;
   padding: 2.75rem;
   border-radius: 18px;
@@ -79,7 +79,7 @@
 
 .legal-section h2 {
   margin: 0 0 0.75rem 0;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   font-size: 1.4rem;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .legal-section a {
-  color: #2563eb;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 600;
 }

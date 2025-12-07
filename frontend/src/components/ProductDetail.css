@@ -4,7 +4,7 @@
 
 .back-link {
   display: inline-block;
-  color: #2563EB;
+  color: var(--primary);
   text-decoration: none;
   margin-bottom: 2rem;
   font-weight: 500;
@@ -12,7 +12,7 @@
 }
 
 .back-link:hover {
-  color: #1E3A8A;
+  color: var(--primary-dark);
 }
 
 .product-detail {
@@ -64,7 +64,7 @@
 .product-detail-price {
   font-size: 2rem;
   font-weight: bold;
-  color: #1E3A8A;
+  color: var(--primary-dark);
   margin: 0;
 }
 
@@ -122,12 +122,12 @@
 
 .quantity-input:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
 }
 
 .add-to-cart-btn-large {
   padding: 1rem 2rem;
-  background: #2563EB;
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -140,7 +140,7 @@
 }
 
 .add-to-cart-btn-large:hover {
-  background: #1E3A8A;
+  background: var(--primary-dark);
 }
 
 .out-of-stock {

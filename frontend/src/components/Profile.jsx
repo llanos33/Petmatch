@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Crown, Truck, Percent, BookOpen, Sparkles } from 'lucide-react'
+import { Crown, Truck, Percent, BookOpen, Sparkles, MessageCircle, CheckCircle, Clock } from 'lucide-react'
 import './Profile.css'
 import { apiPath } from '../config/api'
 
 function Profile() {
   const { user, logout } = useAuth()
   const [orders, setOrders] = useState([])
+  const [consultations, setConsultations] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [consultationsLoading, setConsultationsLoading] = useState(true)
+  const [searchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState('orders')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam === 'consultas') {
+      setActiveTab('consultas')
+    }
+  }, [searchParams])
 
   useEffect(() => {
     if (!user) {
@@ -20,6 +31,7 @@ function Profile() {
 
     fetchProducts()
     fetchOrders()
+    fetchConsultations()
   }, [user, navigate])
 
   const fetchProducts = async () => {
@@ -46,9 +58,36 @@ function Profile() {
         setOrders(data)
       }
     } catch (error) {
-      console.error('Error al cargar Ã³rdenes:', error)
+      console.error('Error al cargar órdenes:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchConsultations = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      console.log('Fetching consultations with token:', token ? 'exists' : 'missing')
+      
+      const response = await fetch(apiPath('/api/auth/consultations'), {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      console.log('Consultations response status:', response.status)
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Consultations data received:', data)
+        setConsultations(data)
+      } else {
+        console.error('Failed to fetch consultations:', response.status, response.statusText)
+      }
+    } catch (error) {
+      console.error('Error al cargar consultas:', error)
+    } finally {
+      setConsultationsLoading(false)
     }
   }
 
@@ -207,56 +246,141 @@ function Profile() {
           </div>
         )}
 
-        <div className="orders-section">
-          <h2>Mis Compras</h2>
-          {loading ? (
-            <p>Cargando...</p>
-          ) : orders.length === 0 ? (
-            <div className="no-orders">
-              <p>No has realizado ninguna compra aún</p>
-              <button onClick={() => navigate('/')} className="shop-button">
-                Ir a Comprar
-              </button>
-            </div>
-          ) : (
-            <div className="orders-list">
-              {orders.map(order => (
-                <div key={order.id} className="order-card">
-                  <div className="order-header">
-                    <div>
-                      <h3>Orden #{order.id}</h3>
-                      <p className="order-date">Fecha: {formatDate(order.date)}</p>
-                    </div>
-                    <div className="order-status">
-                      <span className={`status-badge status-${order.status}`}>
-                        {order.status}
-                      </span>
-                      <span className="order-total">{formatPrice(getOrderTotal(order))}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="order-items">
-                    <h4>Productos:</h4>
-                    <ul>
-                      {order.items.map((item, index) => (
-                        <li key={index}>
-                          <span>{item.quantity}x</span>
-                          <span>{getProductName(item.productId)}</span>
-                          <span className="order-item-price">{formatPrice(getItemPrice(item))}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="order-address">
-                    <h4>Dirección de entrega:</h4>
-                    <p>{order.customerInfo.address}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+        {/* Pestañas de navegación */}
+        <div className="profile-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            <Truck size={20} />
+            Mis Compras
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'consultas' ? 'active' : ''}`}
+            onClick={() => setActiveTab('consultas')}
+          >
+            <MessageCircle size={20} />
+            Mis Consultas
+          </button>
         </div>
+
+        {/* Sección de Compras */}
+        {activeTab === 'orders' && (
+          <div className="orders-section">
+            <h2>Mis Compras</h2>
+            {loading ? (
+              <p>Cargando...</p>
+            ) : orders.length === 0 ? (
+              <div className="no-orders">
+                <p>No has realizado ninguna compra aún</p>
+                <button onClick={() => navigate('/')} className="shop-button">
+                  Ir a Comprar
+                </button>
+              </div>
+            ) : (
+              <div className="orders-list">
+                {orders.map(order => (
+                  <div key={order.id} className="order-card">
+                    <div className="order-header">
+                      <div>
+                        <h3>Orden #{order.id}</h3>
+                        <p className="order-date">Fecha: {formatDate(order.date)}</p>
+                      </div>
+                      <div className="order-status">
+                        <span className={`status-badge status-${order.status}`}>
+                          {order.status}
+                        </span>
+                        <span className="order-total">{formatPrice(getOrderTotal(order))}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="order-items">
+                      <h4>Productos:</h4>
+                      <ul>
+                        {order.items.map((item, index) => (
+                          <li key={index}>
+                            <span>{item.quantity}x</span>
+                            <span>{getProductName(item.productId)}</span>
+                            <span className="order-item-price">{formatPrice(getItemPrice(item))}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="order-address">
+                      <h4>Dirección de entrega:</h4>
+                      <p>{order.customerInfo.address}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Sección de Consultas */}
+        {activeTab === 'consultas' && (
+          <div className="consultations-section">
+            <h2>Mis Consultas Veterinarias</h2>
+            {consultationsLoading ? (
+              <p>Cargando...</p>
+            ) : consultations.length === 0 ? (
+              <div className="no-consultations">
+                <MessageCircle size={48} />
+                <p>No has realizado ninguna consulta aún</p>
+                <button onClick={() => navigate('/consultations')} className="shop-button">
+                  Hacer una Consulta
+                </button>
+              </div>
+            ) : (
+              <div className="consultations-list">
+                {consultations.map(consultation => (
+                  <div key={consultation.id} className="consultation-card">
+                    <div className="consultation-header">
+                      <div>
+                        <h3>{consultation.title}</h3>
+                        <p className="consultation-date">
+                          {formatDate(consultation.createdAt)}
+                        </p>
+                        <span className="pet-type-badge">{consultation.petType}</span>
+                      </div>
+                      <div className={`consultation-status ${consultation.status}`}>
+                        {consultation.status === 'answered' ? (
+                          <>
+                            <CheckCircle size={20} />
+                            <span>Respondida</span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock size={20} />
+                            <span>Pendiente</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="consultation-question">
+                      <h4>Tu pregunta:</h4>
+                      <p>{consultation.question}</p>
+                    </div>
+
+                    {consultation.answer && (
+                      <div className="consultation-answer">
+                        <h4>Respuesta del veterinario:</h4>
+                        <p>{consultation.answer}</p>
+                        {consultation.answeredAt && (
+                          <p className="answered-date">
+                            Respondida el {formatDate(consultation.answeredAt)}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

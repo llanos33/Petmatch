@@ -1,5 +1,5 @@
 .footer {
-  background: #111;
+  background: var(--primary-dark);
   color: #ddd;
   font-size: 0.9rem;
   line-height: 1.5;

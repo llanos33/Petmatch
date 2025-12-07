@@ -8,7 +8,7 @@
 .consultations-header {
   text-align: center;
   margin-bottom: 4rem;
-  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
   padding: 3rem 2rem;
   border-radius: 16px;
   color: white;
@@ -99,7 +99,7 @@
 }
 
 .form-control:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   outline: none;
 }
@@ -112,7 +112,7 @@ textarea.form-control {
 .submit-btn {
   width: 100%;
   padding: 1rem;
-  background: #2563EB;
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 10px;
@@ -186,8 +186,8 @@ textarea.form-control {
 }
 
 .pet-tag {
-  background: #eff6ff;
-  color: #2563EB;
+  background: var(--primary-light);
+  color: var(--primary);
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -231,7 +231,7 @@ textarea.form-control {
 
 .admin-answer {
   background: #f8fafc;
-  border-left: 4px solid #2563EB;
+  border-left: 4px solid var(--primary);
   padding: 1.5rem;
   border-radius: 0 12px 12px 0;
   margin-top: 1.5rem;
@@ -242,7 +242,7 @@ textarea.form-control {
   align-items: center;
   gap: 0.6rem;
   margin-bottom: 0.75rem;
-  color: #2563EB;
+  color: var(--primary);
   font-weight: 700;
   font-size: 0.95rem;
   text-transform: uppercase;
@@ -268,8 +268,8 @@ textarea.form-control {
 }
 
 .login-prompt-icon {
-  background: #eff6ff;
-  color: #2563EB;
+  background: var(--primary-light);
+  color: var(--primary);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -286,7 +286,7 @@ textarea.form-control {
 }
 
 .login-link {
-  color: #2563EB;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 700;
   border-bottom: 2px solid transparent;
@@ -294,7 +294,7 @@ textarea.form-control {
 }
 
 .login-link:hover {
-  border-bottom-color: #2563EB;
+  border-bottom-color: var(--primary);
 }
 
 /* No Consultations Styling */
@@ -348,7 +348,7 @@ textarea.form-control {
 
 .reply-input:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 

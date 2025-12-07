@@ -8,7 +8,7 @@
 }
 
 .services-hero {
-  background: linear-gradient(135deg, #1e3a8a 0%, #0469dd 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #0469dd 100%);
   color: #fff;
   padding: 2rem;
   border-radius: 16px;
@@ -131,7 +131,7 @@
 
 .filter-count {
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   background: #e0e7ff;
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
@@ -160,9 +160,9 @@
 }
 
 .filter-chip.active {
-  background: #1e3a8a;
+  background: var(--primary-dark);
   color: #fff;
-  border-color: #1e3a8a;
+  border-color: var(--primary-dark);
   box-shadow: 0 10px 20px rgba(30, 58, 138, 0.2);
 }
 
@@ -210,7 +210,7 @@
 
 .poi-distance {
   font-size: 0.9rem;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   background: #e0f2fe;
   padding: 0.35rem 0.6rem;
   border-radius: 10px;
@@ -304,8 +304,8 @@
   gap: 0.35rem;
   padding: 0.55rem 0.85rem;
   border-radius: 10px;
-  border: 1px solid #1e3a8a;
-  background: #1e3a8a;
+  border: 1px solid var(--primary-dark);
+  background: var(--primary-dark);
   color: #fff;
   text-decoration: none;
   font-weight: 700;
@@ -314,7 +314,7 @@
 
 .poi-link.secondary {
   background: #fff;
-  color: #1e3a8a;
+  color: var(--primary-dark);
 }
 
 .poi-link:hover {

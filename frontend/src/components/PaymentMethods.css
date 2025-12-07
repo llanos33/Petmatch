@@ -61,11 +61,11 @@
 }
 
 .payment-option:hover {
-  border-color: #2563eb;
+  border-color: var(--primary);
 }
 
 .payment-option.active {
-  border-color: #2563eb;
+  border-color: var(--primary);
   background: #ebf2ff;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .payment-option:hover .option-icon svg {
-  color: #2563eb;
+  color: var(--primary);
   stroke-width: 3;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .payment-section:nth-child(1) .payment-option:nth-child(2).active .option-icon svg {
-  color: #2563eb; /* Blue para PSE */
+  color: var(--primary); /* Blue para PSE */
 }
 
 .payment-section:nth-child(2) .payment-option:nth-child(1).active .option-icon svg {
@@ -136,7 +136,7 @@
 .btn-continue {
   margin-top: 1.5rem;
   width: 100%;
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   border: none;
   padding: 0.9rem;
@@ -159,7 +159,7 @@
 
 .card-form-container {
   background: linear-gradient(135deg, #f0f9ff 0%, #f1f5f9 100%);
-  border: 1.5px solid #2563eb;
+  border: 1.5px solid var(--primary);
   border-top: none;
   border-radius: 0 0 10px 10px;
   padding: 1.5rem;
@@ -190,7 +190,7 @@
 }
 
 .card-form-header svg {
-  color: #2563eb;
+  color: var(--primary);
   width: 18px;
   height: 18px;
 }
@@ -235,7 +235,7 @@
 
 .card-input-group input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--primary);
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
@@ -276,7 +276,7 @@
 /* PSE FORM STYLES (reuses card styling but with small tweaks) */
 .pse-form-container {
   background: linear-gradient(135deg, #f8fafc 0%, #fbfdff 100%);
-  border: 1.5px dashed #2563eb;
+  border: 1.5px dashed var(--primary);
   border-top: none;
   border-radius: 0 0 10px 10px;
   padding: 1.25rem;

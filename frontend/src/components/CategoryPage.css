@@ -16,7 +16,7 @@
 }
 
 .category-breadcrumb a {
-  color: #2563EB;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 600;
 }
@@ -33,7 +33,7 @@
 /* Hero header */
 .category-hero {
   padding: 2rem 2.5rem;
-  background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 65%, #1D4ED8 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 65%, #1D4ED8 100%);
   border-radius: 18px;
   color: white;
   display: flex;
@@ -149,13 +149,13 @@
 }
 
 .pet-filter-btn:hover {
-  border-color: #2563EB;
-  color: #2563EB;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .pet-filter-btn.active {
-  background: #2563EB;
-  border-color: #2563EB;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
 }
@@ -183,7 +183,7 @@
 
 .sort-select:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
 }
 
 /* Paginación */
@@ -211,9 +211,9 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  border-color: #2563EB;
-  color: #2563EB;
-  background: #EFF6FF;
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
 }
 
 .pagination-btn:disabled {
@@ -222,8 +222,8 @@
 }
 
 .pagination-btn.active {
-  background: #1E3A8A;
-  border-color: #1E3A8A;
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
   color: white;
 }
 
@@ -347,7 +347,7 @@
 .current-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1E3A8A;
+  color: var(--primary-dark);
 }
 
 .product-stock-info {
@@ -364,7 +364,7 @@
 .add-to-cart-category {
   margin: 0 1.25rem 1.25rem 1.25rem;
   padding: 0.875rem;
-  background: #2563EB;
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -378,7 +378,7 @@
 }
 
 .add-to-cart-category:hover:not(:disabled) {
-  background: #1E3A8A;
+  background: var(--primary-dark);
 }
 
 .add-to-cart-category:disabled {
@@ -403,7 +403,7 @@
 .back-button {
   display: inline-block;
   padding: 1rem 2rem;
-  background: #2563EB;
+  background: var(--primary);
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -412,7 +412,7 @@
 }
 
 .back-button:hover {
-  background: #1E3A8A;
+  background: var(--primary-dark);
 }
 
 .pagination-bottom {

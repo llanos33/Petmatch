@@ -153,5 +153,26 @@ export const MENU = {
         { label: "Colonias y perfumes", to: `${CATEGORY_ROUTES.higiene}?type=colonia&pet=gato` }
       ]
     }
+  ],
+  servicios: [
+    {
+      titulo: "Puntos de Interés",
+      icon: "puntos",
+      verTodo: "/puntos-interes",
+      items: [
+        { label: "Veterinarias", to: "/puntos-interes?tipo=veterinaria" },
+        { label: "Clínicas", to: "/puntos-interes?tipo=clinica" },
+        { label: "Peluquerías", to: "/puntos-interes?tipo=peluqueria" }
+      ]
+    },
+    {
+      titulo: "Consultas Veterinarias",
+      icon: "consultas",
+      verTodo: "/consultations",
+      items: [
+        { label: "Agendar Consulta", to: "/consultations" },
+        { label: "Mis Consultas", to: "/profile?tab=consultas" }
+      ]
+    }
   ]
 };

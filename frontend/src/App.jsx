@@ -36,6 +36,7 @@ import DeliveryPolicy from "./pages/DeliveryPolicy";
 import SiteMap from "./pages/SiteMap";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
+import PuntosInteres from "./pages/PuntosInteres";
 
 const CART_STORAGE_KEY = 'petmatch_cart_v1'
 
@@ -241,6 +242,10 @@ function AppContent({
           <Route
             path="/admin/products"
             element={<AdminProducts />}
+          />
+          <Route
+            path="/puntos-interes"
+            element={<PuntosInteres />}
           />
         </Routes>
       </main>

@@ -9,7 +9,7 @@
   padding: 0.65rem 1.1rem;
   border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
@@ -21,7 +21,7 @@
   transform: translateY(-2px);
   box-shadow: 0 14px 36px rgba(37, 99, 235, 0.4);
   border-color: rgba(255, 255, 255, 0.9);
-  background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
 }
 
 .back-home-button:active {

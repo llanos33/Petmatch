@@ -16,7 +16,7 @@
 
 .mega-trigger:hover,
 .mega-trigger:focus-visible {
-  color: #2563eb;
+  color: var(--primary);
   outline: none;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .mega-title-icon {
-  color: #2563eb;
+  color: var(--primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +86,7 @@
 .mega-ver-todo {
   font-weight: 700;
   font-size: 0.9rem;
-  color: #2563eb;
+  color: var(--primary);
   text-decoration: none;
   align-self: flex-start;
   margin-top: 4px;

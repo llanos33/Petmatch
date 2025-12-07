@@ -29,7 +29,7 @@
     "category": "Alimentos",
     "petType": "perro",
     "image": "https://laikapp.s3.amazonaws.com/dev_images_products/d7ef6dac7abc43935522d31298a91d91_1756849549.png",
-    "stock": 32
+    "stock": 31
   },
   {
     "id": 4,
@@ -222,7 +222,7 @@
     "category": "Accesorios",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/75986_201630_Elanco___Seresto_Collar_Para_Perros_De_Hasta_8_kg_1666977465_800x800.jpg",
-    "stock": 50
+    "stock": 49
   },
   {
     "id": 23,

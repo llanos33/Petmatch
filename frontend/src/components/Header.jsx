@@ -110,7 +110,7 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button type="submit" className="search-button" aria-label="Buscar" onClick={handleSearch}>
-              <Search size={20} color="#1E3A8A" />
+              <Search size={20} color="var(--primary-dark)" />
             </button>
           </form>
 
@@ -183,10 +183,16 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             sections={MENU.gato}
           />
           
-          <Link to="/servicios" className="menu-item">
-            <Stethoscope size={18} />
-            <span>Servicios</span>
-          </Link>
+          <MegaMenu 
+            label={
+              <span className="mega-label">
+                <Stethoscope size={18} />
+                <span>Servicios</span>
+              </span>
+            }
+            sections={MENU.servicios}
+          />
+          
           <Link to="/promociones" className="menu-item">
             <Gift size={18} />
             <span>Promociones</span>
@@ -194,10 +200,6 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
           <Link to="/blog" className="menu-item">
             <FileText size={18} />
             <span>Consejos</span>
-          </Link>
-          <Link to="/consultations" className="menu-item">
-            <MessageCircle size={18} />
-            <span>Consultas</span>
           </Link>
           {user?.isAdmin && (
             <Link to="/admin/dashboard" className="menu-item">

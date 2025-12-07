@@ -1014,6 +1014,22 @@ app.get('/api/consultations', (req, res) => {
   res.json(consultations);
 });
 
+// Obtener consultas del usuario autenticado
+app.get('/api/auth/consultations', authenticateToken, (req, res) => {
+  console.log('GET /api/auth/consultations - User ID:', req.user.userId);
+  const consultations = readConsultations();
+  console.log('Total consultations in DB:', consultations.length);
+  
+  // Filtrar solo las consultas del usuario
+  const userConsultations = consultations.filter(c => c.userId === req.user.userId);
+  console.log('User consultations found:', userConsultations.length);
+  console.log('User consultations:', userConsultations);
+  
+  // Ordenar por fecha descendente
+  userConsultations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(userConsultations);
+});
+
 // Crear una nueva consulta (pregunta)
 app.post('/api/consultations', authenticateToken, (req, res) => {
   const { title, question, petType } = req.body;

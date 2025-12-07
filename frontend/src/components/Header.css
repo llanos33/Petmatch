@@ -13,7 +13,7 @@
 
 /* Barra superior */
 .header-top {
-  background: #1E3A8A;
+  background: var(--primary-dark);
   color: white;
   padding: 0.5rem 0;
   font-size: 0.875rem;
@@ -80,7 +80,7 @@
 /* Header principal */
 .header-main {
   padding: 0.9rem 0;
-  background: #1E3A8A;
+  background: var(--primary-dark);
 }
 
 .header-main-container {
@@ -128,7 +128,7 @@
   font-size: 1rem;
   outline: none;
   background: white;
-  color: #1E3A8A;
+  color: var(--primary-dark);
 }
 
 .search-input::placeholder {
@@ -140,7 +140,7 @@
   background: white;
   border: none;
   border-radius: 0 50px 50px 0;
-  color: #1E3A8A;
+  color: var(--primary-dark);
   cursor: pointer;
   transition: opacity 0.3s;
   display: flex;
@@ -188,7 +188,7 @@
   gap: 0.5rem;
   padding: 0.625rem 1rem;
   background: #FCD34D;
-  color: #1E3A8A;
+  color: var(--primary-dark);
   border: none;
   border-radius: 50px;
   font-weight: 600;
@@ -222,12 +222,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg,#FCD34D 0%,#FBBF24 100%);
-  color: #1E3A8A;
+  background: var(--highlight);
+  color: var(--primary-dark);
   padding: 2px 6px;
   border-radius: 999px;
   font-size: 0.75rem;
   margin-left: 6px;
+  font-weight: 700;
 }
 
 .user-icon {
@@ -246,15 +247,15 @@
   position: absolute;
   top: -6px;
   right: -6px;
-  background: linear-gradient(135deg,#FCD34D 0%,#FBBF24 100%);
-  color: #1E3A8A;
+  background: var(--highlight);
+  color: var(--primary-dark);
   width: 20px;
   height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(252, 211, 77, 0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   font-size: 0.75rem;
 }
 
@@ -275,7 +276,7 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  background: #EF4444;
+  background: var(--accent);
   color: white;
   border-radius: 50%;
   width: 20px;
@@ -285,12 +286,13 @@
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 600;
+  border: 2px solid var(--primary-dark);
 }
 
 
 /* Menú de categorías */
 .header-menu {
-  background: #2563EB;
+  background: var(--primary);
   padding: 0;
 }
 

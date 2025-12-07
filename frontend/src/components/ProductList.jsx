@@ -135,7 +135,7 @@ function ProductList({ products, addToCart, searchTerm = '' }) {
       name: 'Accesorios',
       icon: Sparkles,
       image: 'https://img.freepik.com/foto-gratis/primer-plano-accesorios-perros_23-2150959988.jpg?ga=GA1.1.1451161761.1754453851&semt=ais_hybrid&w=740&q=80',
-      color: '#F59E0B',
+      color: 'var(--accent)',
       description: 'Todo para su estilo y comodidad'
     },
     {

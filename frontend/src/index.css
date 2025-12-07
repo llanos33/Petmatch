@@ -1,3 +1,31 @@
+:root {
+  /* Paleta de Colores - Nature & Trust */
+  --color-yale-blue: #1B4079;      /* Azul Profundo */
+  --color-air-force: #4D7C8A;      /* Azul Acero */
+  --color-cambridge: #7F9C96;      /* Verde Grisáceo */
+  --color-sage: #8FAD88;           /* Verde Salvia */
+  --color-mindaro: #CBDF90;        /* Verde Lima Suave */
+
+  /* Mapeo Semántico */
+  --primary: var(--color-yale-blue);       /* Encabezados, Elementos principales */
+  --primary-dark: #132E59;                 /* Versión más oscura de Yale Blue */
+  --primary-light: #F1F5F9;                /* Fondo muy suave */
+
+  /* Acciones y Botones */
+  --accent: var(--color-air-force);        /* Botones principales (Buen contraste con blanco) */
+  --accent-hover: var(--color-yale-blue);  /* Hover de botones */
+  --highlight: var(--color-mindaro);       /* Destacados, ofertas, badges */
+
+  /* Textos y Fondos */
+  --text-main: #1E293B;                    /* Slate 800 - Mantenemos gris oscuro para legibilidad */
+  --text-secondary: var(--color-air-force);/* Usamos el azul acero para subtítulos */
+  --bg-main: #F8FAFC;                      /* Fondo general neutro */
+  --bg-card: #FFFFFF;                      /* Fondo de tarjetas */
+  
+  /* Bordes */
+  --border: #E2E8F0;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,8 +41,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F8FAFC;
-  color: #1E293B;
+  background-color: var(--bg-main);
+  color: var(--text-main);
   overflow-x: hidden;
 }
 

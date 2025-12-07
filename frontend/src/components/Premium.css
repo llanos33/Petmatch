@@ -31,7 +31,7 @@
   background: rgba(37, 99, 235, 0.12);
   border-radius: 999px;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.8rem;
@@ -62,7 +62,7 @@
 .billing-option {
   border: none;
   background: transparent;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   font-weight: 700;
   padding: 0.55rem 1.25rem;
   border-radius: 999px;
@@ -76,7 +76,7 @@
 }
 
 .billing-option.active {
-  background: #2563eb;
+  background: var(--primary);
   color: #ffffff;
   box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
 }
@@ -123,7 +123,7 @@
 
 .plan-extra {
   font-size: 0.95rem;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   font-weight: 600;
 }
 
@@ -135,7 +135,7 @@
 
 .premium-cta-btn {
   padding: 0.95rem 2.4rem;
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
   color: #ffffff;
   border: none;
   border-radius: 999px;
@@ -255,7 +255,7 @@
 .benefits-kicker {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #2563eb;
+  color: var(--primary);
   font-weight: 700;
   font-size: 0.78rem;
 }
@@ -293,7 +293,7 @@
 
 .benefit-card h3 {
   margin: 0 0 0.4rem;
-  color: #1e3a8a;
+  color: var(--primary-dark);
   font-size: 1.2rem;
 }
 
@@ -350,7 +350,7 @@
 
 .experience-testimonial span {
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--primary-dark);
 }
 
 .premium-payment-guarantees {
@@ -388,7 +388,7 @@
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: var(--primary);
   color: #ffffff;
   padding: 0.65rem 1.2rem;
   border-radius: 10px;
@@ -397,8 +397,8 @@
 }
 
 .btn-outline {
-  border: 2px solid #2563eb;
-  color: #2563eb;
+  border: 2px solid var(--primary);
+  color: var(--primary);
   padding: 0.65rem 1.2rem;
   border-radius: 10px;
   text-decoration: none;

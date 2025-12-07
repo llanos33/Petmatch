@@ -7,7 +7,9 @@ import {
   Sparkles,
   SprayCan,
   MoreHorizontal,
-  Cat
+  Cat,
+  MapPin,
+  Stethoscope
 } from "lucide-react";
 import "./mega-menu.css";
 
@@ -18,7 +20,9 @@ const ICONS = {
   accesorios: Sparkles,
   higiene: SprayCan,
   mas: MoreHorizontal,
-  arena: Cat
+  arena: Cat,
+  puntos: MapPin,
+  consultas: Stethoscope
 };
 
 export default function MegaMenu({ label, sections }) {

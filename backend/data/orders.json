@@ -1,2 +1,31 @@
 [
+  {
+    "id": 1,
+    "userId": 1,
+    "items": [
+      {
+        "productId": 3,
+        "quantity": 1,
+        "price": 36000
+      },
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000
+      }
+    ],
+    "customerInfo": {
+      "name": "Juan Camilo Arias",
+      "email": "juancamilo.arias@utp.edu.co",
+      "phone": "3202826022",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "tarjeta"
+    },
+    "total": 57600,
+    "itemsTotal": 64000,
+    "shippingCost": 0,
+    "premiumDiscount": 6400,
+    "status": "pendiente",
+    "date": "2025-12-07T01:45:03.591Z"
+  }
 ]
