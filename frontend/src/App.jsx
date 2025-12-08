@@ -15,6 +15,7 @@ import Help from './components/Help'
 import Consultations from './components/Consultations'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
+import BlogPostEdit from './components/BlogPostEdit'
 import CategoryPage from './components/CategoryPage'
 import PromocionesPage from './components/PromocionesPage'
 import Servicios from './components/Servicios'
@@ -198,6 +199,10 @@ function AppContent({
           <Route
             path="/blog/:id"
             element={<BlogPost />}
+          />
+          <Route
+            path="/blog/:id/edit"
+            element={<BlogPostEdit />}
           />
           <Route
             path="/premium"

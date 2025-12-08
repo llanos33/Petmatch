@@ -8,7 +8,8 @@ import {
   Leaf,
   BookOpen,
   Calendar,
-  Crown
+  Crown,
+  Edit
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
@@ -201,7 +202,18 @@ export default function Blog() {
                   </div>
                   
                   <div className="post-content">
-                    <h2 className="post-title">{post.title}</h2>
+                    <div className="post-header-row">
+                      <h2 className="post-title">{post.title}</h2>
+                      {user?.isAdmin && (
+                        <Link 
+                          to={`/blog/${post.id}/edit`} 
+                          className="post-edit-btn"
+                          title="Editar artículo"
+                        >
+                          <Edit size={18} />
+                        </Link>
+                      )}
+                    </div>
                     
                     <div className="post-meta">
                       <Calendar size={16} />

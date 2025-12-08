@@ -30,5 +30,17 @@
     "password": "$2a$10$UDz.bqtuSCFv6/iH.RhnjeF6nnM/NhUytpgk7nXbsSSuE6Cb4NuTq",
     "phone": "3136914054",
     "createdAt": "2025-11-24T00:20:16.873Z"
+  },
+  {
+    "id": 4,
+    "name": "Admin PetMatch",
+    "email": "admin@petmatch.com",
+    "password": "$2a$10$hywxDMu4K/n95/wzGGbN9.C8n/HXqpCQZDkhXBp7w.zegYza9w7DC",
+    "phone": "3136914054",
+    "createdAt": "2025-12-08T00:23:45.363Z",
+    "isPremium": false,
+    "premiumSince": null,
+    "subscription": null,
+    "isAdmin": true
   }
 ]

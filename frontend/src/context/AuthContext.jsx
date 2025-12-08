@@ -73,7 +73,8 @@ export function AuthProvider({ children, clearCart }) {
 
     const localPremium = emailKey && map[emailKey] === true
     const isPremium = backendPremium || localPremium || false
-    return { ...data, isPremium }
+    const isAdmin = data?.isAdmin === true || false
+    return { ...data, isPremium, isAdmin }
   }
 
   const fetchProfile = async (token) => {
