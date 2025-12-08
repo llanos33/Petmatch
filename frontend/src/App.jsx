@@ -126,6 +126,7 @@ function AppContent({
         cartItemCount={getCartItemCount()} 
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        products={products}
       />
       <main className={isAuthPage ? "main-content-full" : "main-content"}>
         <Routes>

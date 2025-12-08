@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import MegaMenu from './MegaMenu'
 import { MENU } from '../data/menuData'
+import basePosts from '../data/blogPosts'
 import './Header.css'
 
-// ⬇️ Nuevo: mega menú + data
-// Iconos de Lucide
-import { 
-  Shield, 
-  DollarSign, 
-  Truck, 
-  Phone, 
-  Youtube, 
-  Facebook, 
+import {
+  Shield,
+  DollarSign,
+  Truck,
+  Phone,
+  Youtube,
+  Facebook,
   Instagram,
   Search,
   User,
@@ -26,33 +25,113 @@ import {
   Stethoscope,
   Gift,
   FileText,
-  MessageCircle,
   LayoutDashboard,
   Boxes
 } from 'lucide-react'
 
-function Header({ cartItemCount, searchTerm, setSearchTerm }) {
+const loadEditedPosts = () => {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem('editedBlogPosts')
+    return raw ? JSON.parse(raw) : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+function Header({ cartItemCount, searchTerm, setSearchTerm, products = [] }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchResults, setSearchResults] = useState({ products: [], posts: [] })
+  const [showResults, setShowResults] = useState(false)
+  const searchRef = useRef(null)
+
+  const escapeRegExp = (str = '') => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+  const highlightText = (text = '', query = '') => {
+    if (!query) return text
+    const safeQuery = escapeRegExp(query)
+    const regex = new RegExp(`(${safeQuery})`, 'ig')
+    const parts = text.split(regex)
+    return parts.map((part, idx) =>
+      idx % 2 === 1
+        ? <mark className="search-highlight" key={`${part}-${idx}`}>{part}</mark>
+        : <span key={`${part}-${idx}`}>{part}</span>
+    )
+  }
 
   const handleSearch = (e) => {
     if (e && e.preventDefault) e.preventDefault()
     const term = (searchTerm || '').trim()
     if (!term) {
       setSearchTerm('')
+      setShowResults(false)
       navigate('/')
       return
     }
     setSearchTerm(term)
+    setShowResults(false)
     navigate(`/buscar?q=${encodeURIComponent(term)}`)
+  }
+
+  const handleResultClick = (path) => {
+    setShowResults(false)
+    setSearchTerm('')
+    navigate(path)
   }
 
   useEffect(() => {
     if (!location.pathname.startsWith('/buscar')) {
       setSearchTerm(prev => (prev ? '' : prev))
     }
+    setShowResults(false)
   }, [location.pathname, setSearchTerm])
+
+  useEffect(() => {
+    const term = (searchTerm || '').trim()
+    if (!term) {
+      setSearchResults({ products: [], posts: [] })
+      setShowResults(false)
+      return
+    }
+
+    const handler = setTimeout(() => {
+      const lower = term.toLowerCase()
+      const productMatches = (products || [])
+        .filter(p =>
+          (p.name && p.name.toLowerCase().includes(lower)) ||
+          (p.description && p.description.toLowerCase().includes(lower))
+        )
+        .slice(0, 5)
+
+      const edits = loadEditedPosts()
+      const mergedPosts = basePosts.map(p => edits[p.id] ? { ...p, ...edits[p.id] } : p)
+      const visiblePosts = user?.isPremium ? mergedPosts : mergedPosts.filter(post => !post.isPremium)
+      const postMatches = visiblePosts
+        .filter(post =>
+          (post.title && post.title.toLowerCase().includes(lower)) ||
+          (post.excerpt && post.excerpt.toLowerCase().includes(lower)) ||
+          (post.content && post.content.toLowerCase().includes(lower))
+        )
+        .slice(0, 4)
+
+      setSearchResults({ products: productMatches, posts: postMatches })
+      setShowResults(true)
+    }, 200)
+
+    return () => clearTimeout(handler)
+  }, [searchTerm, products, user])
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <header className="header">
@@ -101,18 +180,88 @@ function Header({ cartItemCount, searchTerm, setSearchTerm }) {
             <span className="logo-text">PetMatch</span>
           </Link>
 
-          <form className="search-container" onSubmit={handleSearch} role="search">
-            <input
-              type="text"
-              placeholder="¿Qué necesita tu mascota?"
-              className="search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type="submit" className="search-button" aria-label="Buscar" onClick={handleSearch}>
-              <Search size={20} color="var(--primary-dark)" />
-            </button>
-          </form>
+          <div className="search-wrapper" ref={searchRef}>
+            <form className="search-container" onSubmit={handleSearch} role="search">
+              <input
+                type="text"
+                placeholder="¿Qué necesita tu mascota?"
+                className="search-input"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  setShowResults(true)
+                }}
+                onFocus={() => searchTerm && setShowResults(true)}
+              />
+              <button type="submit" className="search-button" aria-label="Buscar" onClick={handleSearch}>
+                <Search size={20} color="var(--primary-dark)" />
+              </button>
+            </form>
+
+            {showResults && searchTerm?.trim() && (
+              <div className="search-results" role="listbox">
+                {searchResults.products.length > 0 && (
+                  <div className="search-group">
+                    <div className="search-group-title">Productos</div>
+                    {searchResults.products.map(product => (
+                      <button
+                        key={`product-${product.id}`}
+                        className="search-item"
+                        onClick={() => handleResultClick(`/product/${product.id}`)}
+                        type="button"
+                      >
+                        <div className="search-item-content">
+                          <div className="search-thumb-wrap">
+                            {product.image ? (
+                              <img src={product.image} alt={product.name} className="search-thumb" />
+                            ) : (
+                              <div className="search-thumb-fallback">🐾</div>
+                            )}
+                          </div>
+                          <div className="search-item-text">
+                            <div className="search-item-title">{highlightText(product.name, searchTerm)}</div>
+                            <div className="search-item-sub">{highlightText(product.description?.slice(0, 80) || '', searchTerm)}</div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {searchResults.posts.length > 0 && (
+                  <div className="search-group">
+                    <div className="search-group-title">Artículos</div>
+                    {searchResults.posts.map(post => (
+                      <button
+                        key={`post-${post.id}`}
+                        className="search-item"
+                        onClick={() => handleResultClick(`/blog/${post.id}`)}
+                        type="button"
+                      >
+                        <div className="search-item-content">
+                          <div className="search-thumb-wrap">
+                            {post.image ? (
+                              <img src={post.image} alt={post.title} className="search-thumb" />
+                            ) : (
+                              <div className="search-thumb-fallback">📄</div>
+                            )}
+                          </div>
+                          <div className="search-item-text">
+                            <div className="search-item-title">{highlightText(post.title, searchTerm)}</div>
+                            <div className="search-item-sub">{highlightText(post.excerpt?.slice(0, 90) || '', searchTerm)}</div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {searchResults.products.length === 0 && searchResults.posts.length === 0 && (
+                  <div className="search-empty">Sin resultados</div>
+                )}
+              </div>
+            )}
+          </div>
 
           <div className="header-actions">
             <Link to="/lista-deseos" className="wishlist-link" aria-label="Lista de deseos">
