@@ -1,15 +1,31 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
-import blogPosts from '../data/blogPosts'
+import basePosts from '../data/blogPosts'
 import { useAuth } from '../context/AuthContext'
 import './Blog.css'
 import { Calendar, Crown } from 'lucide-react'
+
+const loadEditedPosts = () => {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem('editedBlogPosts')
+    return raw ? JSON.parse(raw) : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+const getMergedPosts = () => {
+  const edits = loadEditedPosts()
+  return basePosts.map(p => edits[p.id] ? { ...p, ...edits[p.id] } : p)
+}
 
 export default function BlogPost() {
   const { id } = useParams()
   const { user } = useAuth()
   const postId = parseInt(id)
-  const post = blogPosts.find(p => p.id === postId)
+  const posts = getMergedPosts()
+  const post = posts.find(p => p.id === postId)
 
   if (!post) {
     return (

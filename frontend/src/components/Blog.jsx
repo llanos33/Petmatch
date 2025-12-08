@@ -12,108 +12,26 @@ import {
   Edit
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import basePosts from '../data/blogPosts'
+
+const loadEditedPosts = () => {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem('editedBlogPosts')
+    return raw ? JSON.parse(raw) : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+const getMergedPosts = () => {
+  const edits = loadEditedPosts()
+  return basePosts.map(p => edits[p.id] ? { ...p, ...edits[p.id] } : p)
+}
 
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState('todos')
   const { user } = useAuth()
-
-  const blogPosts = [
-    {
-      id: 1,
-      title: 'Nutrición Equilibrada: La Base de la Salud de tu Mascota',
-      category: 'nutricion',
-      date: '15 Nov 2024',
-      image: 'https://kamanpet.cl/wp-content/uploads/2023/05/alimentacion-equilibrada-para-perros-1.jpg',
-      excerpt: 'Una alimentación adecuada es fundamental para mantener a tu mascota saludable y feliz. Aprende qué nutrientes necesita tu perro o gato.',
-      content: 'Una nutrición equilibrada es esencial para la salud de tu mascota. Los perros y gatos necesitan proteínas de alta calidad, grasas saludables, vitaminas y minerales. Alimenta a tu mascota con productos de calidad premium que contengan ingredientes naturales. Evita alimentos con exceso de conservantes o colorantes artificiales. Consulta con tu veterinario sobre la cantidad diaria recomendada según la edad y peso de tu mascota.'
-    },
-    {
-      id: 2,
-      title: 'Ejercicio Diario: Mantén a tu Mascota Activa',
-      category: 'salud',
-      date: '12 Nov 2024',
-      image: 'https://scontent.cdninstagram.com/v/t51.82787-15/539521894_18278696860275298_1414920783418309_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=MzcwOTg4MjE1NjU1NTgzNDM5Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTgwMi5zZHIuQzMifQ%3D%3D&_nc_ohc=fA8U23lXwNIQ7kNvwFgXpue&_nc_oc=AdlPrsPaAIfmVn-knptXKLH_PiaFmoJnkijdCtZ7PMeT9n1qSQGwJglXBlZa1tlB-ms&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=RgXHhtki0B3HcGyFranK0g&oh=00_Afj00G9FVrfOenaoI8UQhWk3mYkl2V_afHrhuHek_A4zqA&oe=692FEECA',
-      excerpt: 'El ejercicio regular previene la obesidad y mantiene a tu mascota mental y físicamente estimulada. Descubre cuánto ejercicio necesita.',
-      content: 'El ejercicio diario es crucial para la salud física y mental de tu mascota. Los perros necesitan al menos 30 minutos a 2 horas de ejercicio diario, dependiendo de su raza y edad. Los gatos también necesitan actividad física regular mediante juegos y juguetes interactivos. Usa juguetes como pelotas, frisbees o cuerdas para estimular el juego. El ejercicio ayuda a prevenir comportamientos destructivos y reduce la ansiedad.'
-    },
-    {
-      id: 3,
-      title: 'Higiene Dental: Sonrisa Saludable para tu Mascota',
-      category: 'salud',
-      date: '10 Nov 2024',
-      image: 'https://www.simbiosisveterinaria.com/sites/default/files/styles/convertir_webp/public/blog/2021-03/portada-higiene-salud-bucodental-perros-y-gatos.jpg?itok=RrJ_r0ev',
-      excerpt: 'La salud dental es a menudo ignorada pero es vital. Te enseñamos cómo mantener los dientes de tu mascota limpios y saludables.',
-      content: 'La higiene dental es fundamental para prevenir enfermedades bucales y mal aliento en tus mascotas. Cepilla los dientes de tu mascota al menos 3 veces por semana, idealmente diariamente, con cepillos y pastas especiales para animales. Usa juguetes de goma o snacks diseñados para limpiar los dientes naturalmente. Realiza limpiezas profesionales con tu veterinario una vez al año. Una boca saludable es clave para una vida larga y feliz.'
-    },
-    {
-      id: 4,
-      title: 'Accesorios Imprescindibles para tu Mascota',
-      category: 'productos',
-      date: '8 Nov 2024',
-      image: 'https://media.istockphoto.com/id/877490114/es/foto/accesorios-del-perro-sobre-fondo-amarillo-vista-superior-concepto-de-animales-y-mascotas.webp?s=1024x1024&w=is&k=20&c=BMrfK10NL7FneDKKg6OQMxFynjGuXVrTn0Fb7wGHURA=',
-      excerpt: 'Descubre los accesorios esenciales que todo dueño de mascota debe tener para garantizar comodidad y seguridad.',
-      content: 'Los accesorios adecuados hacen la vida más cómoda tanto para ti como para tu mascota. Algunos esenciales incluyen: correa resistente y collar reflectante, transportín seguro para viajar, cama cómoda, comedero y bebedero, juguetes variados, cepillo para el pelaje, y una maceta con pasto gatera para gatos. Invierte en productos de calidad que duren más tiempo y proporcionen mayor seguridad y comodidad a tu mascota.'
-    },
-    {
-      id: 5,
-      title: 'Primeros Auxilios Básicos para Mascotas',
-      category: 'salud',
-      date: '5 Nov 2024',
-      image: 'https://unamglobal.unam.mx/wp-content/uploads/2024/09/destacada-primeros-auxilios-perros-y-gatos-1024x605.jpg',
-      excerpt: 'Aprende técnicas básicas de primeros auxilios para estar preparado ante emergencias con tu mascota.',
-      content: 'Saber primeros auxilios básicos puede salvar la vida de tu mascota en una emergencia. Ten siempre a mano un botiquín de primeros auxilios con vendas, antiséptico, gasas estériles y termómetro. Aprende a controlar hemorragias, reconocer signos de shock, y hacer RCP básico. En caso de envenenamiento o accidente grave, contacta inmediatamente al veterinario. Mantén los números de emergencia veterinaria en tu teléfono. La prevención y preparación son clave.'
-    },
-    {
-      id: 6,
-      title: 'Socialización: Crianza de Mascotas Felices',
-      category: 'comportamiento',
-      date: '2 Nov 2024',
-      image: 'https://purina.com.co/sites/default/files/2022-10/purina-brand-que-pasa-si-mi-cachorro-come-croquetas-de-adulto-0.png',
-      excerpt: 'La socialización temprana es fundamental para que tu mascota sea equilibrada y confiada. Conoce cómo hacerlo correctamente.',
-      content: 'La socialización es el proceso de exponer a tu mascota a diferentes personas, animales y entornos de manera segura y positiva. Comienza desde cachorro o gatito, durante las primeras semanas de vida. Expón a tu mascota a sonidos diferentes, lugares nuevos, personas variadas y otros animales. Usa refuerzo positivo con premios y caricias. Una mascota bien socializada es menos propensa a miedos, agresión y comportamientos destructivos. Es una inversión en su bienestar emocional.'
-    },
-    // Artículos exclusivos Premium
-    {
-      id: 7,
-      title: '🌟 Recetas Premium: Alimentación Natural Casera',
-      category: 'premium',
-      isPremium: true,
-      date: '18 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
-      excerpt: '💎 Exclusivo Premium: Recetas balanceadas y aprobadas por veterinarios para preparar en casa comidas nutritivas para tu mascota.',
-      content: 'Descubre cómo preparar comidas caseras nutritivas y balanceadas para tu perro o gato. Receta 1 - Pollo con verduras: 300g pechuga de pollo, 100g arroz integral, 50g zanahoria, 50g espinacas. Receta 2 - Res con quinoa: 250g carne molida magra, 100g quinoa, 80g calabaza, 30g brócoli. Incluye suplementos vitamínicos recomendados por tu veterinario. Prepara porciones semanales y refrigera. Siempre consulta con un veterinario antes de cambiar la dieta de tu mascota.'
-    },
-    {
-      id: 8,
-      title: '🌟 Medicina Preventiva Avanzada: Calendario Completo',
-      category: 'premium',
-      isPremium: true,
-      date: '16 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=800&q=80',
-      excerpt: '💎 Exclusivo Premium: Guía completa de medicina preventiva con calendario de vacunas, desparasitación y chequeos según la edad.',
-      content: 'Calendario preventivo por edad - Cachorros (0-6 meses): Vacunas a las 6, 9, 12 y 16 semanas. Desparasitación cada 2 semanas. Adultos (1-7 años): Vacunas anuales (rabia, parvovirus, moquillo). Desparasitación trimestral. Control dental cada 6 meses. Seniors (+7 años): Chequeos veterinarios semestrales, análisis de sangre anuales, examen de orina, evaluación dental profesional. Mantén registro digital de todas las vacunas y tratamientos.'
-    },
-    {
-      id: 9,
-      title: '🌟 Entrenamiento Avanzado: Trucos y Comandos Complejos',
-      category: 'premium',
-      isPremium: true,
-      date: '14 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80',
-      excerpt: '💎 Exclusivo Premium: Técnicas profesionales de entrenamiento para enseñar trucos avanzados y mejorar la obediencia.',
-      content: 'Técnicas de entrenamiento profesional - Método del clicker: Asocia el sonido con recompensa inmediata. Trucos avanzados: Rodar, hacerse el muerto, caminar en dos patas, traer objetos específicos por nombre. Progresión: Comienza con comandos básicos (sentado, quieto), luego intermedio (dar la pata, girar), finalmente avanzado (saltos, circuitos). Sesiones de 10-15 minutos, 2-3 veces al día. Paciencia y refuerzo positivo constante son clave. Evita castigos, usa solo recompensas.'
-    },
-    {
-      id: 10,
-      title: '🌟 Planes de Viaje con Mascotas: Guía Definitiva',
-      category: 'premium',
-      isPremium: true,
-      date: '11 Nov 2024',
-      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80',
-      excerpt: '💎 Exclusivo Premium: Todo lo que necesitas saber para viajar con tu mascota: documentos, transportines, destinos pet-friendly.',
-      content: 'Preparación para viajar - Documentos necesarios: Carnet de vacunación actualizado, certificado de salud veterinario (máx. 10 días), microchip registrado. Transportín: Mínimo 1.5x el tamaño de tu mascota, ventilación adecuada. Destinos pet-friendly en Colombia: Cartagena, Eje Cafetero, Villa de Leyva. Hoteles que aceptan mascotas, restaurantes con áreas exteriores. Tips de vuelo: Reserva cabina si el peso lo permite (<8kg). Hidratación constante. Collar con identificación y contacto.'
-    }
-  ]
 
   const categories = [
     { id: 'todos', name: 'Todos los Artículos' },
@@ -125,9 +43,11 @@ export default function Blog() {
   ]
 
   // Filtrar posts según categoría seleccionada
+  const mergedPosts = getMergedPosts()
+
   let filteredPosts = selectedCategory === 'todos'
-    ? blogPosts
-    : blogPosts.filter(post => post.category === selectedCategory)
+    ? mergedPosts
+    : mergedPosts.filter(post => post.category === selectedCategory)
 
   // Si el usuario no es Premium, ocultar artículos premium
   if (!user?.isPremium) {

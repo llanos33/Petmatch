@@ -10,7 +10,19 @@ export default function BlogPostEdit() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const postId = parseInt(id)
-  const post = blogPosts.find(p => p.id === postId)
+  const loadEditedPosts = () => {
+    if (typeof window === 'undefined') return {}
+    try {
+      const raw = localStorage.getItem('editedBlogPosts')
+      return raw ? JSON.parse(raw) : {}
+    } catch (e) {
+      return {}
+    }
+  }
+
+  const editedMap = loadEditedPosts()
+  const basePost = blogPosts.find(p => p.id === postId)
+  const post = basePost ? { ...basePost, ...(editedMap[postId] || {}) } : null
 
   const [formData, setFormData] = useState({
     title: '',
@@ -24,10 +36,10 @@ export default function BlogPostEdit() {
   useEffect(() => {
     if (post) {
       setFormData({
-        title: post.title,
-        excerpt: post.excerpt,
-        content: post.content,
-        image: post.image
+        title: post.title || '',
+        excerpt: post.excerpt || '',
+        content: post.content || '',
+        image: post.image || ''
       })
     }
   }, [post])
