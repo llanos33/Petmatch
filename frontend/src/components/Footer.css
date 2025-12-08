@@ -42,9 +42,10 @@
   font-weight: 700;
   color: #f9fafb;
 }
-.logo-col .logo-icon {
-  font-size: 2rem;
-  line-height: 1;
+.logo-col .logo-img {
+  height: 42px;
+  width: auto;
+  display: block;
 }
 .logo-col .logo-text {
   display: inline-block;

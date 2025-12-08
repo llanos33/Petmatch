@@ -18,7 +18,7 @@ export default function Footer() {
       <div className="footer-main">
         <div className="footer-col logo-col">
           <div className="logo">
-            <span className="logo-icon" aria-hidden="true">🐾</span>
+            <img src="/images/petmatch-logo.png" alt="Logo PetMatch" className="logo-img" />
             <span className="logo-text">PetMatch!</span>
           </div>
           <p className="slogan">Por la felicidad de tus peludos .</p>

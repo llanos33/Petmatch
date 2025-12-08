@@ -175,8 +175,8 @@ function Header({ cartItemCount, searchTerm, setSearchTerm, products = [] }) {
       {/* Header principal */}
       <div className="header-main">
         <div className="header-main-container">
-          <Link to="/" className="logo">
-            <span className="logo-icon">🐾</span>
+          <Link to="/" className="logo" aria-label="Ir al inicio">
+            <img src="/images/petmatch-logo.png" alt="Logo PetMatch" className="logo-img" />
             <span className="logo-text">PetMatch</span>
           </Link>
 
