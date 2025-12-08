@@ -1,36 +1,37 @@
 .footer {
-  background: var(--primary-dark);
-  color: #ddd;
+  background: #0e0f11;
+  color: #e5e7eb;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .footer a {
-  color: #ddd;
+  color: #f3f4f6;
   text-decoration: none;
 }
-.footer a:hover { color: #fff; }
+.footer a:hover { color: #ffffff; }
 
 .footer-main {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr 1.2fr 1fr 1.1fr;
   gap: 2rem;
-  padding: 2rem 1rem;
+  padding: 2.2rem 1.5rem;
   max-width: 1200px;
   margin: auto;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #1e2026;
+  background: #13151a;
 }
 
 .footer-col h4 {
-  color: #fff;
+  color: #f9fafb;
   margin-bottom: 0.6rem;
   font-size: 0.95rem;
 }
 
 .footer-col p, .footer-col a {
   display: block;
-  margin: 0.2rem 0;
-  color: #bbb;
+  margin: 0.25rem 0;
+  color: #d1d5db;
 }
 
 .logo-col .logo {
@@ -39,7 +40,7 @@
   gap: 0.6rem;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #fff;
+  color: #f9fafb;
 }
 .logo-col .logo-icon {
   font-size: 2rem;
@@ -48,18 +49,18 @@
 .logo-col .logo-text {
   display: inline-block;
 }
-.logo-col .slogan { color: #aaa; margin-top: 0.3rem; }
+.logo-col .slogan { color: #c7cdd3; margin-top: 0.3rem; }
 .social a {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 32px; height: 32px;
   margin-right: 8px;
-  border: 1px solid #444;
+  border: 1px solid #2e2f33;
   border-radius: 50%;
-  color: #ddd;
+  color: #e5e7eb;
 }
-.social a:hover { background: #222; }
+.social a:hover { background: #1f2024; }
 
 form {
   display: flex;
@@ -68,12 +69,12 @@ form {
 form input {
   flex: 1;
   padding: 0.4rem 0.6rem;
-  border: 1px solid #333;
-  background: #1a1a1a;
-  color: #eee;
+  border: 1px solid #2a2b2f;
+  background: #0f1013;
+  color: #f9fafb;
 }
 form button {
-  background: #333;
+  background: #2d2f36;
   border: none;
   color: #fff;
   padding: 0 0.8rem;
@@ -92,44 +93,45 @@ form button {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  background: #0d0d0d;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
+  background: #101216;
+  border-top: 1px solid #1e2026;
+  border-bottom: 1px solid #1e2026;
   padding: 1rem;
 }
 .secure-item { margin: 0.3rem 0; }
 .badge {
   display: inline-block;
-  background: #222;
+  background: #1b1c21;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   margin-right: 0.5rem;
-  border: 1px solid #444;
+  border: 1px solid #2b2c31;
 }
-.payments { font-size: 0.85rem; color: #aaa; }
+.payments { font-size: 0.85rem; color: #c7cdd3; }
 
 .footer-apps {
   display: flex;
   gap: 0.6rem;
   justify-content: center;
-  background: #141414;
+  background: #0f1114;
   padding: 0.8rem;
 }
 .footer-apps a {
-  border: 1px dashed #333;
+  border: 1px dashed #2c2d31;
   padding: 0.5rem 1rem;
   border-radius: 6px;
 }
 
 .footer-legal {
   text-align: center;
-  padding: 0.8rem;
-  font-size: 0.8rem;
-  color: #888;
-  border-top: 1px solid #222;
+  padding: 0.9rem;
+  font-size: 0.82rem;
+  color: #c7cdd3;
+  border-top: 1px solid #1e2026;
+  background: #0e1013;
 }
-.footer-legal a { color: #aaa; }
-.footer-legal a:hover { color: #fff; }
+.footer-legal a { color: #e5e7eb; }
+.footer-legal a:hover { color: #ffffff; }
 
 @media (max-width: 900px) {
   .footer-main { grid-template-columns: repeat(3, 1fr); }

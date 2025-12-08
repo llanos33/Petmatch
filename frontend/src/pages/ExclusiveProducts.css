@@ -34,7 +34,7 @@
 .exclusive-header {
   margin-bottom: 2rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #3d69e0 0%, #3053cf 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-radius: 12px;
   color: white;
   display: flex;

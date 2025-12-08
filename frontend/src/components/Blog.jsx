@@ -210,8 +210,6 @@ export default function Blog() {
                     
                     <p className="post-excerpt">{post.excerpt}</p>
                     
-                    <p className="post-excerpt">{post.excerpt}</p>
-                    
                     <Link to={`/blog/${post.id}`} className="read-more-btn">
                       Leer Más
                     </Link>

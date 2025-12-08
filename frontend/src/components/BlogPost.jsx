@@ -42,25 +42,36 @@ export default function BlogPost() {
 
   return (
     <div className="blog-container">
-      <div className="blog-header">
+      <div className="blog-header single-post-header">
         <Link to="/blog" className="blog-back-btn">Volver</Link>
-        <h1 className="blog-title">{post.title}</h1>
-        <div className="post-meta" style={{ marginTop: '0.5rem' }}>
-          <Calendar size={16} /> <span style={{ marginLeft: 8 }}>{post.date}</span>
-          {post.isPremium && (
-            <span style={{ marginLeft: 12, color: '#b45309', display: 'inline-flex', alignItems: 'center' }}>
-              <Crown size={14} style={{ marginRight: 6 }} /> Premium
-            </span>
-          )}
+        <div className="single-post-heading">
+          <h1 className="blog-title">{post.title}</h1>
+          <div className="single-post-meta">
+            <div className="post-meta">
+              <Calendar size={16} />
+              <span>{post.date}</span>
+            </div>
+            {post.isPremium && (
+              <span className="single-post-premium">
+                <Crown size={14} /> Premium
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
-      <main className="blog-posts" style={{ padding: '2rem' }}>
-        <div className="single-post-image" style={{ marginBottom: '1.25rem' }}>
-          <img src={post.image} alt={post.title} style={{ width: '100%', borderRadius: 8 }} />
+      <main className="single-post-body">
+        <div className="single-post-hero">
+          <div className="single-post-image">
+            <img src={post.image} alt={post.title} />
+          </div>
+          {post.excerpt && (
+            <p className="single-post-excerpt">{post.excerpt}</p>
+          )}
         </div>
+
         <article className="single-post-content">
-          <p style={{ whiteSpace: 'pre-line', lineHeight: 1.6 }}>{post.content}</p>
+          <p className="single-post-text">{post.content}</p>
         </article>
       </main>
     </div>
