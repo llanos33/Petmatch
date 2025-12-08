@@ -10,6 +10,7 @@ export default function BlogPostEdit() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const postId = parseInt(id)
+
   const loadEditedPosts = () => {
     if (typeof window === 'undefined') return {}
     try {
@@ -20,9 +21,11 @@ export default function BlogPostEdit() {
     }
   }
 
-  const editedMap = loadEditedPosts()
-  const basePost = blogPosts.find(p => p.id === postId)
-  const post = basePost ? { ...basePost, ...(editedMap[postId] || {}) } : null
+  const [post, setPost] = useState(() => {
+    const editedMap = loadEditedPosts()
+    const basePost = blogPosts.find(p => p.id === postId)
+    return basePost ? { ...basePost, ...(editedMap[postId] || {}) } : null
+  })
 
   const [formData, setFormData] = useState({
     title: '',
@@ -42,7 +45,7 @@ export default function BlogPostEdit() {
         image: post.image || ''
       })
     }
-  }, [post])
+  }, [postId, post])
 
   // Verificar permisos
   if (!user?.isAdmin) {
