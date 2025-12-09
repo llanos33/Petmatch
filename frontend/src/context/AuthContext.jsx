@@ -10,11 +10,13 @@ export function useAuth() {
 export function AuthProvider({ children, clearCart }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [token, setToken] = useState(null)
 
   useEffect(() => {
     // Verificar si hay un token guardado
     const token = localStorage.getItem('token')
     if (token) {
+      setToken(token)
       fetchProfile(token)
     } else {
       setLoading(false)
@@ -24,6 +26,7 @@ export function AuthProvider({ children, clearCart }) {
   const handleSessionDrop = useCallback(() => {
     localStorage.removeItem('token')
     setUser(null)
+    setToken(null)
     try {
       if (typeof clearCart === 'function') clearCart()
     } catch (e) {
@@ -87,6 +90,7 @@ export function AuthProvider({ children, clearCart }) {
       if (response.ok) {
         const userData = await response.json()
         setUser(syncPremiumFlag(userData))
+        setToken(token)
       } else {
         handleSessionDrop()
       }
@@ -167,6 +171,7 @@ export function AuthProvider({ children, clearCart }) {
 
       if (response.ok) {
         localStorage.setItem('token', data.token)
+        setToken(data.token)
         setUser(syncPremiumFlag(data.user))
         return { success: true }
       } else {
@@ -195,6 +200,7 @@ export function AuthProvider({ children, clearCart }) {
 
       if (response.ok) {
         localStorage.setItem('token', data.token)
+        setToken(data.token)
         setUser(syncPremiumFlag(data.user))
         return { success: true }
       } else {
@@ -240,6 +246,7 @@ export function AuthProvider({ children, clearCart }) {
 
   const value = {
     user,
+    token,
     login,
     register,
     logout,

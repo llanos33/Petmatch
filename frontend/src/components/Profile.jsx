@@ -157,9 +157,14 @@ function Profile() {
       <Breadcrumb />
       <div className="profile-header">
         <h1>Mi Perfil</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Cerrar Sesion
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Link to="/pets" className="shop-button">
+            Mis Mascotas
+          </Link>
+          <button onClick={handleLogout} className="logout-button">
+            Cerrar Sesion
+          </button>
+        </div>
       </div>
 
       <div className="profile-content">

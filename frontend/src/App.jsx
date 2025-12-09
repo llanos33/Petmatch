@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { WishlistProvider } from './context/WishlistContext'
+import { PetProvider } from './context/PetContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ProductList from './components/ProductList'
@@ -38,6 +39,9 @@ import SiteMap from "./pages/SiteMap";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import PuntosInteres from "./pages/PuntosInteres";
+import PetProfiles from "./pages/PetProfiles";
+import PetProfileForm from "./components/PetProfileForm";
+import PetProfile from "./components/PetProfile";
 
 const CART_STORAGE_KEY = 'petmatch_cart_v1'
 
@@ -164,6 +168,22 @@ function AppContent({
           <Route
             path="/profile"
             element={<Profile />}
+          />
+          <Route
+            path="/pets"
+            element={<PetProfiles />}
+          />
+          <Route
+            path="/pets/new"
+            element={<PetProfileForm />}
+          />
+          <Route
+            path="/pets/:id"
+            element={<PetProfile />}
+          />
+          <Route
+            path="/pets/:id/edit"
+            element={<PetProfileForm />}
           />
           <Route
             path="/help"
@@ -378,19 +398,21 @@ function App() {
   return (
     <AuthProvider clearCart={clearCart}>
       <WishlistProvider>
-        <Router>
-          <AppContent 
-            cart={cart}
-            products={products}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            updateQuantity={updateQuantity}
-            clearCart={clearCart}
-            getCartItemCount={getCartItemCount}
-          />
-        </Router>
+        <PetProvider>
+          <Router>
+            <AppContent 
+              cart={cart}
+              products={products}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+              updateQuantity={updateQuantity}
+              clearCart={clearCart}
+              getCartItemCount={getCartItemCount}
+            />
+          </Router>
+        </PetProvider>
       </WishlistProvider>
     </AuthProvider>
   )

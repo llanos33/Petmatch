@@ -23,6 +23,7 @@ const ordersFile = path.join(dataDir, 'orders.json');
 const usersFile = path.join(dataDir, 'users.json');
 const reviewsFile = path.join(dataDir, 'reviews.json');
 const consultationsFile = path.join(dataDir, 'consultations.json');
+const petsFile = path.join(dataDir, 'pets.json');
 
 // Asegurar que el directorio data existe
 if (!fs.existsSync(dataDir)) {
@@ -662,6 +663,11 @@ if (!fs.existsSync(consultationsFile)) {
   fs.writeFileSync(consultationsFile, JSON.stringify([], null, 2));
 }
 
+// Inicializar mascotas si no existen
+if (!fs.existsSync(petsFile)) {
+  fs.writeFileSync(petsFile, JSON.stringify([], null, 2));
+}
+
 // Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -766,6 +772,21 @@ function readConsultations() {
 function writeConsultations(consultations) {
   fs.writeFileSync(consultationsFile, JSON.stringify(consultations, null, 2));
 }
+
+  // Helper para leer mascotas
+  function readPets() {
+    try {
+      const data = fs.readFileSync(petsFile, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  // Helper para escribir mascotas
+  function writePets(pets) {
+    fs.writeFileSync(petsFile, JSON.stringify(pets, null, 2));
+  }
 
 function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
@@ -1523,6 +1544,199 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
     res.status(500).json({ error: 'Error interno al suscribir usuario' });
   }
 });
+
+  // ============ RUTAS DE MASCOTAS ============
+
+  // Obtener todas las mascotas del usuario autenticado
+  app.get('/api/pets', authenticateToken, (req, res) => {
+    try {
+      const pets = readPets();
+      const userPets = pets.filter(pet => pet.userId === req.user.userId);
+      res.json(userPets);
+    } catch (error) {
+      console.error('Error obteniendo mascotas:', error);
+      res.status(500).json({ error: 'Error al obtener mascotas' });
+    }
+  });
+
+  // Obtener una mascota específica por ID
+  app.get('/api/pets/:id', authenticateToken, (req, res) => {
+    try {
+      const petId = parseInt(req.params.id);
+      const pets = readPets();
+      const pet = pets.find(p => p.id === petId && p.userId === req.user.userId);
+    
+      if (!pet) {
+        return res.status(404).json({ error: 'Mascota no encontrada' });
+      }
+    
+      res.json(pet);
+    } catch (error) {
+      console.error('Error obteniendo mascota:', error);
+      res.status(500).json({ error: 'Error al obtener mascota' });
+    }
+  });
+
+  // Crear una nueva mascota
+  app.post('/api/pets', authenticateToken, (req, res) => {
+    try {
+      const users = readUsers();
+      const user = users.find(u => u.id === req.user.userId);
+    
+      // Verificar límite de mascotas para usuarios no premium
+      if (!user.isPremium) {
+        const pets = readPets();
+        const userPets = pets.filter(p => p.userId === req.user.userId);
+        if (userPets.length >= 2) {
+          return res.status(403).json({ 
+            error: 'Los usuarios gratuitos pueden tener máximo 2 mascotas. Actualiza a Premium para mascotas ilimitadas.' 
+          });
+        }
+      }
+    
+      const {
+        name,
+        type,
+        breed,
+        birthDate,
+        gender,
+        weight,
+        photo,
+        medicalInfo,
+        preferences,
+        activityLevel,
+        specialNeeds
+      } = req.body;
+    
+      if (!name || !type) {
+        return res.status(400).json({ error: 'Nombre y tipo de mascota son requeridos' });
+      }
+    
+      const pets = readPets();
+      const newPet = {
+        id: pets.length > 0 ? Math.max(...pets.map(p => p.id)) + 1 : 1,
+        userId: req.user.userId,
+        name: name.trim(),
+        type: type.trim(), // 'perro' o 'gato'
+        breed: breed?.trim() || '',
+        birthDate: birthDate || null,
+        gender: gender || '',
+        weight: weight || null,
+        photo: photo || '',
+        medicalInfo: {
+          allergies: medicalInfo?.allergies || [],
+          vaccinations: medicalInfo?.vaccinations || [],
+          medications: medicalInfo?.medications || [],
+          conditions: medicalInfo?.conditions || [],
+          veterinarian: medicalInfo?.veterinarian || '',
+          lastCheckup: medicalInfo?.lastCheckup || null,
+          nextCheckup: medicalInfo?.nextCheckup || null
+        },
+        preferences: {
+          favoriteFood: preferences?.favoriteFood || [],
+          favoriteToys: preferences?.favoriteToys || [],
+          dislikes: preferences?.dislikes || []
+        },
+        activityLevel: activityLevel || 'medium', // 'low', 'medium', 'high'
+        specialNeeds: specialNeeds || '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+    
+      pets.push(newPet);
+      writePets(pets);
+    
+      res.status(201).json(newPet);
+    } catch (error) {
+      console.error('Error creando mascota:', error);
+      res.status(500).json({ error: 'Error al crear mascota' });
+    }
+  });
+
+  // Actualizar una mascota existente
+  app.put('/api/pets/:id', authenticateToken, (req, res) => {
+    try {
+      const petId = parseInt(req.params.id);
+      const pets = readPets();
+      const petIndex = pets.findIndex(p => p.id === petId && p.userId === req.user.userId);
+    
+      if (petIndex === -1) {
+        return res.status(404).json({ error: 'Mascota no encontrada' });
+      }
+    
+      const {
+        name,
+        type,
+        breed,
+        birthDate,
+        gender,
+        weight,
+        photo,
+        medicalInfo,
+        preferences,
+        activityLevel,
+        specialNeeds
+      } = req.body;
+    
+      // Actualizar solo los campos proporcionados
+      const updatedPet = {
+        ...pets[petIndex],
+        name: name?.trim() || pets[petIndex].name,
+        type: type?.trim() || pets[petIndex].type,
+        breed: breed !== undefined ? breed.trim() : pets[petIndex].breed,
+        birthDate: birthDate !== undefined ? birthDate : pets[petIndex].birthDate,
+        gender: gender !== undefined ? gender : pets[petIndex].gender,
+        weight: weight !== undefined ? weight : pets[petIndex].weight,
+        photo: photo !== undefined ? photo : pets[petIndex].photo,
+        medicalInfo: medicalInfo ? {
+          allergies: medicalInfo.allergies || pets[petIndex].medicalInfo.allergies,
+          vaccinations: medicalInfo.vaccinations || pets[petIndex].medicalInfo.vaccinations,
+          medications: medicalInfo.medications || pets[petIndex].medicalInfo.medications,
+          conditions: medicalInfo.conditions || pets[petIndex].medicalInfo.conditions,
+          veterinarian: medicalInfo.veterinarian !== undefined ? medicalInfo.veterinarian : pets[petIndex].medicalInfo.veterinarian,
+          lastCheckup: medicalInfo.lastCheckup !== undefined ? medicalInfo.lastCheckup : pets[petIndex].medicalInfo.lastCheckup,
+          nextCheckup: medicalInfo.nextCheckup !== undefined ? medicalInfo.nextCheckup : pets[petIndex].medicalInfo.nextCheckup
+        } : pets[petIndex].medicalInfo,
+        preferences: preferences ? {
+          favoriteFood: preferences.favoriteFood || pets[petIndex].preferences.favoriteFood,
+          favoriteToys: preferences.favoriteToys || pets[petIndex].preferences.favoriteToys,
+          dislikes: preferences.dislikes || pets[petIndex].preferences.dislikes
+        } : pets[petIndex].preferences,
+        activityLevel: activityLevel || pets[petIndex].activityLevel,
+        specialNeeds: specialNeeds !== undefined ? specialNeeds : pets[petIndex].specialNeeds,
+        updatedAt: new Date().toISOString()
+      };
+    
+      pets[petIndex] = updatedPet;
+      writePets(pets);
+    
+      res.json(updatedPet);
+    } catch (error) {
+      console.error('Error actualizando mascota:', error);
+      res.status(500).json({ error: 'Error al actualizar mascota' });
+    }
+  });
+
+  // Eliminar una mascota
+  app.delete('/api/pets/:id', authenticateToken, (req, res) => {
+    try {
+      const petId = parseInt(req.params.id);
+      const pets = readPets();
+      const petIndex = pets.findIndex(p => p.id === petId && p.userId === req.user.userId);
+    
+      if (petIndex === -1) {
+        return res.status(404).json({ error: 'Mascota no encontrada' });
+      }
+    
+      const deletedPet = pets.splice(petIndex, 1)[0];
+      writePets(pets);
+    
+      res.json({ success: true, pet: deletedPet });
+    } catch (error) {
+      console.error('Error eliminando mascota:', error);
+      res.status(500).json({ error: 'Error al eliminar mascota' });
+    }
+  });
 
 // Servir frontend estatico si existe el build en /public
 const clientBuildPath = path.join(__dirname, 'public');

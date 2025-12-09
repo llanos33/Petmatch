@@ -264,6 +264,12 @@ function Header({ cartItemCount, searchTerm, setSearchTerm, products = [] }) {
           </div>
 
           <div className="header-actions">
+            {user && (
+              <Link to="/pets" className="wishlist-link" aria-label="Mis mascotas">
+                <Dog size={22} />
+                <span className="wishlist-label">Mis mascotas</span>
+              </Link>
+            )}
             <Link to="/lista-deseos" className="wishlist-link" aria-label="Lista de deseos">
               <Heart size={22} />
               <span className="wishlist-label">Lista de deseos</span>
