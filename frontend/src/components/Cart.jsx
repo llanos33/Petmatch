@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Breadcrumb from './Breadcrumb'
 import './Cart.css'
 import {
   ShoppingCart,
@@ -60,6 +61,7 @@ function Cart({ cart, products, removeFromCart, updateQuantity }) {
 
   return (
     <div className="cart-container">
+      <Breadcrumb />
       <h1>Carrito de Compras</h1>
 
       <div className="cart-content">

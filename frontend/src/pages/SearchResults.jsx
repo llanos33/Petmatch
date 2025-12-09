@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ShoppingCart, Search as SearchIcon } from 'lucide-react'
+import Breadcrumb from '../components/Breadcrumb'
 import './SearchResults.css'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
 import WishlistToggle from '../components/WishlistToggle'
@@ -61,6 +62,7 @@ function SearchResults({ products = [], addToCart, searchTerm = '', setSearchTer
 
   return (
     <div className="search-page">
+      <Breadcrumb />
 
       {/* Header */}
       <div className="search-header">

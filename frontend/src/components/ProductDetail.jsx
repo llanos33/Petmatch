@@ -13,6 +13,7 @@ import { applyDiscountToProduct, applyPremiumDiscount } from '../utils/productDi
 import { useAuth } from '../context/AuthContext'
 import WishlistToggle from './WishlistToggle'
 import ProductReviews from './ProductReviews'
+import Breadcrumb from './Breadcrumb'
 
 function ProductDetail({ products, addToCart }) {
   const { id } = useParams()
@@ -92,8 +93,14 @@ function ProductDetail({ products, addToCart }) {
     setQuantity(maxQuantity)
   }
 
+  const breadcrumbCrumbs = [
+    { label: product.category, path: `/category/${product.category}` },
+    { label: product.name, path: `/product/${product.id}` }
+  ]
+
   return (
     <div className="product-detail-container">
+      <Breadcrumb customCrumbs={breadcrumbCrumbs} />
       {similarProducts.length > 0 && (
         <div className="similar-products-section">
           <div className="similar-products-header">

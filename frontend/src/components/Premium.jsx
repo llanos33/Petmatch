@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Breadcrumb from './Breadcrumb'
 import './Premium.css'
 import PaymentMethods from './PaymentMethods'
 import { useAuth } from '../context/AuthContext'
@@ -149,6 +150,7 @@ export default function Premium() {
 
   return (
     <div className="premium-page">
+      <Breadcrumb />
       {!subscribed ? (
         <>
           <section className="premium-hero">

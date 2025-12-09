@@ -1,0 +1,75 @@
+.breadcrumb {
+  background: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.breadcrumb-separator {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-hover);
+  background: #f1f5f9;
+}
+
+.breadcrumb-current {
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .breadcrumb {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .breadcrumb-link span:not(:first-child),
+  .breadcrumb-current {
+    font-size: 0.85rem;
+  }
+
+  .breadcrumb-link svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .breadcrumb-separator {
+    width: 14px;
+    height: 14px;
+  }
+}

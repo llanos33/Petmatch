@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Breadcrumb from './Breadcrumb'
 import { Crown, Truck, Percent, BookOpen, Sparkles, MessageCircle, CheckCircle, Clock } from 'lucide-react'
 import './Profile.css'
 import { apiPath } from '../config/api'
@@ -153,6 +154,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
+      <Breadcrumb />
       <div className="profile-header">
         <h1>Mi Perfil</h1>
         <button onClick={handleLogout} className="logout-button">

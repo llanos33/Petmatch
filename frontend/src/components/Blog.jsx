@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Breadcrumb from './Breadcrumb'
 import './Blog.css'
 import { 
   ArrowLeft, 
@@ -56,6 +57,7 @@ export default function Blog() {
 
   return (
     <div className="blog-container">
+      <Breadcrumb />
       <div className="blog-header">
         <h1 className="blog-title">Consejos</h1>
         <p className="blog-subtitle">Tips y artículos sobre el cuidado de tus mascotas</p>

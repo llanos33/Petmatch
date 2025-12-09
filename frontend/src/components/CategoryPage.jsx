@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import './CategoryPage.css'
 import WishlistToggle from './WishlistToggle'
+import Breadcrumb from './Breadcrumb'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
 import {
   UtensilsCrossed,
@@ -266,6 +267,7 @@ function CategoryPage({ products, addToCart }) {
 
   return (
     <div className="category-page">
+      <Breadcrumb />
       {/* Encabezado hero */}
       <div className="category-hero">
         <div className="category-hero-left">

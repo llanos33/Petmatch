@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, Sparkles, Clock, Gift, ShoppingCart, CheckCircle, XCircle, Lock } from 'lucide-react'
+import Breadcrumb from '../components/Breadcrumb'
 import './Wishlist.css'
 import { useWishlist } from '../context/WishlistContext'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
@@ -79,6 +80,7 @@ function Wishlist({ products = [], addToCart }) {
 
   return (
     <div className="wishlist">
+      <Breadcrumb />
       <section className="wishlist-hero">
         <div className="wishlist-hero-content">
           <span className="wishlist-pill"><Heart size={16} fill="currentColor" stroke="currentColor" /> Tus favoritos en un solo lugar</span>

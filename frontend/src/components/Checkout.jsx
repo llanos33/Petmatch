@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Breadcrumb from "./Breadcrumb";
 import { CheckCircle, Phone, Mail, MapPin, CreditCard } from "lucide-react";
 import "./Checkout.css";
 import PaymentMethods from "../components/PaymentMethods";
@@ -167,6 +168,7 @@ function Checkout({ cart, products, clearCart }) {
   if (orderSuccess) {
     return (
       <div className="checkout-container">
+        <Breadcrumb />
         <div className="success-message">
           <div className="success-icon">✓</div>
           <h2>¡Orden Realizada con Éxito!</h2>
@@ -179,6 +181,7 @@ function Checkout({ cart, products, clearCart }) {
 
   return (
     <div className="checkout-container">
+      <Breadcrumb />
       <h1>Finalizar Compra</h1>
 
       <div className="steps-indicator">
