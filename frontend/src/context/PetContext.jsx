@@ -167,9 +167,19 @@ export function PetProvider({ children }) {
     }
   };
 
-  const getPetById = async (petId) => {
+  const getPetById = (petId) => {
+    const petIdNum = parseInt(petId);
     // Primero intenta encontrar en el caché local
-    const cachedPet = pets.find(p => p.id === parseInt(petId));
+    const cachedPet = pets.find(p => p.id === petIdNum);
+    if (cachedPet) return cachedPet;
+    
+    return null;
+  };
+
+  const getPetByIdAsync = async (petId) => {
+    const petIdNum = parseInt(petId);
+    // Primero intenta encontrar en el caché local
+    const cachedPet = pets.find(p => p.id === petIdNum);
     if (cachedPet) return cachedPet;
 
     // Si no está en caché (p.ej., admin viendo mascota de otro usuario), 
@@ -178,7 +188,7 @@ export function PetProvider({ children }) {
     if (!activeToken) return null;
 
     try {
-      const response = await fetch(apiPath(`/api/pets/${petId}`), {
+      const response = await fetch(apiPath(`/api/pets/${petIdNum}`), {
         headers: {
           'Authorization': `Bearer ${activeToken}`
         }
@@ -207,6 +217,7 @@ export function PetProvider({ children }) {
     updatePet,
     deletePet,
     getPetById,
+    getPetByIdAsync,
     clearError
   };
 

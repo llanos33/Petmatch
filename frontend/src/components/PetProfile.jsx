@@ -10,20 +10,20 @@ import './PetProfile.css';
 function PetProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getPetById } = usePets();
+  const { getPetByIdAsync } = usePets();
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadPet = async () => {
       setLoading(true);
-      const petData = await getPetById(id);
+      const petData = await getPetByIdAsync(id);
       setPet(petData);
       setLoading(false);
     };
     
     loadPet();
-  }, [id, getPetById]);
+  }, [id, getPetByIdAsync]);
 
   if (loading) {
     return (
