@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import './ProductDetail.css'
 import { 
@@ -6,7 +6,8 @@ import {
   ShoppingCart, 
   Package,
   Plus,
-  Minus
+  Minus,
+  ChevronRight
 } from 'lucide-react'
 import { applyDiscountToProduct, applyPremiumDiscount } from '../utils/productDiscounts'
 import { useAuth } from '../context/AuthContext'
@@ -39,6 +40,34 @@ function ProductDetail({ products, addToCart }) {
 
   const productWithDiscount = product ? applyDiscountToProduct(product) : null
 
+  const similarProducts = useMemo(() => {
+    if (!product) return []
+    
+    // Priority 1: Same category AND same petType
+    const exactMatches = products.filter(p => 
+      p.id !== product.id && 
+      p.category === product.category && 
+      p.petType === product.petType
+    )
+    
+    // Priority 2: Same category but different/any petType
+    const categoryMatches = products.filter(p => 
+      p.id !== product.id && 
+      p.category === product.category &&
+      !exactMatches.find(em => em.id === p.id)
+    )
+    
+    // Priority 3: Different category but same petType (only if needed)
+    const petTypeMatches = products.filter(p => 
+      p.id !== product.id && 
+      p.category !== product.category &&
+      p.petType === product.petType
+    )
+    
+    // Combine in priority order and limit to 8
+    return [...exactMatches, ...categoryMatches, ...petTypeMatches].slice(0, 8)
+  }, [product, products])
+
   const handleAddToCart = () => {
     if (!productWithDiscount) return
     // prevent non-premium users from adding exclusive products
@@ -65,7 +94,39 @@ function ProductDetail({ products, addToCart }) {
 
   return (
     <div className="product-detail-container">
-      
+      {similarProducts.length > 0 && (
+        <div className="similar-products-section">
+          <div className="similar-products-header">
+            <h3>Productos Similares</h3>
+            <Link to={`/category/${product.category}`} className="view-all-link">
+              Ver todos <ChevronRight size={16} />
+            </Link>
+          </div>
+          <div className="similar-products-scroll">
+            {similarProducts.map(similar => {
+              const simWithDiscount = applyDiscountToProduct(similar)
+              return (
+                <Link 
+                  key={similar.id} 
+                  to={`/product/${similar.id}`}
+                  className="similar-product-card"
+                >
+                  <div className="similar-product-image">
+                    <img src={similar.image} alt={similar.name} />
+                    {simWithDiscount.discountPercentage > 0 && (
+                      <span className="similar-discount-badge">-{simWithDiscount.discountPercentage}%</span>
+                    )}
+                  </div>
+                  <div className="similar-product-info">
+                    <p className="similar-product-name">{similar.name}</p>
+                    <p className="similar-product-price">{formatPrice(simWithDiscount.discountedPrice)}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
       
       <div className="product-detail">
         <div className="product-detail-image" style={{ position: 'relative' }}>
