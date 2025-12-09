@@ -108,6 +108,8 @@ export function AuthProvider({ children, clearCart }) {
 
     let cancelled = false
     let sessionCleared = false
+    let failureCount = 0
+    const MAX_FAILURES = 3 // Permitir 3 fallos consecutivos antes de cerrar sesión
 
     const verifySession = async () => {
       const activeToken = localStorage.getItem('token')
@@ -120,20 +122,36 @@ export function AuthProvider({ children, clearCart }) {
           }
         })
 
-        if (!response.ok && !cancelled) {
-          sessionCleared = true
-          handleSessionDrop()
+        if (response.ok) {
+          // Sesión válida, resetear contador de fallos
+          failureCount = 0
+        } else if (response.status === 401 || response.status === 403) {
+          // Token inválido o expirado, cerrar sesión inmediatamente
+          if (!cancelled && !sessionCleared) {
+            sessionCleared = true
+            handleSessionDrop()
+          }
+        } else {
+          // Otro error (500, etc), incrementar contador
+          failureCount++
+          if (failureCount >= MAX_FAILURES && !cancelled && !sessionCleared) {
+            sessionCleared = true
+            handleSessionDrop()
+          }
         }
       } catch (error) {
-        if (!cancelled && !sessionCleared) {
-          console.warn('Sesión cerrada por desconexión del servidor', error)
+        // Error de red, incrementar contador pero no cerrar inmediatamente
+        failureCount++
+        if (failureCount >= MAX_FAILURES && !cancelled && !sessionCleared) {
+          console.warn('Sesión cerrada por múltiples fallos de conexión', error)
           sessionCleared = true
           handleSessionDrop()
         }
       }
     }
 
-    const intervalId = setInterval(verifySession, 30000)
+    // Verificar sesión cada 5 minutos en lugar de 30 segundos
+    const intervalId = setInterval(verifySession, 300000)
     const handleVisibility = () => {
       if (!document.hidden) {
         verifySession()

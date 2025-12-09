@@ -350,6 +350,19 @@ function Profile() {
                           {formatDate(consultation.createdAt)}
                         </p>
                         <span className="pet-type-badge">{consultation.petType}</span>
+                        {consultation.petName && (
+                          <span className="pet-linked-badge">
+                            {consultation.petPhoto && (
+                              <img
+                                className="pet-mini-avatar"
+                                src={consultation.petPhoto}
+                                alt={consultation.petName}
+                                loading="lazy"
+                              />
+                            )}
+                            Mascota: {consultation.petName}
+                          </span>
+                        )}
                       </div>
                       <div className={`consultation-status ${consultation.status}`}>
                         {consultation.status === 'answered' ? (

@@ -1053,7 +1053,7 @@ app.get('/api/auth/consultations', authenticateToken, (req, res) => {
 
 // Crear una nueva consulta (pregunta)
 app.post('/api/consultations', authenticateToken, (req, res) => {
-  const { title, question, petType } = req.body;
+  const { title, question, petType, petId } = req.body;
   
   if (!title || !question) {
     return res.status(400).json({ error: 'Título y pregunta son requeridos' });
@@ -1061,7 +1061,19 @@ app.post('/api/consultations', authenticateToken, (req, res) => {
 
   const users = readUsers();
   const user = users.find(u => u.id === req.user.userId);
+  const pets = readPets();
   const consultations = readConsultations();
+
+  let linkedPet = null;
+  if (petId !== undefined && petId !== null && petId !== '') {
+    const parsedPetId = parseInt(petId, 10);
+    if (Number.isInteger(parsedPetId)) {
+      linkedPet = pets.find(p => p.id === parsedPetId && p.userId === req.user.userId) || null;
+    }
+    if (petId && !linkedPet) {
+      return res.status(400).json({ error: 'Mascota no encontrada o no pertenece al usuario' });
+    }
+  }
 
   const newConsultation = {
     id: consultations.length > 0 ? Math.max(...consultations.map(c => c.id)) + 1 : 1,
@@ -1069,7 +1081,10 @@ app.post('/api/consultations', authenticateToken, (req, res) => {
     userName: user ? user.name : 'Usuario',
     title,
     question,
-    petType: petType || 'General',
+    petType: linkedPet?.type || petType || 'General',
+    petId: linkedPet?.id || null,
+    petName: linkedPet?.name || null,
+    petPhoto: linkedPet?.photo || null,
     createdAt: new Date().toISOString(),
     status: 'pending', // pending, answered
     answer: null,
@@ -1202,9 +1217,7 @@ app.post('/api/orders', authenticateToken, (req, res) => {
 // Obtener todas las órdenes (útil para administración)
 app.get('/api/orders', authenticateToken, (req, res) => {
   const orders = readOrders();
-  const users = readUsers();
-  const requester = users.find(u => u.id === req.user.userId);
-  const isAdmin = !!requester?.isAdmin;
+  const isAdmin = !!req.user?.isAdmin;
   const visibleOrders = isAdmin ? orders : orders.filter(order => order.userId === req.user.userId);
   res.json(visibleOrders);
 });

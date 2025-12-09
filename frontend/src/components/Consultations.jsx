@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { usePets } from '../context/PetContext';
 import { apiPath } from '../config/api';
 import { MessageCircle, User, ShieldCheck, Send, Trash2, Lock, HelpCircle } from 'lucide-react';
 import './Consultations.css';
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 function Consultations() {
   const { user, getAuthToken } = useAuth();
+  const { pets, fetchPets } = usePets();
   const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +17,7 @@ function Consultations() {
   const [title, setTitle] = useState('');
   const [question, setQuestion] = useState('');
   const [petType, setPetType] = useState('General');
+  const [petId, setPetId] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   // Admin reply state
@@ -22,7 +25,10 @@ function Consultations() {
 
   useEffect(() => {
     fetchConsultations();
-  }, []);
+    if (user) {
+      fetchPets();
+    }
+  }, [user, fetchPets]);
 
   const fetchConsultations = async () => {
     try {
@@ -50,7 +56,7 @@ function Consultations() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ title, question, petType })
+        body: JSON.stringify({ title, question, petType, petId: petId || null })
       });
 
       if (!response.ok) throw new Error('Error al enviar consulta');
@@ -60,6 +66,7 @@ function Consultations() {
       setTitle('');
       setQuestion('');
       setPetType('General');
+      setPetId('');
     } catch (err) {
       alert(err.message);
     } finally {
@@ -157,6 +164,23 @@ function Consultations() {
                   </select>
                 </div>
 
+                <div className="form-group">
+                  <label>Selecciona tu mascota (opcional)</label>
+                  <select
+                    className="form-control"
+                    value={petId}
+                    onChange={(e) => setPetId(e.target.value)}
+                  >
+                    <option value="">No asociar mascota</option>
+                    {pets.map(pet => (
+                      <option key={pet.id} value={pet.id}>
+                        {pet.name} • {pet.type} {pet.breed ? `(${pet.breed})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <small className="hint-text">Si eliges una mascota, la consulta se vinculará a su perfil.</small>
+                </div>
+
                 <div className="form-group full-width">
                   <label>Tu Pregunta</label>
                   <textarea
@@ -215,6 +239,19 @@ function Consultations() {
                     <span className={`status-badge ${consultation.status}`}>
                       {consultation.status === 'answered' ? 'Respondida' : 'Pendiente'}
                     </span>
+                    {consultation.petName && (
+                      <div className="pet-linked-info">
+                        {consultation.petPhoto && (
+                          <img
+                            className="pet-avatar"
+                            src={consultation.petPhoto}
+                            alt={`Foto de ${consultation.petName}`}
+                            loading="lazy"
+                          />
+                        )}
+                        <span className="pet-name">{consultation.petName}</span>
+                      </div>
+                    )}
                     {user?.isAdmin && (
                       <button 
                         className="delete-btn"
