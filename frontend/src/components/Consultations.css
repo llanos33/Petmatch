@@ -233,6 +233,30 @@ textarea.form-control {
   gap: 0.75rem;
 }
 
+.actions-top-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+  color: #991b1b;
+}
+
 .pet-linked-info {
   display: flex;
   flex-direction: column;

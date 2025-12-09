@@ -236,9 +236,20 @@ function Consultations() {
                     </div>
                   </div>
                   <div className="consultation-actions">
-                    <span className={`status-badge ${consultation.status}`}>
-                      {consultation.status === 'answered' ? 'Respondida' : 'Pendiente'}
-                    </span>
+                    <div className="actions-top-row">
+                      <span className={`status-badge ${consultation.status}`}>
+                        {consultation.status === 'answered' ? 'Respondida' : 'Pendiente'}
+                      </span>
+                      {user?.isAdmin && (
+                        <button 
+                          className="delete-btn"
+                          onClick={() => handleDelete(consultation.id)}
+                          title="Eliminar consulta"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
                     {consultation.petName && (
                       <div className="pet-linked-info">
                         {consultation.petPhoto && (
@@ -251,15 +262,6 @@ function Consultations() {
                         )}
                         <span className="pet-name">{consultation.petName}</span>
                       </div>
-                    )}
-                    {user?.isAdmin && (
-                      <button 
-                        className="delete-btn"
-                        onClick={() => handleDelete(consultation.id)}
-                        title="Eliminar consulta"
-                      >
-                        <Trash2 size={16} />
-                      </button>
                     )}
                   </div>
                 </div>
