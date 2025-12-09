@@ -167,8 +167,31 @@ export function PetProvider({ children }) {
     }
   };
 
-  const getPetById = (petId) => {
-    return pets.find(p => p.id === parseInt(petId));
+  const getPetById = async (petId) => {
+    // Primero intenta encontrar en el caché local
+    const cachedPet = pets.find(p => p.id === parseInt(petId));
+    if (cachedPet) return cachedPet;
+
+    // Si no está en caché (p.ej., admin viendo mascota de otro usuario), 
+    // hacer llamada a la API
+    const activeToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+    if (!activeToken) return null;
+
+    try {
+      const response = await fetch(apiPath(`/api/pets/${petId}`), {
+        headers: {
+          'Authorization': `Bearer ${activeToken}`
+        }
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.error('Error fetching pet:', err);
+    }
+    
+    return null;
   };
 
   const clearError = () => {

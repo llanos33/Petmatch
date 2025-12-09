@@ -1577,7 +1577,14 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
     try {
       const petId = parseInt(req.params.id);
       const pets = readPets();
-      const pet = pets.find(p => p.id === petId && p.userId === req.user.userId);
+      const users = readUsers();
+      const requestUser = users.find(u => u.id === req.user.userId);
+      const isAdmin = !!requestUser?.isAdmin;
+      
+      // Si es admin, puede ver cualquier mascota. Si no, solo la suya
+      const pet = isAdmin 
+        ? pets.find(p => p.id === petId)
+        : pets.find(p => p.id === petId && p.userId === req.user.userId);
     
       if (!pet) {
         return res.status(404).json({ error: 'Mascota no encontrada' });

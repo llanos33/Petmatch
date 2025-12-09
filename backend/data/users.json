@@ -38,9 +38,12 @@
     "password": "$2a$10$hywxDMu4K/n95/wzGGbN9.C8n/HXqpCQZDkhXBp7w.zegYza9w7DC",
     "phone": "3136914054",
     "createdAt": "2025-12-08T00:23:45.363Z",
-    "isPremium": false,
-    "premiumSince": null,
-    "subscription": null,
+    "isPremium": true,
+    "premiumSince": "2025-12-09T12:50:36.206Z",
+    "subscription": {
+      "plan": "yearly",
+      "price": 420000
+    },
     "isAdmin": true
   }
 ]

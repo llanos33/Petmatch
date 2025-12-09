@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { usePets } from '../context/PetContext';
 import { apiPath } from '../config/api';
-import { MessageCircle, User, ShieldCheck, Send, Trash2, Lock, HelpCircle } from 'lucide-react';
+import { MessageCircle, User, ShieldCheck, Send, Trash2, Lock, HelpCircle, Eye } from 'lucide-react';
 import './Consultations.css';
 import { Link } from 'react-router-dom';
 
@@ -261,6 +261,15 @@ function Consultations() {
                           />
                         )}
                         <span className="pet-name">{consultation.petName}</span>
+                        {user?.isAdmin && (
+                          <button 
+                            className="view-pet-btn"
+                            title="Ver perfil de la mascota"
+                            onClick={() => window.open(`/pets/${consultation.petId}`, '_blank')}
+                          >
+                            <Eye size={14} />
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

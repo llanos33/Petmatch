@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
 import { 
@@ -10,15 +10,31 @@ import './PetProfile.css';
 function PetProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getPetById, fetchPets } = usePets();
-  
-  const pet = getPetById(id);
+  const { getPetById } = usePets();
+  const [pet, setPet] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!pet) {
-      fetchPets();
-    }
-  }, [pet, fetchPets]);
+    const loadPet = async () => {
+      setLoading(true);
+      const petData = await getPetById(id);
+      setPet(petData);
+      setLoading(false);
+    };
+    
+    loadPet();
+  }, [id, getPetById]);
+
+  if (loading) {
+    return (
+      <div className="pet-profile-container">
+        <div className="not-found">
+          <AlertCircle size={64} />
+          <h2>Cargando...</h2>
+        </div>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (

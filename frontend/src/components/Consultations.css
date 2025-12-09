@@ -266,7 +266,32 @@ textarea.form-control {
   padding: 0.75rem;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
+  position: relative;
 }
+
+.view-pet-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.view-pet-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  transform: scale(1.1);
+}
+
 
 .pet-avatar {
   width: 60px;
