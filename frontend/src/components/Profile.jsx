@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Breadcrumb from './Breadcrumb'
-import { Crown, Truck, Percent, BookOpen, Sparkles, MessageCircle, CheckCircle, Clock } from 'lucide-react'
+import { Crown, Truck, Percent, BookOpen, Sparkles, MessageCircle, CheckCircle, Clock, Stethoscope } from 'lucide-react'
 import './Profile.css'
 import { apiPath } from '../config/api'
 
@@ -193,6 +193,7 @@ function Profile() {
         </div>
 
         {/* Sección de Beneficios Premium */}
+        <div className="profile-cards-wrapper">
         {user.isPremium ? (
           <div className="premium-benefits-card">
             <div className="premium-benefits-header">
@@ -252,6 +253,60 @@ function Profile() {
             </Link>
           </div>
         )}
+
+        {/* Sección de Veterinario */}
+        {user.isVeterinarian && (
+          <div className="veterinarian-section-card">
+            <div className="veterinarian-header">
+              <Stethoscope size={28} className="stethoscope-icon" />
+              <div>
+                <h2>Perfil Veterinario</h2>
+                {user.isVerifiedVeterinarian ? (
+                  <p className="vet-status verified">✓ Cuenta Verificada</p>
+                ) : (
+                  <p className="vet-status pending">Pendiente de Verificación</p>
+                )}
+              </div>
+            </div>
+
+            {!user.isVerifiedVeterinarian && (
+              <div className="vet-info-card">
+                <p>Tu cuenta de veterinario está pendiente de verificación. Completa el proceso para acceder a todas las funcionalidades.</p>
+                <Link to="/veterinarian-verification" className="verify-button">
+                  Verificar Cuenta
+                </Link>
+              </div>
+            )}
+
+            {user.isVerifiedVeterinarian && user.veterinarianDetails && (
+              <div className="vet-details">
+                <div className="vet-detail-item">
+                  <span className="detail-label">Clínica/Consultorio:</span>
+                  <span className="detail-value">{user.veterinarianDetails.clinic}</span>
+                </div>
+                {user.veterinarianDetails.specialties && (
+                  <div className="vet-detail-item">
+                    <span className="detail-label">Especialidades:</span>
+                    <span className="detail-value">{user.veterinarianDetails.specialties}</span>
+                  </div>
+                )}
+                {user.veterinarianDetails.licenseNumber && (
+                  <div className="vet-detail-item">
+                    <span className="detail-label">Cédula Profesional:</span>
+                    <span className="detail-value">{user.veterinarianDetails.licenseNumber}</span>
+                  </div>
+                )}
+                {user.veterinarianDetails.approvedAt && (
+                  <div className="vet-detail-item">
+                    <span className="detail-label">Verificado el:</span>
+                    <span className="detail-value">{formatDate(user.veterinarianDetails.approvedAt)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        </div>
 
         {/* Pestañas de navegación */}
         <div className="profile-tabs">

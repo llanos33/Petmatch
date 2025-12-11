@@ -25,7 +25,12 @@ function Login() {
     const result = await login(email, password)
 
     if (result.success) {
-      navigate('/')
+      // Si es veterinario y no está verificado, redirigir a verificación
+      if (result.user?.isVeterinarian && !result.user?.isVerifiedVeterinarian) {
+        navigate('/veterinarian-verification')
+      } else {
+        navigate('/')
+      }
     } else {
       setError(result.error || 'Error al iniciar sesión')
     }

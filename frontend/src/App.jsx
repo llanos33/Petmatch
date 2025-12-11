@@ -14,6 +14,7 @@ import Register from './components/Register'
 import Profile from './components/Profile'
 import Help from './components/Help'
 import Consultations from './components/Consultations'
+import VeterinarianVerification from './components/VeterinarianVerification'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
 import BlogPostEdit from './components/BlogPostEdit'
@@ -38,6 +39,7 @@ import DeliveryPolicy from "./pages/DeliveryPolicy";
 import SiteMap from "./pages/SiteMap";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
+import AdminVeterinarianRequests from "./pages/AdminVeterinarianRequests";
 import PuntosInteres from "./pages/PuntosInteres";
 import PetProfiles from "./pages/PetProfiles";
 import PetProfileForm from "./components/PetProfileForm";
@@ -194,6 +196,10 @@ function AppContent({
             element={<Consultations />}
           />
           <Route
+            path="/veterinarian-verification"
+            element={<VeterinarianVerification />}
+          />
+          <Route
             path="/lista-deseos"
             element={<Wishlist products={products} addToCart={addToCart} />}
           />
@@ -268,6 +274,10 @@ function AppContent({
           <Route
             path="/admin/products"
             element={<AdminProducts />}
+          />
+          <Route
+            path="/admin/veterinarian-requests"
+            element={<AdminVeterinarianRequests />}
           />
           <Route
             path="/puntos-interes"

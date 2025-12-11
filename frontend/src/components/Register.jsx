@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { Stethoscope, User as UserIcon } from 'lucide-react'
 import './Auth.css'
 
 function Register() {
@@ -9,6 +10,7 @@ function Register() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [phone, setPhone] = useState('')
+  const [userType, setUserType] = useState('normal') // 'normal' o 'veterinarian'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { register } = useAuth()
@@ -97,10 +99,15 @@ function Register() {
     setLoading(true)
 
     const normalizedEmail = email.trim().toLowerCase()
-    const result = await register(trimmedName, normalizedEmail, password, numericPhone)
+    const result = await register(trimmedName, normalizedEmail, password, numericPhone, userType)
 
     if (result.success) {
-      navigate('/')
+      // Si es veterinario, redirigir a verificación
+      if (userType === 'veterinarian') {
+        navigate('/veterinarian-verification')
+      } else {
+        navigate('/')
+      }
     } else {
       setError(result.error || 'Error al registrarse')
     }
@@ -131,6 +138,26 @@ function Register() {
           <p className="auth-subtitle">Completa el formulario y únete a la comunidad PetMatch</p>
 
           {error && <div className="auth-error">{error}</div>}
+
+          {/* Selector de tipo de usuario */}
+          <div className="user-type-selector">
+            <button
+              type="button"
+              className={`user-type-option ${userType === 'normal' ? 'active' : ''}`}
+              onClick={() => setUserType('normal')}
+            >
+              <UserIcon size={20} />
+              <span>Usuario Normal</span>
+            </button>
+            <button
+              type="button"
+              className={`user-type-option ${userType === 'veterinarian' ? 'active' : ''}`}
+              onClick={() => setUserType('veterinarian')}
+            >
+              <Stethoscope size={20} />
+              <span>Veterinario</span>
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">

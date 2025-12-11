@@ -14,5 +14,23 @@
     "answer": "xscs",
     "answeredAt": "2025-12-09T12:53:46.951Z",
     "answeredBy": "Admin"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "userName": "Kevin Arias",
+    "title": "dadad",
+    "question": "dadasdv",
+    "petType": "gato",
+    "petId": 2,
+    "petName": "Luna",
+    "petPhoto": "https://upload.wikimedia.org/wikipedia/commons/6/60/Neighbours_Siamese.jpg",
+    "createdAt": "2025-12-11T14:54:05.932Z",
+    "status": "answered",
+    "answer": "cfvf",
+    "answeredAt": "2025-12-11T14:55:45.859Z",
+    "answeredBy": "Veterinario Prueba",
+    "answeredByType": "veterinarian",
+    "answeredByUserId": 5
   }
 ]

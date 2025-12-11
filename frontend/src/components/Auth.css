@@ -136,6 +136,47 @@
   font-size: 1rem;
 }
 
+.user-type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.user-type-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: white;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-type-option:hover {
+  border-color: var(--primary);
+  background: #f0f4ff;
+  color: var(--primary);
+}
+
+.user-type-option.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.user-type-option svg {
+  width: 20px;
+  height: 20px;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;

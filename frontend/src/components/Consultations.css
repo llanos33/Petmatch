@@ -346,6 +346,14 @@ textarea.form-control {
   line-height: 1.6;
 }
 
+.answer-by {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0.75rem 0 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
 /* Login Prompt Styling */
 .login-prompt {
   text-align: center;

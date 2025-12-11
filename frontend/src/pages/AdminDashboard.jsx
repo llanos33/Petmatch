@@ -150,6 +150,9 @@ const AdminDashboard = () => {
           <Link to="/admin/products" className="admin-dashboard__header-link">
             Gestionar productos
           </Link>
+          <Link to="/admin/veterinarian-requests" className="admin-dashboard__header-link">
+            Verificar veterinarios
+          </Link>
           {lastFetched && (
             <span className="admin-dashboard__timestamp">
               Última actualización: {dateFormatter.format(lastFetched)}

@@ -204,14 +204,14 @@ export function AuthProvider({ children, clearCart }) {
     }
   }
 
-  const register = async (name, email, password, phone) => {
+  const register = async (name, email, password, phone, userType = 'normal') => {
     try {
       const response = await fetch(apiPath('/api/auth/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, password, phone })
+        body: JSON.stringify({ name, email, password, phone, userType })
       })
 
       const data = await response.json()
@@ -220,7 +220,7 @@ export function AuthProvider({ children, clearCart }) {
         localStorage.setItem('token', data.token)
         setToken(data.token)
         setUser(syncPremiumFlag(data.user))
-        return { success: true }
+        return { success: true, user: data.user }
       } else {
         return { success: false, error: data.error || 'Error al registrarse' }
       }

@@ -93,7 +93,7 @@ function Consultations() {
 
       const updatedConsultation = await response.json();
       setConsultations(consultations.map(c => 
-        c.id === consultationId ? updatedConsultation : c
+        c.id === consultationId ? updatedConsultation.data : c
       ));
       setReplyText(prev => ({ ...prev, [consultationId]: '' }));
     } catch (err) {
@@ -261,7 +261,7 @@ function Consultations() {
                           />
                         )}
                         <span className="pet-name">{consultation.petName}</span>
-                        {user?.isAdmin && (
+                        {(user?.isAdmin || user?.isVerifiedVeterinarian) && (
                           <button 
                             className="view-pet-btn"
                             title="Ver perfil de la mascota"
@@ -282,14 +282,17 @@ function Consultations() {
                     <div className="admin-answer">
                       <div className="answer-header">
                         <ShieldCheck size={16} />
-                        Respuesta de PetMatch
+                        Respuesta {consultation.answeredByType === 'veterinarian' ? 'del Veterinario' : 'de PetMatch'}
                       </div>
                       <p className="answer-text">{consultation.answer}</p>
+                      {consultation.answeredBy && (
+                        <p className="answer-by">Respondido por: <strong>{consultation.answeredBy}</strong></p>
+                      )}
                     </div>
                   )}
                 </div>
 
-                {user?.isAdmin && !consultation.answer && (
+                {(user?.isAdmin || user?.isVerifiedVeterinarian) && !consultation.answer && (
                   <div className="admin-reply-form">
                     <textarea
                       className="reply-input"

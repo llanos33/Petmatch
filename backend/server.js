@@ -15,19 +15,26 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'petmatch_secret_key_change_in_production'; // En produccion, usar variable de entorno
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const dataDir = path.join(__dirname, 'data');
+const uploadsDir = path.join(__dirname, 'uploads', 'veterinary-documents');
 const productsFile = path.join(dataDir, 'products.json');
 const ordersFile = path.join(dataDir, 'orders.json');
 const usersFile = path.join(dataDir, 'users.json');
 const reviewsFile = path.join(dataDir, 'reviews.json');
 const consultationsFile = path.join(dataDir, 'consultations.json');
 const petsFile = path.join(dataDir, 'pets.json');
+const veterinarianRequestsFile = path.join(dataDir, 'veterinarian-requests.json');
 
-// Asegurar que el directorio data existe
+// Asegurar que los directorios existen
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
+}
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 // Inicializar productos si no existen
@@ -681,7 +688,23 @@ function authenticateToken(req, res, next) {
     if (err) {
       return res.status(403).json({ error: 'Token inválido o expirado' });
     }
-    req.user = user;
+    // Obtener datos frescos del usuario desde users.json
+    const users = readUsers();
+    const currentUser = users.find(u => u.id === user.userId);
+    
+    if (!currentUser) {
+      return res.status(401).json({ error: 'Usuario no encontrado' });
+    }
+    
+    // Actualizar req.user con datos frescos de la base de datos
+    req.user = {
+      userId: currentUser.id,
+      email: currentUser.email,
+      isAdmin: !!currentUser.isAdmin,
+      isVeterinarian: !!currentUser.isVeterinarian,
+      isVerifiedVeterinarian: !!currentUser.isVerifiedVeterinarian,
+      isPremium: !!currentUser.isPremium
+    };
     next();
   });
 }
@@ -692,6 +715,18 @@ function requireAdmin(req, res, next) {
 
   if (!currentUser || !currentUser.isAdmin) {
     return res.status(403).json({ error: 'Acceso restringido a administradores' });
+  }
+
+  req.currentUser = currentUser;
+  next();
+}
+
+function requireVerifiedVeterinarian(req, res, next) {
+  const users = readUsers();
+  const currentUser = users.find(u => u.id === req.user.userId);
+
+  if (!currentUser || !currentUser.isVerifiedVeterinarian) {
+    return res.status(403).json({ error: 'Solo veterinarios verificados pueden realizar esta acción' });
   }
 
   req.currentUser = currentUser;
@@ -787,6 +822,21 @@ function writeConsultations(consultations) {
   function writePets(pets) {
     fs.writeFileSync(petsFile, JSON.stringify(pets, null, 2));
   }
+
+// Helper para leer solicitudes de veterinarios
+function readVeterinarianRequests() {
+  try {
+    const data = fs.readFileSync(veterinarianRequestsFile, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+}
+
+// Helper para escribir solicitudes de veterinarios
+function writeVeterinarianRequests(requests) {
+  fs.writeFileSync(veterinarianRequestsFile, JSON.stringify(requests, null, 2));
+}
 
 function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
@@ -1098,13 +1148,21 @@ app.post('/api/consultations', authenticateToken, (req, res) => {
   res.status(201).json(newConsultation);
 });
 
-// Responder una consulta (Solo Admin)
-app.post('/api/consultations/:id/answer', authenticateToken, requireAdmin, (req, res) => {
+// Responder una consulta (Admin o Veterinario Verificado)
+app.post('/api/consultations/:id/answer', authenticateToken, (req, res) => {
   const consultationId = parseInt(req.params.id);
   const { answer } = req.body;
 
   if (!answer) {
     return res.status(400).json({ error: 'La respuesta es requerida' });
+  }
+
+  // Verificar que el usuario sea admin o veterinario verificado
+  const users = readUsers();
+  const currentUser = users.find(u => u.id === req.user.userId);
+
+  if (!currentUser || (!currentUser.isAdmin && !currentUser.isVerifiedVeterinarian)) {
+    return res.status(403).json({ error: 'Solo administradores y veterinarios verificados pueden responder consultas' });
   }
 
   const consultations = readConsultations();
@@ -1114,14 +1172,23 @@ app.post('/api/consultations/:id/answer', authenticateToken, requireAdmin, (req,
     return res.status(404).json({ error: 'Consulta no encontrada' });
   }
 
+  // Obtener el nombre del respondedor (admin o veterinario)
+  const responderName = currentUser.isAdmin ? 'Administrador' : currentUser.name;
+  const responderType = currentUser.isAdmin ? 'admin' : 'veterinarian';
+
   consultations[index].answer = answer;
   consultations[index].status = 'answered';
   consultations[index].answeredAt = new Date().toISOString();
-  consultations[index].answeredBy = 'Admin'; // O el nombre del admin si se prefiere
+  consultations[index].answeredBy = responderName;
+  consultations[index].answeredByType = responderType; // 'admin' o 'veterinarian'
+  consultations[index].answeredByUserId = currentUser.id;
 
   writeConsultations(consultations);
 
-  res.json(consultations[index]);
+  res.json({
+    success: true,
+    data: consultations[index]
+  });
 });
 
 // Eliminar una consulta (Solo Admin)
@@ -1397,7 +1464,7 @@ app.get('/api/admin/dashboard', authenticateToken, requireAdmin, (req, res) => {
 
 // Registrar nuevo usuario
 app.post('/api/auth/register', async (req, res) => {
-  const { name, email, password, phone } = req.body || {};
+  const { name, email, password, phone, userType = 'normal' } = req.body || {};
   const normalizedEmail = normalizeEmail(email);
 
   if (!name || !normalizedEmail || !password) {
@@ -1425,7 +1492,10 @@ app.post('/api/auth/register', async (req, res) => {
     isPremium: false,
     premiumSince: null,
     subscription: null,
-    isAdmin: false
+    isAdmin: false,
+    isVeterinarian: userType === 'veterinarian',
+    isVerifiedVeterinarian: false,
+    veterinarianDetails: null
   };
 
   users.push(newUser);
@@ -1447,7 +1517,9 @@ app.post('/api/auth/register', async (req, res) => {
       phone: newUser.phone,
       isPremium: newUser.isPremium,
       premiumSince: newUser.premiumSince,
-      isAdmin: newUser.isAdmin
+      isAdmin: newUser.isAdmin,
+      isVeterinarian: newUser.isVeterinarian,
+      isVerifiedVeterinarian: newUser.isVerifiedVeterinarian
     }
   });
 });
@@ -1491,7 +1563,10 @@ app.post('/api/auth/login', async (req, res) => {
       phone: user.phone,
       isPremium: !!user.isPremium,
       premiumSince: user.premiumSince || null,
-      isAdmin: !!user.isAdmin
+      isAdmin: !!user.isAdmin,
+      isVeterinarian: !!user.isVeterinarian,
+      isVerifiedVeterinarian: !!user.isVerifiedVeterinarian,
+      veterinarianDetails: user.veterinarianDetails || null
     }
   });
 });
@@ -1513,9 +1588,184 @@ app.get('/api/auth/profile', authenticateToken, (req, res) => {
     createdAt: user.createdAt,
     isPremium: !!user.isPremium,
     premiumSince: user.premiumSince || null,
-    isAdmin: !!user.isAdmin
+    isAdmin: !!user.isAdmin,
+    isVeterinarian: !!user.isVeterinarian,
+    isVerifiedVeterinarian: !!user.isVerifiedVeterinarian,
+    veterinarianDetails: user.veterinarianDetails || null
   });
 });
+
+// Verificación de veterinario
+app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
+  try {
+    console.log('POST /api/veterinarian/verify - Iniciando...')
+    
+    const { professionalLicense, licenseNumber, clinic, specialties, certificateFile, certificateFileName, certificateFileType } = req.body;
+
+    console.log('Datos recibidos:', {
+      licenseNumber,
+      clinic,
+      hasCertificateFile: !!certificateFile,
+      certificateFileName,
+      certificateFileType
+    })
+
+    if (!licenseNumber || !clinic) {
+      console.log('Error: Faltan campos requeridos')
+      return res.status(400).json({ error: 'Número de cédula y clínica son requeridos' });
+    }
+
+    if (!certificateFile || !certificateFileName) {
+      console.log('Error: Falta certificado')
+      return res.status(400).json({ error: 'El certificado es requerido' });
+    }
+
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.userId);
+
+    if (userIndex === -1) {
+      console.log('Error: Usuario no encontrado')
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const user = users[userIndex];
+    console.log('Usuario encontrado:', user.name)
+
+    // Procesar y guardar el certificado
+    let certificatePath = null;
+    try {
+      console.log('Procesando certificado...')
+      // Extraer base64 data
+      const base64Data = certificateFile.split(',')[1] || certificateFile;
+      const buffer = Buffer.from(base64Data, 'base64');
+      
+      console.log('Tamaño del buffer:', buffer.length, 'bytes')
+      
+      // Generar nombre único para el archivo
+      const timestamp = Date.now();
+      const userId = req.user.userId;
+      const fileExtension = certificateFileName.split('.').pop() || 'pdf';
+      const fileName = `vet_${userId}_${timestamp}.${fileExtension}`;
+      const filePath = path.join(uploadsDir, fileName);
+      
+      console.log('Guardando archivo en:', filePath)
+      
+      // Guardar archivo
+      fs.writeFileSync(filePath, buffer);
+      certificatePath = `/uploads/veterinary-documents/${fileName}`;
+      
+      console.log('Archivo guardado exitosamente')
+    } catch (fileError) {
+      console.error('Error al guardar certificado:', fileError);
+      return res.status(500).json({ error: 'Error al guardar el certificado: ' + fileError.message });
+    }
+
+    // Crear solicitud de verificación
+    const requests = readVeterinarianRequests();
+    const requestId = requests.length > 0 ? Math.max(...requests.map(r => r.id)) + 1 : 1;
+
+    const newRequest = {
+      id: requestId,
+      userId: req.user.userId,
+      userName: user.name,
+      userEmail: user.email,
+      professionalLicense: professionalLicense || '',
+      licenseNumber,
+      clinic,
+      specialties: specialties || '',
+      certificatePath,
+      certificateFileName,
+      submittedAt: new Date().toISOString(),
+      status: 'pending' // pending, approved, rejected
+    };
+
+    requests.push(newRequest);
+    writeVeterinarianRequests(requests);
+
+    console.log('Solicitud creada exitosamente:', requestId)
+
+    res.json({
+      success: true,
+      message: 'Solicitud de verificación enviada. El equipo la revisará en 2-3 días hábiles.'
+    });
+  } catch (error) {
+    console.error('Error en verificación de veterinario:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud: ' + error.message });
+  }
+});
+
+// Endpoint para obtener solicitudes de verificación de veterinarios (admin)
+app.get('/api/admin/veterinarian-requests', authenticateToken, requireAdmin, (req, res) => {
+  try {
+    const requests = readVeterinarianRequests();
+    res.json({
+      success: true,
+      data: requests
+    });
+  } catch (error) {
+    console.error('Error al obtener solicitudes:', error);
+    res.status(500).json({ error: 'Error al obtener solicitudes' });
+  }
+});
+
+// Endpoint para aprobar/rechazar solicitud de veterinario (admin)
+app.put('/api/admin/veterinarian-requests/:requestId', authenticateToken, requireAdmin, (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { status } = req.body; // 'approved' o 'rejected'
+
+    if (!['approved', 'rejected'].includes(status)) {
+      return res.status(400).json({ error: 'Estado inválido. Debe ser "approved" o "rejected"' });
+    }
+
+    const requests = readVeterinarianRequests();
+    const requestIndex = requests.findIndex(r => r.id === parseInt(requestId));
+
+    if (requestIndex === -1) {
+      return res.status(404).json({ error: 'Solicitud no encontrada' });
+    }
+
+    const request = requests[requestIndex];
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === request.userId);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Actualizar estado de la solicitud
+    requests[requestIndex].status = status;
+    requests[requestIndex].reviewedAt = new Date().toISOString();
+    requests[requestIndex].reviewedBy = req.user.userId;
+
+    // Si es aprobada, actualizar el usuario como veterinario verificado
+    if (status === 'approved') {
+      users[userIndex].isVeterinarian = true;
+      users[userIndex].isVerifiedVeterinarian = true;
+      users[userIndex].veterinarianDetails = {
+        professionalLicense: request.professionalLicense,
+        licenseNumber: request.licenseNumber,
+        clinic: request.clinic,
+        specialties: request.specialties,
+        submittedAt: request.submittedAt,
+        approvedAt: new Date().toISOString()
+      };
+    }
+
+    writeVeterinarianRequests(requests);
+    writeUsers(users);
+
+    res.json({
+      success: true,
+      message: `Solicitud ${status === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`,
+      data: request
+    });
+  } catch (error) {
+    console.error('Error al procesar solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
 
 // Obtener órdenes del usuario actual
 app.get('/api/auth/orders', authenticateToken, (req, res) => {
@@ -1579,15 +1829,22 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
       const pets = readPets();
       const users = readUsers();
       const requestUser = users.find(u => u.id === req.user.userId);
-      const isAdmin = !!requestUser?.isAdmin;
       
-      // Si es admin, puede ver cualquier mascota. Si no, solo la suya
-      const pet = isAdmin 
-        ? pets.find(p => p.id === petId)
-        : pets.find(p => p.id === petId && p.userId === req.user.userId);
-    
+      // Verificación sencilla: admin, veterinario verificado, o propietario
+      const isAdmin = !!requestUser?.isAdmin;
+      const isVerifiedVeterinarian = !!requestUser?.isVerifiedVeterinarian;
+      const isOwner = requestUser?.linkedPetIds?.includes(petId);
+      
+      // Buscar la mascota
+      const pet = pets.find(p => p.id === petId);
+      
       if (!pet) {
         return res.status(404).json({ error: 'Mascota no encontrada' });
+      }
+      
+      // Verificar permisos: admin, veterinario verificado, o propietario
+      if (!isAdmin && !isVerifiedVeterinarian && pet.userId !== req.user.userId) {
+        return res.status(403).json({ error: 'No tienes permiso para ver esta mascota' });
       }
     
       res.json(pet);
@@ -1758,6 +2015,9 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
     }
   });
 
+// Servir archivos cargados de documentos de veterinarios
+app.use('/uploads/veterinary-documents', express.static(uploadsDir));
+
 // Servir frontend estatico si existe el build en /public
 const clientBuildPath = path.join(__dirname, 'public');
 if (fs.existsSync(clientBuildPath)) {
@@ -1772,5 +2032,4 @@ await ensureAdminUser();
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
 

@@ -41,5 +41,48 @@
     "specialNeeds": "ninguna",
     "createdAt": "2025-12-09T12:03:39.189Z",
     "updatedAt": "2025-12-09T12:06:58.624Z"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "name": "Luna",
+    "type": "gato",
+    "breed": "Siames",
+    "birthDate": "2022-12-12",
+    "gender": "hembra",
+    "weight": 14,
+    "photo": "https://upload.wikimedia.org/wikipedia/commons/6/60/Neighbours_Siamese.jpg",
+    "medicalInfo": {
+      "allergies": [
+        "No tiene"
+      ],
+      "vaccinations": [
+        "Todas"
+      ],
+      "medications": [
+        "ninguno"
+      ],
+      "conditions": [
+        "ninguna"
+      ],
+      "veterinarian": "no tiene",
+      "lastCheckup": "2025-06-06",
+      "nextCheckup": "2026-02-01"
+    },
+    "preferences": {
+      "favoriteFood": [
+        "Salmón"
+      ],
+      "favoriteToys": [
+        "Ratón de felpa"
+      ],
+      "dislikes": [
+        "Bañarse"
+      ]
+    },
+    "activityLevel": "high",
+    "specialNeeds": "",
+    "createdAt": "2025-12-11T14:53:44.235Z",
+    "updatedAt": "2025-12-11T14:53:44.235Z"
   }
 ]
