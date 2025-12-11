@@ -259,7 +259,7 @@ const AdminVeterinarianRequests = () => {
                     <div className="vet-requests__info-group">
                       <label className="vet-requests__label">Certificado Profesional</label>
                       <a 
-                        href={request.certificatePath}
+                        href={apiPath(request.certificatePath)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="vet-requests__certificate-link"
@@ -327,6 +327,21 @@ const AdminVeterinarianRequests = () => {
                     <label className="vet-requests__label">Clínica/Consultorio</label>
                     <p className="vet-requests__value">{request.clinic}</p>
                   </div>
+                  
+                  {request.certificatePath && (
+                    <div className="vet-requests__info-group">
+                      <label className="vet-requests__label">Certificado Profesional</label>
+                      <a 
+                        href={apiPath(request.certificatePath)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="vet-requests__certificate-link"
+                      >
+                        📄 Ver {request.certificateFileName || 'Certificado'}
+                      </a>
+                    </div>
+                  )}
+                  
                   <div className="vet-requests__info-group">
                     <label className="vet-requests__label">Aprobada el</label>
                     <p className="vet-requests__value">
@@ -360,6 +375,20 @@ const AdminVeterinarianRequests = () => {
                 </div>
 
                 <div className="vet-requests__card-content">
+                  {request.certificatePath && (
+                    <div className="vet-requests__info-group">
+                      <label className="vet-requests__label">Certificado Profesional</label>
+                      <a 
+                        href={apiPath(request.certificatePath)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="vet-requests__certificate-link"
+                      >
+                        📄 Ver {request.certificateFileName || 'Certificado'}
+                      </a>
+                    </div>
+                  )}
+                  
                   <div className="vet-requests__info-group">
                     <label className="vet-requests__label">Rechazada el</label>
                     <p className="vet-requests__value">

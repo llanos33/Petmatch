@@ -8,9 +8,11 @@
     "licenseNumber": "1006533909",
     "clinic": "PetVet",
     "specialties": "Cirugia",
-    "submittedAt": "2025-12-11T14:47:19.044Z",
-    "status": "approved",
-    "reviewedAt": "2025-12-11T14:48:08.298Z",
+    "certificatePath": "/uploads/veterinary-documents/vet_5_1765467332880.pdf",
+    "certificateFileName": "carnet UTP.pdf",
+    "submittedAt": "2025-12-11T15:35:32.886Z",
+    "status": "rejected",
+    "reviewedAt": "2025-12-11T15:41:10.166Z",
     "reviewedBy": 4
   },
   {
@@ -22,27 +24,11 @@
     "licenseNumber": "1006533909",
     "clinic": "PetVet",
     "specialties": "Cirugia",
-    "certificatePath": "/uploads/veterinary-documents/vet_5_1765466849047.jpg",
+    "certificatePath": "/uploads/veterinary-documents/vet_5_1765467634729.jpg",
     "certificateFileName": "Carnet UTP.jpg",
-    "submittedAt": "2025-12-11T15:27:29.049Z",
-    "status": "rejected",
-    "reviewedAt": "2025-12-11T15:28:17.735Z",
-    "reviewedBy": 4
-  },
-  {
-    "id": 3,
-    "userId": 5,
-    "userName": "Veterinario Prueba",
-    "userEmail": "veterinariopetmatch@gmail.com",
-    "professionalLicense": "Universidad Tecnologica de pereira",
-    "licenseNumber": "1006533909",
-    "clinic": "PetVet",
-    "specialties": "Cirugia",
-    "certificatePath": "/uploads/veterinary-documents/vet_5_1765466923885.pdf",
-    "certificateFileName": "carnet UTP.pdf",
-    "submittedAt": "2025-12-11T15:28:43.886Z",
+    "submittedAt": "2025-12-11T15:40:34.731Z",
     "status": "approved",
-    "reviewedAt": "2025-12-11T15:29:20.772Z",
+    "reviewedAt": "2025-12-11T15:40:57.393Z",
     "reviewedBy": 4
   }
 ]

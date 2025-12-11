@@ -50,11 +50,11 @@
     "id": 5,
     "name": "Veterinario Prueba",
     "email": "veterinariopetmatch@gmail.com",
-    "password": "$2a$10$L54g1gRBib0bTp9WHO5YLOgydo8x3mBXxOO.FUNUhEgKrGxvW2OE.",
-    "phone": "3202826022",
-    "createdAt": "2025-12-11T15:19:36.121Z",
+    "password": "$2a$10$rsRUux0/PY4IbRiFxzDJw.CG6SmZU82VJmydOZwEVzLh9MMwKFXDa",
+    "phone": "3225567890",
+    "createdAt": "2025-12-11T15:35:22.733Z",
     "isPremium": true,
-    "premiumSince": "2025-12-11T15:20:43.188Z",
+    "premiumSince": "2025-12-11T15:41:26.524Z",
     "subscription": {
       "plan": "yearly",
       "price": 420000
@@ -67,8 +67,8 @@
       "licenseNumber": "1006533909",
       "clinic": "PetVet",
       "specialties": "Cirugia",
-      "submittedAt": "2025-12-11T15:28:43.886Z",
-      "approvedAt": "2025-12-11T15:29:20.772Z"
+      "submittedAt": "2025-12-11T15:40:34.731Z",
+      "approvedAt": "2025-12-11T15:40:57.393Z"
     }
   }
 ]
