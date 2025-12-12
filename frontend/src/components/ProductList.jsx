@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './ProductList.css'
 import WishlistToggle from './WishlistToggle'
@@ -18,7 +18,28 @@ import { useAuth } from '../context/AuthContext'
 
 function ProductList({ products, addToCart, searchTerm = '' }) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [bestsellerProducts, setBestsellerProducts] = useState([])
+  const [loadingBestsellers, setLoadingBestsellers] = useState(true)
   const { user } = useAuth()
+
+  // Cargar productos más vendidos del mes
+  useEffect(() => {
+    const fetchBestsellers = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/products/bestsellers/monthly')
+        if (response.ok) {
+          const data = await response.json()
+          setBestsellerProducts(data)
+        }
+      } catch (error) {
+        console.error('Error cargando productos más vendidos:', error)
+      } finally {
+        setLoadingBestsellers(false)
+      }
+    }
+
+    fetchBestsellers()
+  }, [])
 
   // Seleccionar productos variados de todas las categorías
   const getFeaturedProducts = () => {
@@ -311,15 +332,23 @@ function ProductList({ products, addToCart, searchTerm = '' }) {
         {/* Sección de Productos */}
         <div className="products-section">
         <div className="products-header">
-          <h2>{(searchTerm || '').trim() ? 'Resultados de búsqueda' : 'Productos Destacados'}</h2>
+          <h2>{(searchTerm || '').trim() ? 'Resultados de búsqueda' : 'Productos Más Vendidos'}</h2>
           {(searchTerm || '').trim() && (
             <p className="search-summary">{filteredProducts.length} resultado{filteredProducts.length !== 1 ? 's' : ''}</p>
+          )}
+          {!(searchTerm || '').trim() && !loadingBestsellers && (
+            <p className="search-summary">Este mes en PetMatch</p>
           )}
         </div>
 
         {(() => {
           const isSearching = (searchTerm || '').trim()
-          const productsToShow = isSearching ? filteredProducts : featuredProducts
+          let productsToShow = isSearching ? filteredProducts : bestsellerProducts
+
+          // Si está buscando o no hay datos de bestsellers, usar featured
+          if (!isSearching && bestsellerProducts.length === 0 && !loadingBestsellers) {
+            productsToShow = featuredProducts
+          }
 
           if (productsToShow.length === 0) {
             return (

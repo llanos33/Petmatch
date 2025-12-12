@@ -28,6 +28,7 @@ const reviewsFile = path.join(dataDir, 'reviews.json');
 const consultationsFile = path.join(dataDir, 'consultations.json');
 const petsFile = path.join(dataDir, 'pets.json');
 const veterinarianRequestsFile = path.join(dataDir, 'veterinarian-requests.json');
+const couponsFile = path.join(dataDir, 'coupons.json');
 
 // Asegurar que los directorios existen
 if (!fs.existsSync(dataDir)) {
@@ -40,6 +41,11 @@ if (!fs.existsSync(uploadsDir)) {
 
 if (!fs.existsSync(invoicesFile)) {
   fs.writeFileSync(invoicesFile, JSON.stringify([], null, 2));
+}
+
+// Inicializar cupones si no existen
+if (!fs.existsSync(couponsFile)) {
+  fs.writeFileSync(couponsFile, JSON.stringify([], null, 2));
 }
 
 // Inicializar productos si no existen
@@ -828,6 +834,19 @@ function writeConsultations(consultations) {
   fs.writeFileSync(consultationsFile, JSON.stringify(consultations, null, 2));
 }
 
+function readCoupons() {
+  const data = fs.readFileSync(couponsFile, 'utf8');
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+
+function writeCoupons(coupons) {
+  fs.writeFileSync(couponsFile, JSON.stringify(coupons, null, 2));
+}
+
   // Helper para leer mascotas
   function readPets() {
     try {
@@ -1068,6 +1087,46 @@ app.get('/api/products/:id/reviews', (req, res) => {
   res.json(productReviews);
 });
 
+// Obtener productos más vendidos del mes
+app.get('/api/products/bestsellers/monthly', (req, res) => {
+  const orders = readOrders();
+  const products = readProducts();
+  
+  // Calcular fecha de hace 30 días
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  // Filtrar órdenes del último mes
+  const recentOrders = orders.filter(order => {
+    const orderDate = new Date(order.date);
+    return orderDate >= thirtyDaysAgo;
+  });
+  
+  // Contar cantidad vendida por producto
+  const productSales = {};
+  recentOrders.forEach(order => {
+    order.items?.forEach(item => {
+      const productId = item.productId;
+      productSales[productId] = (productSales[productId] || 0) + item.quantity;
+    });
+  });
+  
+  // Obtener los datos de productos y ordenar por cantidad vendida
+  const topProducts = Object.entries(productSales)
+    .map(([productId, quantity]) => {
+      const product = products.find(p => p.id === parseInt(productId));
+      return {
+        ...product,
+        quantity: quantity,
+        monthlySales: quantity
+      };
+    })
+    .sort((a, b) => b.quantity - a.quantity)
+    .slice(0, 8); // Top 8 productos
+  
+  res.json(topProducts);
+});
+
 // Agregar una reseña
 app.post('/api/products/:id/reviews', authenticateToken, (req, res) => {
   const productId = parseInt(req.params.id);
@@ -1225,6 +1284,114 @@ app.delete('/api/consultations/:id', authenticateToken, requireAdmin, (req, res)
   writeConsultations(consultations);
 
   res.json({ success: true, data: deleted[0] });
+});
+
+// Recompensas para veterinarios: progreso mensual y emisión de cupón 5%
+app.get('/api/veterinarians/:userId/rewards', authenticateToken, (req, res) => {
+  const { userId } = req.params;
+  const requestedId = parseInt(userId, 10);
+  if (requestedId !== req.user.userId) {
+    return res.status(403).json({ success: false, error: 'No autorizado' });
+  }
+
+  const users = readUsers();
+  const user = users.find(u => u.id === requestedId);
+  if (!user || !user.isVeterinarian) {
+    return res.status(400).json({ success: false, error: 'Usuario no es veterinario' });
+  }
+
+  const consultations = readConsultations();
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  const answeredThisMonth = consultations.filter(c => {
+    const answeredByUser = c.answeredByUserId === requestedId;
+    const isAnswered = (c.status === 'answered');
+    const date = c.answeredAt ? new Date(c.answeredAt) : (c.updatedAt ? new Date(c.updatedAt) : new Date(c.createdAt));
+    return answeredByUser && isAnswered && date >= startOfMonth && date <= endOfMonth;
+  });
+
+  const count = answeredThisMonth.length;
+  const threshold = 10;
+  const progress = Math.min(count / threshold, 1);
+
+  const coupons = readCoupons();
+  const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+  const existingMonthlyCoupon = coupons.find(c => c.userId === requestedId && c.type === 'veterinarian-monthly-5' && c.monthKey === monthKey);
+
+  res.json({
+    success: true,
+    data: {
+      monthKey,
+      count,
+      threshold,
+      progress,
+      eligible: count >= threshold && !existingMonthlyCoupon,
+      couponIssued: !!existingMonthlyCoupon,
+      coupon: existingMonthlyCoupon || null
+    }
+  });
+});
+
+app.post('/api/veterinarians/:userId/coupons', authenticateToken, (req, res) => {
+  const { userId } = req.params;
+  const requestedId = parseInt(userId, 10);
+  if (requestedId !== req.user.userId) {
+    return res.status(403).json({ success: false, error: 'No autorizado' });
+  }
+
+  const users = readUsers();
+  const user = users.find(u => u.id === requestedId);
+  if (!user || !user.isVeterinarian) {
+    return res.status(400).json({ success: false, error: 'Usuario no es veterinario' });
+  }
+
+  const consultations = readConsultations();
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  const answeredThisMonth = consultations.filter(c => {
+    const answeredByUser = c.answeredByUserId === requestedId;
+    const isAnswered = (c.status === 'answered');
+    const date = c.answeredAt ? new Date(c.answeredAt) : (c.updatedAt ? new Date(c.updatedAt) : new Date(c.createdAt));
+    return answeredByUser && isAnswered && date >= startOfMonth && date <= endOfMonth;
+  });
+
+  if (answeredThisMonth.length < 10) {
+    return res.status(400).json({ success: false, error: 'No elegible: menos de 10 consultas respondidas en el mes' });
+  }
+
+  const coupons = readCoupons();
+  const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+  const existingMonthlyCoupon = coupons.find(c => c.userId === requestedId && c.type === 'veterinarian-monthly-5' && c.monthKey === monthKey);
+  if (existingMonthlyCoupon) {
+    return res.json({ success: true, data: existingMonthlyCoupon });
+  }
+
+  const code = `VET5-${monthKey}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  const newCoupon = {
+    id: Date.now(),
+    userId: requestedId,
+    type: 'veterinarian-monthly-5',
+    discountPercent: 5,
+    issuedAt: new Date().toISOString(),
+    monthKey,
+    code,
+    description: 'Cupón 5% por 10 consultas respondidas en el mes',
+    redeemableOn: 'any-product',
+    used: false
+  };
+
+  coupons.push(newCoupon);
+  writeCoupons(coupons);
+
+  user.coupons = Array.isArray(user.coupons) ? user.coupons : [];
+  user.coupons.push({ id: newCoupon.id, code: newCoupon.code, type: newCoupon.type, discountPercent: newCoupon.discountPercent, issuedAt: newCoupon.issuedAt, monthKey: newCoupon.monthKey });
+  writeUsers(users);
+
+  res.json({ success: true, data: newCoupon });
 });
 
 // Crear una orden

@@ -69,6 +69,16 @@
       "specialties": "Cirugia",
       "submittedAt": "2025-12-11T20:16:56.264Z",
       "approvedAt": "2025-12-11T20:17:17.755Z"
-    }
+    },
+    "coupons": [
+      {
+        "id": 1765576117296,
+        "code": "VET5-2025-12-5T4OK5",
+        "type": "veterinarian-monthly-5",
+        "discountPercent": 5,
+        "issuedAt": "2025-12-12T21:48:37.296Z",
+        "monthKey": "2025-12"
+      }
+    ]
   }
 ]

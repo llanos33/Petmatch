@@ -3,12 +3,15 @@
     "id": 1,
     "name": "Alimento Premium para Perros",
     "description": "Croquetas premium ricas en proteínas de pollo y pescado, con Omega-3 para piel y pelaje, prebióticos para la salud digestiva y antioxidantes para el sistema inmune. Ideal para perros adultos de mantenimiento. Indicaciones de alimento: 20-30g por kg de peso al día, ajustar según actividad. Contenido: 3 kg.",
-    "price": 45000,
+    "price": 50000,
     "category": "Alimentos",
     "petType": "perro",
     "image": "https://laikapp.s3.amazonaws.com/dev_images_products/9f5fc6101e66358e499af3e92c12fcfc_1753368247.jpg",
     "exclusive": true,
-    "stock": 46
+    "stock": 50,
+    "isOnSale": false,
+    "updatedAt": "2025-12-12T20:58:18.709Z",
+    "createdAt": "2025-12-12T20:58:18.709Z"
   },
   {
     "id": 2,

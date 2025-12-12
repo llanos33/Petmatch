@@ -32,6 +32,7 @@ const AdminDashboard = () => {
   const [invoiceError, setInvoiceError] = useState('')
   const [loadingInvoices, setLoadingInvoices] = useState(true)
   const [invoiceModal, setInvoiceModal] = useState({ open: false, loading: false, error: '', invoice: null })
+  const [activeTab, setActiveTab] = useState('ventas')
 
   const loadMetrics = useCallback(async () => {
     if (!user?.isAdmin) {
@@ -331,272 +332,334 @@ const AdminDashboard = () => {
         ))}
       </section>
 
-      <section className="admin-dashboard__grid">
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Pedidos recientes</h2>
-            <span>Ultimos 5 pedidos confirmados</span>
-          </header>
-          {metrics?.recentOrders?.length ? (
-            <div className="admin-dashboard__table-wrap">
-              <table className="admin-dashboard__table admin-dashboard__table--orders">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Cliente</th>
-                  <th>Total</th>
-                  <th>Estado</th>
-                  <th>Fecha</th>
-                  <th>Factura</th>
-                </tr>
-              </thead>
-              <tbody>
-                {metrics.recentOrders.map(order => (
-                  <tr key={order.id}>
-                    <td>#{order.id}</td>
-                    <td>
-                      <span className="admin-dashboard__customer">{order.customer}</span>
-                      {order.email && <span className="admin-dashboard__customer-email">{order.email}</span>}
-                    </td>
-                    <td>{formatCurrency(order.total)}</td>
-                    <td>
-                      <span className={`admin-dashboard__status admin-dashboard__status--${order.status || 'pendiente'}`}>
-                        {order.status || 'pendiente'}
-                      </span>
-                    </td>
-                    <td>{order.date ? dateFormatter.format(new Date(order.date)) : '—'}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="admin-dashboard__icon-button"
-                        title="Ver factura"
-                        onClick={() => openInvoiceForOrder(order.id)}
-                      >
-                        <FileText size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="admin-dashboard__empty">Todavía no hay pedidos registrados.</p>
-          )}
-        </article>
+      <nav className="admin-dashboard__tabs">
+        <button 
+          className={`admin-dashboard__tab ${activeTab === 'ventas' ? 'admin-dashboard__tab--active' : ''}`}
+          onClick={() => setActiveTab('ventas')}
+        >
+          <TrendingUp size={18} />
+          <span>Ventas</span>
+        </button>
+        <button 
+          className={`admin-dashboard__tab ${activeTab === 'ordenes' ? 'admin-dashboard__tab--active' : ''}`}
+          onClick={() => setActiveTab('ordenes')}
+        >
+          <ShoppingBag size={18} />
+          <span>Órdenes</span>
+        </button>
+        <button 
+          className={`admin-dashboard__tab ${activeTab === 'inventario' ? 'admin-dashboard__tab--active' : ''}`}
+          onClick={() => setActiveTab('inventario')}
+        >
+          <Package size={18} />
+          <span>Inventario</span>
+        </button>
+        <button 
+          className={`admin-dashboard__tab ${activeTab === 'metricas' ? 'admin-dashboard__tab--active' : ''}`}
+          onClick={() => setActiveTab('metricas')}
+        >
+          <Star size={18} />
+          <span>Métricas Adicionales</span>
+        </button>
+      </nav>
 
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Facturas recientes</h2>
-            <span>Ultimas facturas emitidas</span>
-          </header>
-          {invoiceError && (
-            <div className="admin-dashboard__alert">
-              <AlertCircle size={18} />
-              <span>{invoiceError}</span>
-            </div>
-          )}
-          {invoices?.length ? (
-            <div className="admin-dashboard__table-wrap">
-              <table className="admin-dashboard__table admin-dashboard__table--invoices">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoices.slice(0, 5).map(inv => (
-                    <tr key={inv.id}>
-                      <td>
-                        <div className="admin-dashboard__invoice-id">
-                          <FileText size={16} />
-                          <span>{inv.invoiceNumber || `Factura #${inv.id}`}</span>
-                          <span className="admin-dashboard__muted">Orden #{inv.orderId}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <span className="admin-dashboard__customer">{inv.customerName || 'Cliente'}</span>
-                        {inv.customerEmail && (
-                          <span className="admin-dashboard__customer-email">{inv.customerEmail}</span>
-                        )}
-                      </td>
-                      <td>{formatCurrency(inv.total)}</td>
-                      <td>
-                        <span className={`admin-dashboard__status admin-dashboard__status--${inv.status || 'emitida'}`}>
-                          {inv.status || 'emitida'}
-                        </span>
-                      </td>
-                      <td>{inv.issuedAt ? dateFormatter.format(new Date(inv.issuedAt)) : '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="admin-dashboard__empty">Todavía no hay facturas emitidas.</p>
-          )}
-        </article>
+      <section className="admin-dashboard__content">
+        {/* TAB: Ventas */}
+        {activeTab === 'ventas' && (
+          <div className="admin-dashboard__tab-content">
+            <section className="admin-dashboard__grid admin-dashboard__grid--single-column">
+              <article className="admin-dashboard__panel">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Tendencia de ventas</h2>
+                  <span>Últimos 7 días</span>
+                </header>
+                <div className="admin-dashboard__chart-container">
+                  {salesTrendData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={450}>
+                      <LineChart data={salesTrendData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip 
+                          formatter={(value) => formatCurrency(value)}
+                          contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0' }}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="total" 
+                          stroke="#FF6B6B" 
+                          dot={{ fill: '#FF6B6B', r: 5 }}
+                          activeDot={{ r: 7 }}
+                          name="Ventas"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <p className="admin-dashboard__chart-empty">No hay datos de ventas disponibles</p>
+                  )}
+                </div>
+              </article>
 
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Tendencia de ventas</h2>
-            <span>Últimos 7 días</span>
-          </header>
-          <div className="admin-dashboard__chart-container">
-            {salesTrendData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={salesTrendData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip 
-                    formatter={(value) => formatCurrency(value)}
-                    contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0' }}
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke="#FF6B6B" 
-                    dot={{ fill: '#FF6B6B', r: 5 }}
-                    activeDot={{ r: 7 }}
-                    name="Ventas"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="admin-dashboard__chart-empty">No hay datos de ventas disponibles</p>
-            )}
+              <article className="admin-dashboard__panel">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Distribución de métodos de pago</h2>
+                  <span>Órdenes por método</span>
+                </header>
+                <div className="admin-dashboard__chart-container">
+                  {paymentMethodData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={450}>
+                      <PieChart>
+                        <Pie
+                          data={paymentMethodData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, value }) => `${name}: ${value}`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {paymentMethodData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <p className="admin-dashboard__chart-empty">No hay datos de métodos de pago</p>
+                  )}
+                </div>
+              </article>
+
+              <article className="admin-dashboard__panel">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Top 5 productos más vendidos</h2>
+                  <span>Por cantidad</span>
+                </header>
+                <div className="admin-dashboard__chart-container">
+                  {topProductsData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={450}>
+                      <BarChart data={topProductsData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                        <XAxis 
+                          dataKey="name" 
+                          angle={-45}
+                          textAnchor="end"
+                          height={100}
+                        />
+                        <YAxis />
+                        <Tooltip 
+                          cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                          content={({ active, payload }) => {
+                            if (active && payload && payload[0]) {
+                              return (
+                                <div style={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0', padding: '8px', borderRadius: '4px' }}>
+                                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#666' }}>{payload[0].payload.fullName}</p>
+                                  <p style={{ margin: '0', fontWeight: 'bold' }}>Cantidad: {payload[0].value}</p>
+                                </div>
+                              )
+                            }
+                            return null
+                          }}
+                        />
+                        <Bar dataKey="quantity" fill="#4ECDC4" radius={[8, 8, 0, 0]} name="Cantidad vendida" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <p className="admin-dashboard__chart-empty">No hay datos de productos</p>
+                  )}
+                </div>
+              </article>
+            </section>
           </div>
-        </article>
+        )}
 
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Distribución de métodos de pago</h2>
-            <span>Órdenes por método</span>
-          </header>
-          <div className="admin-dashboard__chart-container">
-            {paymentMethodData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={paymentMethodData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: ${value}`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {paymentMethodData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="admin-dashboard__chart-empty">No hay datos de métodos de pago</p>
-            )}
-          </div>
-        </article>
-
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Top 5 productos más vendidos</h2>
-            <span>Por cantidad</span>
-          </header>
-          <div className="admin-dashboard__chart-container">
-            {topProductsData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={topProductsData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                  <XAxis 
-                    dataKey="name" 
-                    angle={-45}
-                    textAnchor="end"
-                    height={100}
-                  />
-                  <YAxis />
-                  <Tooltip 
-                    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
-                    content={({ active, payload }) => {
-                      if (active && payload && payload[0]) {
-                        return (
-                          <div style={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0', padding: '8px', borderRadius: '4px' }}>
-                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#666' }}>{payload[0].payload.fullName}</p>
-                            <p style={{ margin: '0', fontWeight: 'bold' }}>Cantidad: {payload[0].value}</p>
-                          </div>
-                        )
-                      }
-                      return null
-                    }}
-                  />
-                  <Bar dataKey="quantity" fill="#4ECDC4" radius={[8, 8, 0, 0]} name="Cantidad vendida" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="admin-dashboard__chart-empty">No hay datos de productos</p>
-            )}
-          </div>
-        </article>
-
-        <article className="admin-dashboard__panel">
-          <header className="admin-dashboard__panel-header">
-            <h2>Inventario crítico</h2>
-            <span>Productos por debajo de {metrics?.lowStockThreshold ?? 10} unidades</span>
-          </header>
-          {metrics?.lowStockProducts?.length ? (
-            <ul className="admin-dashboard__list">
-              {metrics.lowStockProducts.map(product => (
-                <li key={product.id} className="admin-dashboard__list-item">
-                  <div>
-                    <p className="admin-dashboard__list-title">{product.name}</p>
-                    <span className="admin-dashboard__list-subtitle">{product.category}</span>
+        {/* TAB: Órdenes */}
+        {activeTab === 'ordenes' && (
+          <div className="admin-dashboard__tab-content">
+            <section className="admin-dashboard__grid">
+              <article className="admin-dashboard__panel">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Pedidos recientes</h2>
+                  <span>Ultimos 5 pedidos confirmados</span>
+                </header>
+                {metrics?.recentOrders?.length ? (
+                  <div className="admin-dashboard__table-wrap">
+                    <table className="admin-dashboard__table admin-dashboard__table--orders">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Factura</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {metrics.recentOrders.map(order => (
+                        <tr key={order.id}>
+                          <td>#{order.id}</td>
+                          <td>
+                            <span className="admin-dashboard__customer">{order.customer}</span>
+                            {order.email && <span className="admin-dashboard__customer-email">{order.email}</span>}
+                          </td>
+                          <td>{formatCurrency(order.total)}</td>
+                          <td>
+                            <span className={`admin-dashboard__status admin-dashboard__status--${order.status || 'pendiente'}`}>
+                              {order.status || 'pendiente'}
+                            </span>
+                          </td>
+                          <td>{order.date ? dateFormatter.format(new Date(order.date)) : '—'}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="admin-dashboard__icon-button"
+                              title="Ver factura"
+                              onClick={() => openInvoiceForOrder(order.id)}
+                            >
+                              <FileText size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    </table>
                   </div>
-                  <span className="admin-dashboard__badge">{product.stock} en stock</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="admin-dashboard__empty">Excelente noticia, no hay productos en niveles críticos.</p>
-          )}
-        </article>
-      </section>
+                ) : (
+                  <p className="admin-dashboard__empty">Todavía no hay pedidos registrados.</p>
+                )}
+              </article>
 
-      <section className="admin-dashboard__panel admin-dashboard__panel--wide">
-        <header className="admin-dashboard__panel-header">
-          <h2>Métricas adicionales</h2>
-          <span>Profundiza en el desempeño general</span>
-        </header>
-        <div className="admin-dashboard__metrics-extra">
-          <div className="admin-dashboard__extra-card">
-            <Star size={22} />
-            <div>
-              <span className="admin-dashboard__extra-label">Usuarios premium</span>
-              <strong>{metrics?.premiumUsers ?? 0}</strong>
-            </div>
+              <article className="admin-dashboard__panel">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Facturas recientes</h2>
+                  <span>Ultimas facturas emitidas</span>
+                </header>
+                {invoiceError && (
+                  <div className="admin-dashboard__alert">
+                    <AlertCircle size={18} />
+                    <span>{invoiceError}</span>
+                  </div>
+                )}
+                {invoices?.length ? (
+                  <div className="admin-dashboard__table-wrap">
+                    <table className="admin-dashboard__table admin-dashboard__table--invoices">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Cliente</th>
+                          <th>Total</th>
+                          <th>Estado</th>
+                          <th>Fecha</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {invoices.slice(0, 5).map(inv => (
+                          <tr key={inv.id}>
+                            <td>
+                              <div className="admin-dashboard__invoice-id">
+                                <FileText size={16} />
+                                <span>{inv.invoiceNumber || `Factura #${inv.id}`}</span>
+                                <span className="admin-dashboard__muted">Orden #{inv.orderId}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <span className="admin-dashboard__customer">{inv.customerName || 'Cliente'}</span>
+                              {inv.customerEmail && (
+                                <span className="admin-dashboard__customer-email">{inv.customerEmail}</span>
+                              )}
+                            </td>
+                            <td>{formatCurrency(inv.total)}</td>
+                            <td>
+                              <span className={`admin-dashboard__status admin-dashboard__status--${inv.status || 'emitida'}`}>
+                                {inv.status || 'emitida'}
+                              </span>
+                            </td>
+                            <td>{inv.issuedAt ? dateFormatter.format(new Date(inv.issuedAt)) : '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="admin-dashboard__empty">Todavía no hay facturas emitidas.</p>
+                )}
+              </article>
+            </section>
           </div>
-          <div className="admin-dashboard__extra-card">
-            <TrendingUp size={22} />
-            <div>
-              <span className="admin-dashboard__extra-label">Ticket promedio</span>
-              <strong>{formatCurrency(metrics?.averageOrderValue ?? 0)}</strong>
-            </div>
+        )}
+
+        {/* TAB: Inventario */}
+        {activeTab === 'inventario' && (
+          <div className="admin-dashboard__tab-content">
+            <section className="admin-dashboard__grid">
+              <article className="admin-dashboard__panel admin-dashboard__panel--wide">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Inventario crítico</h2>
+                  <span>Productos por debajo de {metrics?.lowStockThreshold ?? 10} unidades</span>
+                </header>
+                {metrics?.lowStockProducts?.length ? (
+                  <ul className="admin-dashboard__list">
+                    {metrics.lowStockProducts.map(product => (
+                      <li key={product.id} className="admin-dashboard__list-item">
+                        <div>
+                          <p className="admin-dashboard__list-title">{product.name}</p>
+                          <span className="admin-dashboard__list-subtitle">{product.category}</span>
+                        </div>
+                        <span className="admin-dashboard__badge">{product.stock} en stock</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="admin-dashboard__empty">Excelente noticia, no hay productos en niveles críticos.</p>
+                )}
+              </article>
+            </section>
           </div>
-          <div className="admin-dashboard__extra-card">
-            <ShoppingBag size={22} />
-            <div>
-              <span className="admin-dashboard__extra-label">Pedidos mensuales (total)</span>
-              <strong>{metrics?.totalOrders ?? 0}</strong>
-            </div>
+        )}
+
+        {/* TAB: Métricas Adicionales */}
+        {activeTab === 'metricas' && (
+          <div className="admin-dashboard__tab-content">
+            <section className="admin-dashboard__grid admin-dashboard__grid--single-column">
+              <article className="admin-dashboard__panel admin-dashboard__panel--wide">
+                <header className="admin-dashboard__panel-header">
+                  <h2>Métricas adicionales</h2>
+                  <span>Profundiza en el desempeño general</span>
+                </header>
+                <div className="admin-dashboard__metrics-extra admin-dashboard__metrics-extra--large">
+                  <div className="admin-dashboard__extra-card admin-dashboard__extra-card--large">
+                    <Star size={40} />
+                    <div>
+                      <span className="admin-dashboard__extra-label">Usuarios premium</span>
+                      <strong className="admin-dashboard__extra-value">{metrics?.premiumUsers ?? 0}</strong>
+                      <span className="admin-dashboard__extra-subtitle">Clientes premium activos</span>
+                    </div>
+                  </div>
+                  <div className="admin-dashboard__extra-card admin-dashboard__extra-card--large">
+                    <TrendingUp size={40} />
+                    <div>
+                      <span className="admin-dashboard__extra-label">Ticket promedio</span>
+                      <strong className="admin-dashboard__extra-value">{formatCurrency(metrics?.averageOrderValue ?? 0)}</strong>
+                      <span className="admin-dashboard__extra-subtitle">Valor promedio por orden</span>
+                    </div>
+                  </div>
+                  <div className="admin-dashboard__extra-card admin-dashboard__extra-card--large">
+                    <ShoppingBag size={40} />
+                    <div>
+                      <span className="admin-dashboard__extra-label">Pedidos totales</span>
+                      <strong className="admin-dashboard__extra-value">{metrics?.totalOrders ?? 0}</strong>
+                      <span className="admin-dashboard__extra-subtitle">Órdenes completadas</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </section>
           </div>
-        </div>
+        )}
       </section>
 
       {invoiceModal.open && (

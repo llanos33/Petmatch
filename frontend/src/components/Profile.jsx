@@ -10,6 +10,7 @@ function Profile() {
   const { user, logout } = useAuth()
   const [orders, setOrders] = useState([])
   const [consultations, setConsultations] = useState([])
+  const [vetRewards, setVetRewards] = useState(null)
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [consultationsLoading, setConsultationsLoading] = useState(true)
@@ -33,6 +34,9 @@ function Profile() {
     fetchProducts()
     fetchOrders()
     fetchConsultations()
+    if (user?.isVeterinarian) {
+      fetchVetRewards()
+    }
   }, [user, navigate])
 
   const fetchProducts = async () => {
@@ -89,6 +93,44 @@ function Profile() {
       console.error('Error al cargar consultas:', error)
     } finally {
       setConsultationsLoading(false)
+    }
+  }
+
+  const fetchVetRewards = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(apiPath(`/api/veterinarians/${user.id}/rewards`), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (response.ok) {
+        const payload = await response.json()
+        setVetRewards(payload.data)
+      }
+    } catch (e) {
+      console.error('Error cargando recompensas de veterinario', e)
+    }
+  }
+
+  const claimVetCoupon = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(apiPath(`/api/veterinarians/${user.id}/coupons`), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      const payload = await response.json()
+      if (response.ok && payload.success) {
+        // Refresh rewards to reflect issued coupon
+        fetchVetRewards()
+        alert(`Cupón generado: ${payload.data.code}`)
+      } else {
+        alert(payload.error || 'No fue posible generar el cupón')
+      }
+    } catch (e) {
+      alert('Error al generar el cupón')
     }
   }
 
@@ -190,6 +232,7 @@ function Profile() {
               <span className="info-value">{user.phone}</span>
             </div>
           )}
+          
         </div>
 
         {/* Sección de Beneficios Premium */}
@@ -255,56 +298,78 @@ function Profile() {
         )}
         </div>
 
-        {/* Sección de Veterinario */}
+        {/* Tarea mensual y Perfil Veterinario en una fila */}
         {user.isVeterinarian && (
-          <div className="veterinarian-section-card">
-            <div className="veterinarian-header">
-              <Stethoscope size={28} className="stethoscope-icon" />
-              <div>
-                <h2>Perfil Veterinario</h2>
-                {user.isVerifiedVeterinarian ? (
-                  <p className="vet-status verified">✓ Cuenta Verificada</p>
-                ) : (
-                  <p className="vet-status pending">Pendiente de Verificación</p>
-                )}
+          <div className="vet-row">
+            <div className="vet-rewards-card">
+              <div className="vet-rewards-header">
+                <Stethoscope size={28} color="white" strokeWidth={2.5} />
+                <div>
+                  <h3 className="vet-rewards-title">Tarea mensual: Responde 10 consultas</h3>
+                </div>
               </div>
+              <p className="vet-rewards-subtitle">Por cada 10 consultas contestadas en el mes, ganas un cupón del 5% para cualquier producto. ¡Sigue ayudando a nuestros usuarios!</p>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${Math.round((vetRewards?.progress || 0) * 100)}%` }} />
+              </div>
+              <div className="progress-info">
+                <span>📋 {vetRewards ? `${vetRewards.count} / ${vetRewards.threshold} consultas` : 'Cargando...'}</span>
+                <span>⭐ {vetRewards ? `${Math.round((vetRewards.progress) * 100)}%` : ''}</span>
+              </div>
+              <button className="coupon-button" disabled={!vetRewards || (!vetRewards.eligible)} onClick={claimVetCoupon}>
+                {vetRewards?.couponIssued ? '✓ Cupón ya emitido este mes' : (vetRewards?.eligible ? '🎁 Generar cupón 5%' : '⏳ Sigue respondiendo consultas')}
+              </button>
             </div>
 
-            {!user.isVerifiedVeterinarian && (
-              <div className="vet-info-card">
-                <p>Tu cuenta de veterinario está pendiente de verificación. Completa el proceso para acceder a todas las funcionalidades.</p>
-                <Link to="/veterinarian-verification" className="verify-button">
-                  Verificar Cuenta
-                </Link>
-              </div>
-            )}
-
-            {user.isVerifiedVeterinarian && user.veterinarianDetails && (
-              <div className="vet-details">
-                <div className="vet-detail-item">
-                  <span className="detail-label">Clínica/Consultorio:</span>
-                  <span className="detail-value">{user.veterinarianDetails.clinic}</span>
+            <div className="veterinarian-section-card">
+              <div className="veterinarian-header">
+                <Stethoscope size={28} className="stethoscope-icon" />
+                <div>
+                  <h2>Perfil Veterinario</h2>
+                  {user.isVerifiedVeterinarian ? (
+                    <p className="vet-status verified">✓ Cuenta Verificada</p>
+                  ) : (
+                    <p className="vet-status pending">Pendiente de Verificación</p>
+                  )}
                 </div>
-                {user.veterinarianDetails.specialties && (
-                  <div className="vet-detail-item">
-                    <span className="detail-label">Especialidades:</span>
-                    <span className="detail-value">{user.veterinarianDetails.specialties}</span>
-                  </div>
-                )}
-                {user.veterinarianDetails.licenseNumber && (
-                  <div className="vet-detail-item">
-                    <span className="detail-label">Cédula Profesional:</span>
-                    <span className="detail-value">{user.veterinarianDetails.licenseNumber}</span>
-                  </div>
-                )}
-                {user.veterinarianDetails.approvedAt && (
-                  <div className="vet-detail-item">
-                    <span className="detail-label">Verificado el:</span>
-                    <span className="detail-value">{formatDate(user.veterinarianDetails.approvedAt)}</span>
-                  </div>
-                )}
               </div>
-            )}
+
+              {!user.isVerifiedVeterinarian && (
+                <div className="vet-info-card">
+                  <p>Tu cuenta de veterinario está pendiente de verificación. Completa el proceso para acceder a todas las funcionalidades.</p>
+                  <Link to="/veterinarian-verification" className="verify-button">
+                    Verificar Cuenta
+                  </Link>
+                </div>
+              )}
+
+              {user.isVerifiedVeterinarian && user.veterinarianDetails && (
+                <div className="vet-details">
+                  <div className="vet-detail-item">
+                    <span className="detail-label">Clínica/Consultorio:</span>
+                    <span className="detail-value">{user.veterinarianDetails.clinic}</span>
+                  </div>
+                  {user.veterinarianDetails.specialties && (
+                    <div className="vet-detail-item">
+                      <span className="detail-label">Especialidades:</span>
+                      <span className="detail-value">{user.veterinarianDetails.specialties}</span>
+                    </div>
+                  )}
+                  {user.veterinarianDetails.licenseNumber && (
+                    <div className="vet-detail-item">
+                      <span className="detail-label">Cédula Profesional:</span>
+                      <span className="detail-value">{user.veterinarianDetails.licenseNumber}</span>
+                    </div>
+                  )}
+                  {user.veterinarianDetails.approvedAt && (
+                    <div className="vet-detail-item">
+                      <span className="detail-label">Verificado el:</span>
+                      <span className="detail-value">{formatDate(user.veterinarianDetails.approvedAt)}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
