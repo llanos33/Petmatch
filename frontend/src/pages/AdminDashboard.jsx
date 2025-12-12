@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { TrendingUp, ShoppingBag, Users, Package, RefreshCw, AlertCircle, Star } from 'lucide-react'
+import { TrendingUp, ShoppingBag, Users, Package, RefreshCw, AlertCircle, Star, FileText, X } from 'lucide-react'
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import './AdminDashboard.css'
 import { useAuth } from '../context/AuthContext'
 import { apiPath } from '../config/api'
@@ -27,6 +28,10 @@ const AdminDashboard = () => {
   const [error, setError] = useState('')
   const [loadingMetrics, setLoadingMetrics] = useState(true)
   const [lastFetched, setLastFetched] = useState(null)
+  const [invoices, setInvoices] = useState([])
+  const [invoiceError, setInvoiceError] = useState('')
+  const [loadingInvoices, setLoadingInvoices] = useState(true)
+  const [invoiceModal, setInvoiceModal] = useState({ open: false, loading: false, error: '', invoice: null })
 
   const loadMetrics = useCallback(async () => {
     if (!user?.isAdmin) {
@@ -66,9 +71,78 @@ const AdminDashboard = () => {
     }
   }, [getAuthToken, user?.isAdmin])
 
+  const loadInvoices = useCallback(async () => {
+    if (!user?.isAdmin) {
+      setLoadingInvoices(false)
+      return
+    }
+
+    try {
+      setLoadingInvoices(true)
+      setInvoiceError('')
+      const token = getAuthToken()
+
+      if (!token) {
+        throw new Error('No se encontró un token de autenticación. Inicia sesión nuevamente.')
+      }
+
+      const response = await fetch(apiPath('/api/admin/invoices'), {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      const payload = await response.json()
+
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.error || 'No se pudieron obtener las facturas.')
+      }
+
+      const data = Array.isArray(payload.data) ? payload.data : []
+      const sorted = [...data].sort((a, b) => new Date(b.issuedAt || b.date || 0) - new Date(a.issuedAt || a.date || 0))
+      setInvoices(sorted)
+    } catch (err) {
+      console.error('Error al cargar facturas:', err)
+      const message = err?.message || 'Error inesperado al cargar las facturas.'
+      setInvoiceError(message)
+    } finally {
+      setLoadingInvoices(false)
+    }
+  }, [getAuthToken, user?.isAdmin])
+
+  const openInvoiceForOrder = useCallback(async (orderId) => {
+    if (!user?.isAdmin) return
+    setInvoiceModal({ open: true, loading: true, error: '', invoice: null })
+
+    try {
+      const token = getAuthToken()
+      if (!token) {
+        throw new Error('No se encontró un token de autenticación. Inicia sesión nuevamente.')
+      }
+
+      const response = await fetch(apiPath(`/api/admin/orders/${orderId}/invoice`), {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      const payload = await response.json()
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.error || 'No se pudo obtener la factura de esta orden.')
+      }
+
+      setInvoiceModal({ open: true, loading: false, error: '', invoice: payload.data })
+    } catch (err) {
+      console.error('Error al abrir factura:', err)
+      const message = err?.message || 'Error inesperado al obtener la factura.'
+      setInvoiceModal({ open: true, loading: false, error: message, invoice: null })
+    }
+  }, [getAuthToken, user?.isAdmin])
+
   useEffect(() => {
     loadMetrics()
-  }, [loadMetrics])
+    loadInvoices()
+  }, [loadMetrics, loadInvoices])
 
   const summaryCards = useMemo(() => {
     if (!metrics) return []
@@ -104,7 +178,73 @@ const AdminDashboard = () => {
     ]
   }, [metrics])
 
-  if (loading || loadingMetrics) {
+  // Chart data: Payment method distribution
+  const paymentMethodData = useMemo(() => {
+    if (!invoices || invoices.length === 0) return []
+    const methods = {}
+    invoices.forEach(inv => {
+      const method = inv.paymentMethod || 'Sin especificar'
+      methods[method] = (methods[method] || 0) + 1
+    })
+    return Object.entries(methods).map(([name, value]) => ({ name, value }))
+  }, [invoices])
+
+  // Chart data: Sales trend (last 7 days)
+  const salesTrendData = useMemo(() => {
+    if (!invoices || invoices.length === 0) return []
+    const dailySales = {}
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const dateStr = date.toISOString().slice(0, 10)
+      dailySales[dateStr] = 0
+    }
+    
+    invoices.forEach(inv => {
+      const dateStr = inv.issuedAt?.slice(0, 10) || new Date().toISOString().slice(0, 10)
+      if (dailySales.hasOwnProperty(dateStr)) {
+        dailySales[dateStr] += inv.total || 0
+      }
+    })
+    
+    return Object.entries(dailySales).map(([date, total]) => {
+      const d = new Date(date)
+      return {
+        date: d.toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }),
+        total: Math.round(total)
+      }
+    })
+  }, [invoices])
+
+  // Chart data: Top 5 products
+  const topProductsData = useMemo(() => {
+    if (!invoices || invoices.length === 0) return []
+    const products = {}
+    
+    invoices.forEach(inv => {
+      inv.items?.forEach(item => {
+        const productKey = item.productName || `Producto #${item.productId}`
+        products[productKey] = (products[productKey] || 0) + item.quantity
+      })
+    })
+    
+    return Object.entries(products)
+      .map(([name, qty]) => ({
+        name: name.length > 30 ? name.substring(0, 27) + '...' : name,
+        quantity: qty,
+        fullName: name
+      }))
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 5)
+  }, [invoices])
+
+  // Chart colors
+  const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F']
+
+  const closeInvoiceModal = () => setInvoiceModal({ open: false, loading: false, error: '', invoice: null })
+
+  if (loading || loadingMetrics || loadingInvoices) {
     return (
       <div className="admin-dashboard admin-dashboard--loading">
         <div className="admin-dashboard__card">
@@ -158,7 +298,14 @@ const AdminDashboard = () => {
               Última actualización: {dateFormatter.format(lastFetched)}
             </span>
           )}
-          <button type="button" className="admin-dashboard__refresh" onClick={loadMetrics}>
+          <button
+            type="button"
+            className="admin-dashboard__refresh"
+            onClick={() => {
+              loadMetrics()
+              loadInvoices()
+            }}
+          >
             <RefreshCw size={18} />
             <span>Actualizar</span>
           </button>
@@ -191,7 +338,8 @@ const AdminDashboard = () => {
             <span>Ultimos 5 pedidos confirmados</span>
           </header>
           {metrics?.recentOrders?.length ? (
-            <table className="admin-dashboard__table">
+            <div className="admin-dashboard__table-wrap">
+              <table className="admin-dashboard__table admin-dashboard__table--orders">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -199,6 +347,7 @@ const AdminDashboard = () => {
                   <th>Total</th>
                   <th>Estado</th>
                   <th>Fecha</th>
+                  <th>Factura</th>
                 </tr>
               </thead>
               <tbody>
@@ -216,13 +365,185 @@ const AdminDashboard = () => {
                       </span>
                     </td>
                     <td>{order.date ? dateFormatter.format(new Date(order.date)) : '—'}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className="admin-dashboard__icon-button"
+                        title="Ver factura"
+                        onClick={() => openInvoiceForOrder(order.id)}
+                      >
+                        <FileText size={16} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
           ) : (
             <p className="admin-dashboard__empty">Todavía no hay pedidos registrados.</p>
           )}
+        </article>
+
+        <article className="admin-dashboard__panel">
+          <header className="admin-dashboard__panel-header">
+            <h2>Facturas recientes</h2>
+            <span>Ultimas facturas emitidas</span>
+          </header>
+          {invoiceError && (
+            <div className="admin-dashboard__alert">
+              <AlertCircle size={18} />
+              <span>{invoiceError}</span>
+            </div>
+          )}
+          {invoices?.length ? (
+            <div className="admin-dashboard__table-wrap">
+              <table className="admin-dashboard__table admin-dashboard__table--invoices">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoices.slice(0, 5).map(inv => (
+                    <tr key={inv.id}>
+                      <td>
+                        <div className="admin-dashboard__invoice-id">
+                          <FileText size={16} />
+                          <span>{inv.invoiceNumber || `Factura #${inv.id}`}</span>
+                          <span className="admin-dashboard__muted">Orden #{inv.orderId}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="admin-dashboard__customer">{inv.customerName || 'Cliente'}</span>
+                        {inv.customerEmail && (
+                          <span className="admin-dashboard__customer-email">{inv.customerEmail}</span>
+                        )}
+                      </td>
+                      <td>{formatCurrency(inv.total)}</td>
+                      <td>
+                        <span className={`admin-dashboard__status admin-dashboard__status--${inv.status || 'emitida'}`}>
+                          {inv.status || 'emitida'}
+                        </span>
+                      </td>
+                      <td>{inv.issuedAt ? dateFormatter.format(new Date(inv.issuedAt)) : '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="admin-dashboard__empty">Todavía no hay facturas emitidas.</p>
+          )}
+        </article>
+
+        <article className="admin-dashboard__panel">
+          <header className="admin-dashboard__panel-header">
+            <h2>Tendencia de ventas</h2>
+            <span>Últimos 7 días</span>
+          </header>
+          <div className="admin-dashboard__chart-container">
+            {salesTrendData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={salesTrendData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => formatCurrency(value)}
+                    contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0' }}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="total" 
+                    stroke="#FF6B6B" 
+                    dot={{ fill: '#FF6B6B', r: 5 }}
+                    activeDot={{ r: 7 }}
+                    name="Ventas"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="admin-dashboard__chart-empty">No hay datos de ventas disponibles</p>
+            )}
+          </div>
+        </article>
+
+        <article className="admin-dashboard__panel">
+          <header className="admin-dashboard__panel-header">
+            <h2>Distribución de métodos de pago</h2>
+            <span>Órdenes por método</span>
+          </header>
+          <div className="admin-dashboard__chart-container">
+            {paymentMethodData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={paymentMethodData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {paymentMethodData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="admin-dashboard__chart-empty">No hay datos de métodos de pago</p>
+            )}
+          </div>
+        </article>
+
+        <article className="admin-dashboard__panel">
+          <header className="admin-dashboard__panel-header">
+            <h2>Top 5 productos más vendidos</h2>
+            <span>Por cantidad</span>
+          </header>
+          <div className="admin-dashboard__chart-container">
+            {topProductsData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={topProductsData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                  />
+                  <YAxis />
+                  <Tooltip 
+                    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload[0]) {
+                        return (
+                          <div style={{ backgroundColor: '#f9f9f9', border: '1px solid #e0e0e0', padding: '8px', borderRadius: '4px' }}>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#666' }}>{payload[0].payload.fullName}</p>
+                            <p style={{ margin: '0', fontWeight: 'bold' }}>Cantidad: {payload[0].value}</p>
+                          </div>
+                        )
+                      }
+                      return null
+                    }}
+                  />
+                  <Bar dataKey="quantity" fill="#4ECDC4" radius={[8, 8, 0, 0]} name="Cantidad vendida" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="admin-dashboard__chart-empty">No hay datos de productos</p>
+            )}
+          </div>
         </article>
 
         <article className="admin-dashboard__panel">
@@ -277,6 +598,110 @@ const AdminDashboard = () => {
           </div>
         </div>
       </section>
+
+      {invoiceModal.open && (
+        <div 
+          className="admin-dashboard__modal-backdrop" 
+          role="dialog" 
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeInvoiceModal()
+            }
+          }}
+        >
+          <div className="admin-dashboard__modal">
+            <button className="admin-dashboard__modal-close" onClick={closeInvoiceModal} aria-label="Cerrar">
+              <X size={20} />
+            </button>
+
+            {invoiceModal.loading && (
+              <div className="admin-dashboard__modal-body">
+                <span className="admin-dashboard__spinner" aria-hidden="true" />
+                <p>Cargando factura...</p>
+              </div>
+            )}
+
+            {!invoiceModal.loading && invoiceModal.error && (
+              <div className="admin-dashboard__modal-body">
+                <div className="admin-dashboard__alert">
+                  <AlertCircle size={18} />
+                  <span>{invoiceModal.error}</span>
+                </div>
+              </div>
+            )}
+
+            {!invoiceModal.loading && invoiceModal.invoice && (
+              <div className="admin-dashboard__modal-body">
+                <header className="admin-dashboard__modal-header">
+                  <div>
+                    <p className="admin-dashboard__muted">Factura</p>
+                    <h3>{invoiceModal.invoice.invoiceNumber || `Factura #${invoiceModal.invoice.id}`}</h3>
+                    <p className="admin-dashboard__muted">Orden #{invoiceModal.invoice.orderId}</p>
+                  </div>
+                  <div className="admin-dashboard__status-badge">
+                    <span className={`admin-dashboard__status admin-dashboard__status--${invoiceModal.invoice.status || 'emitida'}`}>
+                      {invoiceModal.invoice.status || 'emitida'}
+                    </span>
+                    <span className="admin-dashboard__muted">{invoiceModal.invoice.issuedAt ? dateFormatter.format(new Date(invoiceModal.invoice.issuedAt)) : ''}</span>
+                  </div>
+                </header>
+
+                <div className="admin-dashboard__modal-grid">
+                  <div>
+                    <p className="admin-dashboard__muted">Cliente</p>
+                    <p className="admin-dashboard__strong">{invoiceModal.invoice.customerName || 'Cliente'}</p>
+                    {invoiceModal.invoice.customerEmail && (
+                      <p className="admin-dashboard__muted">{invoiceModal.invoice.customerEmail}</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="admin-dashboard__muted">Total</p>
+                    <p className="admin-dashboard__strong">{formatCurrency(invoiceModal.invoice.total)}</p>
+                    <p className="admin-dashboard__muted">Método: {invoiceModal.invoice.paymentMethod || '—'}</p>
+                  </div>
+                </div>
+
+                <div className="admin-dashboard__items">
+                  <div className="admin-dashboard__items-header">
+                    <span>Producto</span>
+                    <span>Cant.</span>
+                    <span>Precio</span>
+                    <span>Subtotal</span>
+                  </div>
+                  {invoiceModal.invoice.items?.map(item => (
+                    <div key={`${item.productId}-${item.price}`} className="admin-dashboard__item-row">
+                      <span>{item.productId}</span>
+                      <span>x{item.quantity}</span>
+                      <span>{formatCurrency(item.price)}</span>
+                      <span>{formatCurrency(item.price * item.quantity)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="admin-dashboard__totals">
+                  <div>
+                    <span>Productos</span>
+                    <strong>{formatCurrency(invoiceModal.invoice.itemsTotal || 0)}</strong>
+                  </div>
+                  <div>
+                    <span>Envío</span>
+                    <strong>{formatCurrency(invoiceModal.invoice.shippingCost || 0)}</strong>
+                  </div>
+                  <div>
+                    <span>Descuento Premium</span>
+                    <strong>-{formatCurrency(invoiceModal.invoice.premiumDiscount || 0)}</strong>
+                  </div>
+                  <div className="admin-dashboard__total-line">
+                    <span>Total</span>
+                    <strong>{formatCurrency(invoiceModal.invoice.total || 0)}</strong>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

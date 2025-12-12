@@ -22,6 +22,7 @@ const dataDir = path.join(__dirname, 'data');
 const uploadsDir = path.join(__dirname, 'uploads', 'veterinary-documents');
 const productsFile = path.join(dataDir, 'products.json');
 const ordersFile = path.join(dataDir, 'orders.json');
+const invoicesFile = path.join(dataDir, 'invoices.json');
 const usersFile = path.join(dataDir, 'users.json');
 const reviewsFile = path.join(dataDir, 'reviews.json');
 const consultationsFile = path.join(dataDir, 'consultations.json');
@@ -35,6 +36,10 @@ if (!fs.existsSync(dataDir)) {
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+if (!fs.existsSync(invoicesFile)) {
+  fs.writeFileSync(invoicesFile, JSON.stringify([], null, 2));
 }
 
 // Inicializar productos si no existen
@@ -763,6 +768,21 @@ function writeOrders(orders) {
   fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
 }
 
+// Helper para leer facturas
+function readInvoices() {
+  try {
+    const data = fs.readFileSync(invoicesFile, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+}
+
+// Helper para escribir facturas
+function writeInvoices(invoices) {
+  fs.writeFileSync(invoicesFile, JSON.stringify(invoices, null, 2));
+}
+
 // Helper para leer usuarios
 function readUsers() {
   try {
@@ -1224,6 +1244,7 @@ app.post('/api/orders', authenticateToken, (req, res) => {
   const orderUser = users.find(u => u.id === req.user.userId);
   const isPremiumUser = !!orderUser?.isPremium;
   const orders = readOrders();
+  const invoices = readInvoices();
 
   // Validar que los productos existan y haya stock
   for (const item of items) {
@@ -1240,7 +1261,11 @@ app.post('/api/orders', authenticateToken, (req, res) => {
   const itemsWithResolvedPrice = items.map(item => {
     const product = products.find(p => p.id === item.productId);
     const priceToUse = typeof item.price === 'number' ? item.price : (product?.price || 0);
-    return { ...item, price: priceToUse };
+    return { 
+      ...item, 
+      price: priceToUse,
+      productName: product?.name || `Producto #${item.productId}`
+    };
   });
 
   const itemsTotal = itemsWithResolvedPrice.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -1266,6 +1291,26 @@ app.post('/api/orders', authenticateToken, (req, res) => {
     date: new Date().toISOString()
   };
 
+  const invoiceId = invoices.length > 0 ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
+  const invoiceNumber = `PM-${new Date().toISOString().slice(0,10).replace(/-/g, '')}-${String(invoiceId).padStart(4, '0')}`;
+
+  const newInvoice = {
+    id: invoiceId,
+    invoiceNumber,
+    orderId: newOrder.id,
+    userId: newOrder.userId,
+    customerName: customerInfo?.name || orderUser?.name || '',
+    customerEmail: customerInfo?.email || orderUser?.email || '',
+    items: itemsWithResolvedPrice,
+    itemsTotal,
+    shippingCost: shippingValue,
+    premiumDiscount: premiumDiscountValue,
+    total: orderTotal,
+    status: 'emitida',
+    issuedAt: new Date().toISOString(),
+    paymentMethod: customerInfo?.paymentMethod || null
+  };
+
   // Actualizar stock
   items.forEach(item => {
     const productIndex = products.findIndex(p => p.id === item.productId);
@@ -1275,10 +1320,12 @@ app.post('/api/orders', authenticateToken, (req, res) => {
   });
 
   orders.push(newOrder);
+  invoices.push(newInvoice);
   writeOrders(orders);
+  writeInvoices(invoices);
   writeProducts(products);
 
-  res.status(201).json(newOrder);
+  res.status(201).json({ success: true, order: newOrder, invoice: newInvoice });
 });
 
 // Obtener todas las órdenes (útil para administración)
@@ -1287,6 +1334,75 @@ app.get('/api/orders', authenticateToken, (req, res) => {
   const isAdmin = !!req.user?.isAdmin;
   const visibleOrders = isAdmin ? orders : orders.filter(order => order.userId === req.user.userId);
   res.json(visibleOrders);
+});
+
+// Facturas para administración
+app.get('/api/admin/invoices', authenticateToken, requireAdmin, (req, res) => {
+  const invoices = readInvoices();
+  const products = readProducts();
+  
+  // Enriquecer invoices con nombres de productos si no los tienen
+  const enrichedInvoices = invoices.map(inv => {
+    const enrichedItems = inv.items.map(item => {
+      if (!item.productName) {
+        const product = products.find(p => p.id === item.productId);
+        return { ...item, productName: product?.name || `Producto #${item.productId}` };
+      }
+      return item;
+    });
+    return { ...inv, items: enrichedItems };
+  });
+  
+  res.json({ success: true, data: enrichedInvoices });
+});
+
+app.get('/api/admin/invoices/:id', authenticateToken, requireAdmin, (req, res) => {
+  const invoiceId = parseInt(req.params.id, 10);
+  const invoices = readInvoices();
+  const products = readProducts();
+  const invoice = invoices.find(inv => inv.id === invoiceId);
+
+  if (!invoice) {
+    return res.status(404).json({ success: false, error: 'Factura no encontrada' });
+  }
+
+  // Enriquecer items con nombres de productos
+  const enrichedItems = invoice.items.map(item => {
+    if (!item.productName) {
+      const product = products.find(p => p.id === item.productId);
+      return { ...item, productName: product?.name || `Producto #${item.productId}` };
+    }
+    return item;
+  });
+
+  res.json({ success: true, data: { ...invoice, items: enrichedItems } });
+});
+
+// Obtener factura por ID de orden
+app.get('/api/admin/orders/:orderId/invoice', authenticateToken, requireAdmin, (req, res) => {
+  const orderId = parseInt(req.params.orderId, 10);
+  if (!Number.isFinite(orderId)) {
+    return res.status(400).json({ success: false, error: 'ID de orden inválido' });
+  }
+
+  const invoices = readInvoices();
+  const products = readProducts();
+  const invoice = invoices.find(inv => inv.orderId === orderId);
+
+  if (!invoice) {
+    return res.status(404).json({ success: false, error: 'Factura no encontrada para esta orden' });
+  }
+
+  // Enriquecer items con nombres de productos
+  const enrichedItems = invoice.items.map(item => {
+    if (!item.productName) {
+      const product = products.find(p => p.id === item.productId);
+      return { ...item, productName: product?.name || `Producto #${item.productId}` };
+    }
+    return item;
+  });
+
+  res.json({ success: true, data: { ...invoice, items: enrichedItems } });
 });
 
 app.get('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {

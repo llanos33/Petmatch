@@ -253,6 +253,7 @@ function Profile() {
             </Link>
           </div>
         )}
+        </div>
 
         {/* Sección de Veterinario */}
         {user.isVeterinarian && (
@@ -306,7 +307,6 @@ function Profile() {
             )}
           </div>
         )}
-        </div>
 
         {/* Pestañas de navegación */}
         <div className="profile-tabs">

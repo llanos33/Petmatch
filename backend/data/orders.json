@@ -1,3 +1,173 @@
 [
-  
+  {
+    "id": 1,
+    "userId": 4,
+    "items": [
+      {
+        "productId": 62,
+        "quantity": 1,
+        "price": 7800
+      },
+      {
+        "productId": 93,
+        "quantity": 1,
+        "price": 15000
+      },
+      {
+        "productId": 92,
+        "quantity": 1,
+        "price": 28400
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950
+      }
+    ],
+    "customerInfo": {
+      "name": "Admin PetMatch",
+      "email": "admin@petmatch.com",
+      "phone": "3136914054",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "tarjeta"
+    },
+    "total": 51435,
+    "itemsTotal": 57150,
+    "shippingCost": 0,
+    "premiumDiscount": 5715,
+    "status": "pendiente",
+    "date": "2025-12-11T20:09:07.095Z"
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "items": [
+      {
+        "productId": 120,
+        "quantity": 1,
+        "price": 45000
+      },
+      {
+        "productId": 29,
+        "quantity": 1,
+        "price": 18000
+      },
+      {
+        "productId": 7,
+        "quantity": 1,
+        "price": 39600
+      }
+    ],
+    "customerInfo": {
+      "name": "Juan Camilo Arias",
+      "email": "juancamilo.arias@utp.edu.co",
+      "phone": "3202826022",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "tarjeta"
+    },
+    "total": 92340,
+    "itemsTotal": 102600,
+    "shippingCost": 0,
+    "premiumDiscount": 10260,
+    "status": "pendiente",
+    "date": "2025-12-12T19:25:33.337Z"
+  },
+  {
+    "id": 3,
+    "userId": 2,
+    "items": [
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000
+      }
+    ],
+    "customerInfo": {
+      "name": "Kevin Arias",
+      "email": "ariasjuancamilo14@gmail.com",
+      "phone": "3136914054",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "efectivo"
+    },
+    "total": 53950,
+    "itemsTotal": 45950,
+    "shippingCost": 8000,
+    "premiumDiscount": 0,
+    "status": "pendiente",
+    "date": "2025-12-12T19:49:57.361Z"
+  },
+  {
+    "id": 4,
+    "userId": 4,
+    "items": [
+      {
+        "productId": 51,
+        "quantity": 1,
+        "price": 120000
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000
+      },
+      {
+        "productId": 61,
+        "quantity": 1,
+        "price": 200000
+      },
+      {
+        "productId": 2,
+        "quantity": 1,
+        "price": 33600
+      }
+    ],
+    "customerInfo": {
+      "name": "Admin PetMatch",
+      "email": "admin@petmatch.com",
+      "phone": "3136914054",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "datafono"
+    },
+    "total": 339440,
+    "itemsTotal": 371600,
+    "shippingCost": 0,
+    "premiumDiscount": 37160,
+    "status": "pendiente",
+    "date": "2025-12-12T19:55:35.778Z"
+  },
+  {
+    "id": 5,
+    "userId": 4,
+    "items": [
+      {
+        "productId": 2,
+        "quantity": 5,
+        "price": 33600,
+        "productName": "Alimento Premium para Gatos"
+      }
+    ],
+    "customerInfo": {
+      "name": "Admin PetMatch",
+      "email": "admin@petmatch.com",
+      "phone": "3136914054",
+      "address": "calle 32 #45-77, Dosquebradas",
+      "paymentMethod": "efectivo"
+    },
+    "total": 156200,
+    "itemsTotal": 168000,
+    "shippingCost": 0,
+    "premiumDiscount": 16800,
+    "status": "pendiente",
+    "date": "2025-12-12T20:36:30.006Z"
+  }
 ]

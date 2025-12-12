@@ -35,7 +35,7 @@
 
 .profile-cards-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
   grid-column: 2 / 3;
   align-items: start;
@@ -251,6 +251,7 @@
   box-shadow: 0 8px 24px rgba(15, 118, 110, 0.25);
   color: white;
   height: fit-content;
+  grid-column: 1 / -1;
 }
 
 .veterinarian-header {

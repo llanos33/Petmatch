@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "invoiceNumber": "PM-20251212-0001",
+    "orderId": 2,
+    "userId": 1,
+    "customerName": "Juan Camilo Arias",
+    "customerEmail": "juancamilo.arias@utp.edu.co",
+    "items": [
+      {
+        "productId": 120,
+        "quantity": 1,
+        "price": 45000
+      },
+      {
+        "productId": 29,
+        "quantity": 1,
+        "price": 18000
+      },
+      {
+        "productId": 7,
+        "quantity": 1,
+        "price": 39600
+      }
+    ],
+    "itemsTotal": 102600,
+    "shippingCost": 0,
+    "premiumDiscount": 10260,
+    "total": 92340,
+    "status": "emitida",
+    "issuedAt": "2025-12-12T19:25:33.337Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 2,
+    "invoiceNumber": "PM-20251212-0002",
+    "orderId": 3,
+    "userId": 2,
+    "customerName": "Kevin Arias",
+    "customerEmail": "ariasjuancamilo14@gmail.com",
+    "items": [
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000
+      }
+    ],
+    "itemsTotal": 45950,
+    "shippingCost": 8000,
+    "premiumDiscount": 0,
+    "total": 53950,
+    "status": "emitida",
+    "issuedAt": "2025-12-12T19:49:57.361Z",
+    "paymentMethod": "efectivo"
+  },
+  {
+    "id": 3,
+    "invoiceNumber": "PM-20251212-0003",
+    "orderId": 4,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 51,
+        "quantity": 1,
+        "price": 120000
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000
+      },
+      {
+        "productId": 61,
+        "quantity": 1,
+        "price": 200000
+      },
+      {
+        "productId": 2,
+        "quantity": 1,
+        "price": 33600
+      }
+    ],
+    "itemsTotal": 371600,
+    "shippingCost": 0,
+    "premiumDiscount": 37160,
+    "total": 339440,
+    "status": "emitida",
+    "issuedAt": "2025-12-12T19:55:35.778Z",
+    "paymentMethod": "datafono"
+  },
+  {
+    "id": 4,
+    "invoiceNumber": "PM-20251212-0004",
+    "orderId": 5,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 2,
+        "quantity": 5,
+        "price": 33600,
+        "productName": "Alimento Premium para Gatos"
+      }
+    ],
+    "itemsTotal": 168000,
+    "shippingCost": 0,
+    "premiumDiscount": 16800,
+    "total": 156200,
+    "status": "emitida",
+    "issuedAt": "2025-12-12T20:36:30.006Z",
+    "paymentMethod": "efectivo"
+  }
+]

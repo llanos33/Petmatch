@@ -1,38 +1,3 @@
 [
-  {
-    "id": 1,
-    "userId": 1,
-    "userName": "Juan Camilo Arias",
-    "title": "fdfd",
-    "question": "vdv",
-    "petType": "Perro",
-    "petId": null,
-    "petName": null,
-    "petPhoto": null,
-    "createdAt": "2025-12-11T15:44:34.833Z",
-    "status": "answered",
-    "answer": "cscasc",
-    "answeredAt": "2025-12-11T15:44:57.732Z",
-    "answeredBy": "Veterinario Prueba",
-    "answeredByType": "veterinarian",
-    "answeredByUserId": 5
-  },
-  {
-    "id": 2,
-    "userId": 1,
-    "userName": "Juan Camilo Arias",
-    "title": "cdc",
-    "question": "cdcd",
-    "petType": "perro",
-    "petId": 1,
-    "petName": "max",
-    "petPhoto": "https://images.unsplash.com/photo-1697722454841-75f9a1fdd8a5?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGluc2NoZXJ8ZW58MHx8MHx8fDA%3D",
-    "createdAt": "2025-12-11T15:46:03.455Z",
-    "status": "answered",
-    "answer": "fvfvf",
-    "answeredAt": "2025-12-11T15:46:29.623Z",
-    "answeredBy": "Veterinario Prueba",
-    "answeredByType": "veterinarian",
-    "answeredByUserId": 5
-  }
+ 
 ]

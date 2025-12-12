@@ -19,7 +19,7 @@
     "petType": "gato",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/674e0f2550ddf04569f97326e317108b_1673048730.jpg",
     "exclusive": true,
-    "stock": 43
+    "stock": 37
   },
   {
     "id": 3,
@@ -33,13 +33,17 @@
   },
   {
     "id": 4,
-    "name": "Alimento Húmedo para Gatos",
+    "name": "Alimento Húmedo para Gatos 100 gr",
     "description": "Paté húmedo de atún y carnes seleccionadas, alto en proteína y con textura húmeda que favorece la hidratación. Ideal como complemento de la dieta seca o para gatos con apetito selectivo. Proporciona ácidos grasos esenciales y es fácil de digerir. Contenido: 85 g (lata).",
     "price": 8500,
     "category": "Alimentos",
     "petType": "gato",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/f3ccdd27d2000e3f9255a7e3e2c48800_1687988660.jpg",
-    "stock": 79
+    "stock": 77,
+    "exclusive": false,
+    "isOnSale": false,
+    "updatedAt": "2025-12-11T20:07:34.154Z",
+    "createdAt": "2025-12-11T20:07:19.158Z"
   },
   {
     "id": 5,
@@ -70,7 +74,7 @@
     "category": "Alimentos",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/1824_160444_Monello_Raza_Peque__a_1652893035_500x500.png",
-    "stock": 40
+    "stock": 39
   },
   {
     "id": 8,
@@ -120,7 +124,7 @@
     "category": "Juguetes",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/5197_117956_Kong___Squeak_Air_Pelota_1637950218_500x500.png",
-    "stock": 48
+    "stock": 47
   },
   {
     "id": 13,
@@ -222,7 +226,7 @@
     "category": "Accesorios",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/75986_201630_Elanco___Seresto_Collar_Para_Perros_De_Hasta_8_kg_1666977465_800x800.jpg",
-    "stock": 49
+    "stock": 48
   },
   {
     "id": 23,
@@ -293,7 +297,7 @@
     "category": "Accesorios",
     "petType": "perro",
     "image": "https://img.kwcdn.com/product/fancy/279a2705-c2d6-4018-86d8-31d0f6e8e4da.jpg?imageView2/2/w/1300/q/80/format/avif",
-    "stock": 35
+    "stock": 34
   },
   {
     "id": 30,
@@ -413,7 +417,7 @@
     "category": "Higiene",
     "petType": "ambos",
     "image": "https://laikapp.s3.amazonaws.com/dev_images_products/4ebd6071d17aeb594fcb35f9f47ba756_1743697769.jpg",
-    "stock": 57
+    "stock": 56
   },
   {
     "id": 42,
@@ -513,7 +517,7 @@
     "category": "Camas y Casas",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/313d824f327e18ac57ca976c7559436f_1705677205.jpg",
-    "stock": 13
+    "stock": 12
   },
   {
     "id": 52,
@@ -614,17 +618,21 @@
     "petType": "perro",
     "image": "https://www.agrocampo.com.co/media/catalog/product/cache/c49bee17ef1a166135589f0329fd61b1/1/1/111100168-v1-min.jpg",
     "exclusive": true,
-    "stock": 26
+    "stock": 25
   },
   {
     "id": 62,
-    "name": "Pouch Gourmet de Salmón para Gatos",
+    "name": "Pouch Gourmet de Salmón para Gatos 156 gr",
     "description": "Latas individuales con filetes de salmón en salsa, alta palatabilidad y taurina añadida para gatos exigentes.",
     "price": 7800,
     "category": "Alimentos",
     "petType": "gato",
     "image": "https://exitocol.vteximg.com.br/arquivos/ids/26956948/Alimento-Gato-Filetes-De-Salmon-En-Salsa-Lata-X-156-gr-695841_a.jpg?v=638767286704070000",
-    "stock": 85
+    "stock": 84,
+    "exclusive": false,
+    "isOnSale": false,
+    "updatedAt": "2025-12-11T20:06:40.945Z",
+    "createdAt": "2025-12-11T20:06:40.945Z"
   },
   {
     "id": 63,
@@ -928,7 +936,7 @@
     "category": "Alimentos",
     "petType": "perro",
     "image": "//ceba.com.co/cdn/shop/products/VHN-GASTROINTESTINAL_DOG_LOAF_CAN_400GR-PACKSHOT_Med._Res.___Basic_400x.png?v=1686151506 400w, //ceba.com.co/cdn/shop/products/VHN-GASTROINTESTINAL_DOG_LOAF_CAN_400GR-PACKSHOT_Med._Res.___Basic_500x.png?v=1686151506 500w",
-    "stock": 60,
+    "stock": 59,
     "id": 92
   },
   {
@@ -938,7 +946,7 @@
     "category": "Alimentos",
     "petType": "gato",
     "image": "https://www.depelos.co/static/products/84-Alimento humedo Renal E feline lata387x430q99.jpg",
-    "stock": 55,
+    "stock": 54,
     "id": 93
   },
   {
@@ -1208,7 +1216,7 @@
     "category": "Higiene",
     "petType": "gato",
     "image": "https://m.media-amazon.com/images/I/71UQ0QH3vUL._AC_SX679_.jpg",
-    "stock": 30,
+    "stock": 29,
     "id": 120
   },
   {

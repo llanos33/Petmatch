@@ -64,7 +64,14 @@ function Checkout({ cart, products, clearCart }) {
     return getSubtotal() * 0.10;
   };
 
-  const getTotal = () => getSubtotal() - getPremiumDiscount() + getShippingCost();
+  const getPaymentHandlingFee = () => {
+    if (formData.paymentMethod === 'efectivo' || formData.paymentMethod === 'datafono') {
+      return 5000;
+    }
+    return 0;
+  };
+
+  const getTotal = () => getSubtotal() - getPremiumDiscount() + getShippingCost() + getPaymentHandlingFee();
 
   const handleChange = (e) => {
     setFormData({
@@ -120,7 +127,8 @@ function Checkout({ cart, products, clearCart }) {
       const itemsTotal = orderItems.reduce((acc, it) => acc + it.price * it.quantity, 0);
       const premiumDiscount = getPremiumDiscount();
       const shippingCost = getShippingCost();
-      const orderTotal = itemsTotal - premiumDiscount + shippingCost;
+      const paymentHandlingFee = getPaymentHandlingFee();
+      const orderTotal = itemsTotal - premiumDiscount + shippingCost + paymentHandlingFee;
 
       const token = getAuthToken();
       if (!token) {
@@ -448,6 +456,12 @@ function Checkout({ cart, products, clearCart }) {
                 <span>{formatPrice(getShippingCost())}</span>
               )}
             </div>
+            {getPaymentHandlingFee() > 0 && (
+              <div className="total-row">
+                <span>Costo adicional de {formData.paymentMethod === 'efectivo' ? 'efectivo' : 'datáfono'}:</span>
+                <span>{formatPrice(getPaymentHandlingFee())}</span>
+              </div>
+            )}
             <div className="total-row final-total">
               <span>Total:</span>
               <span>{formatPrice(getTotal())}</span>
