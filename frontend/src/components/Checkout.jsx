@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Breadcrumb from "./Breadcrumb";
@@ -23,6 +23,8 @@ function Checkout({ cart, products, clearCart }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [useVetCoupon, setUseVetCoupon] = useState(false);
+  const [vetRewards, setVetRewards] = useState(null);
 
   useEffect(() => {
     if (!user) {
@@ -37,6 +39,29 @@ function Checkout({ cart, products, clearCart }) {
       phone: user.phone || "",
     }));
   }, [user, navigate]);
+
+  // Cargar recompensas del veterinario para detectar cupón emitido
+  useEffect(() => {
+    const loadVetRewards = async () => {
+      try {
+        if (!user?.isVeterinarian || !user?.id) return;
+        const token = localStorage.getItem('token');
+        const res = await fetch(apiPath(`/api/veterinarians/${user.id}/rewards`), {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const payload = await res.json();
+          setVetRewards(payload.data);
+          if (payload?.data?.couponIssued) {
+            setUseVetCoupon(true); // auto-aplicar en checkout si existe
+          }
+        }
+      } catch (e) {
+        // Silenciar errores en checkout
+      }
+    };
+    loadVetRewards();
+  }, [user?.isVeterinarian, user?.id]);
 
   const formatPrice = (price) =>
     new Intl.NumberFormat("es-CO", {
@@ -71,7 +96,33 @@ function Checkout({ cart, products, clearCart }) {
     return 0;
   };
 
-  const getTotal = () => getSubtotal() - getPremiumDiscount() + getShippingCost() + getPaymentHandlingFee();
+  const hasVetCoupon = useMemo(() => {
+    if (!user?.isVeterinarian) return false;
+    if (vetRewards?.couponIssued && vetRewards?.coupon?.used !== true) return true;
+    const coupons = Array.isArray(user?.coupons) ? user.coupons : [];
+    const now = new Date();
+    const m = now.getMonth() + 1;
+    const y = now.getFullYear();
+    return coupons.some(c => (c.month === m) && (c.year === y) && c.redeemed !== true);
+  }, [user, vetRewards]);
+
+  const getCouponDiscount = () => {
+    if (!useVetCoupon || !hasVetCoupon) return 0;
+    const base = Math.max(0, getSubtotal() - getPremiumDiscount() + getShippingCost() + getPaymentHandlingFee());
+    return Math.round(base * 0.05);
+  };
+
+  const getCouponCode = () => {
+    if (vetRewards?.coupon?.code) return vetRewards.coupon.code;
+    const coupons = Array.isArray(user?.coupons) ? user.coupons : [];
+    const now = new Date();
+    const m = now.getMonth() + 1;
+    const y = now.getFullYear();
+    const found = coupons.find(c => (c.month === m || c.monthKey?.endsWith(`-${m}`)) && (c.year === y || c.monthKey?.startsWith(`${y}-`)) && c.redeemed !== true);
+    return found?.code || null;
+  };
+
+  const getTotal = () => getSubtotal() - getPremiumDiscount() + getShippingCost() + getPaymentHandlingFee() - getCouponDiscount();
 
   const handleChange = (e) => {
     setFormData({
@@ -128,7 +179,9 @@ function Checkout({ cart, products, clearCart }) {
       const premiumDiscount = getPremiumDiscount();
       const shippingCost = getShippingCost();
       const paymentHandlingFee = getPaymentHandlingFee();
-      const orderTotal = itemsTotal - premiumDiscount + shippingCost + paymentHandlingFee;
+      const couponDiscount = getCouponDiscount();
+      const couponCode = getCouponCode();
+      const orderTotal = itemsTotal - premiumDiscount + shippingCost + paymentHandlingFee - couponDiscount;
 
       const token = getAuthToken();
       if (!token) {
@@ -154,6 +207,8 @@ function Checkout({ cart, products, clearCart }) {
             address: `${formData.address}, ${formData.city}`,
             paymentMethod: formData.paymentMethod,
           },
+          couponDiscount,
+          couponCode,
         }),
       });
 
@@ -440,6 +495,23 @@ function Checkout({ cart, products, clearCart }) {
                 <span style={{ color: '#10B981', fontWeight: '600' }}>
                   -{formatPrice(getPremiumDiscount())}
                 </span>
+              </div>
+            )}
+            {hasVetCoupon && (
+              <div className="total-row">
+                <span>Cupón Veterinario (5% sobre total):</span>
+                {useVetCoupon ? (
+                  <span style={{ color: '#10B981', fontWeight: '600' }}>
+                    -{formatPrice(getCouponDiscount())}
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => setUseVetCoupon(true)}
+                    style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid #E2E8F0', background: '#F8FAFC', fontWeight: 600 }}
+                  >
+                    Usar cupón
+                  </button>
+                )}
               </div>
             )}
             <div className="total-row">

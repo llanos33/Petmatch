@@ -1,14 +1,3 @@
 [
-  {
-    "id": 1765576117296,
-    "userId": 5,
-    "type": "veterinarian-monthly-5",
-    "discountPercent": 5,
-    "issuedAt": "2025-12-12T21:48:37.296Z",
-    "monthKey": "2025-12",
-    "code": "VET5-2025-12-5T4OK5",
-    "description": "Cupón 5% por 10 consultas respondidas en el mes",
-    "redeemableOn": "any-product",
-    "used": false
-  }
+
 ]

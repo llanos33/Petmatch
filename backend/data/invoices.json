@@ -122,5 +122,208 @@
     "status": "emitida",
     "issuedAt": "2025-12-12T20:36:30.006Z",
     "paymentMethod": "efectivo"
+  },
+  {
+    "id": 5,
+    "invoiceNumber": "PM-20251213-0005",
+    "orderId": 6,
+    "userId": 6,
+    "customerName": "Veterinario Prueba 2",
+    "customerEmail": "veterinariopetmatch2@gmail.com",
+    "items": [
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000,
+        "productName": "Collar Antipulgas"
+      },
+      {
+        "productId": 29,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Pechera Reflejante"
+      }
+    ],
+    "itemsTotal": 51950,
+    "shippingCost": 0,
+    "premiumDiscount": 5195,
+    "total": 46755,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:26:59.134Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 6,
+    "invoiceNumber": "PM-20251213-0006",
+    "orderId": 7,
+    "userId": 6,
+    "customerName": "Veterinario Prueba 2",
+    "customerEmail": "veterinariopetmatch2@gmail.com",
+    "items": [
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      }
+    ],
+    "itemsTotal": 30000,
+    "shippingCost": 0,
+    "premiumDiscount": 3000,
+    "total": 25650,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:39:02.285Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 7,
+    "invoiceNumber": "PM-20251213-0007",
+    "orderId": 8,
+    "userId": 6,
+    "customerName": "Veterinario Prueba 2",
+    "customerEmail": "veterinariopetmatch2@gmail.com",
+    "items": [
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      },
+      {
+        "productId": 29,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Pechera Reflejante"
+      }
+    ],
+    "itemsTotal": 36000,
+    "shippingCost": 0,
+    "premiumDiscount": 3600,
+    "total": 35530,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:43:13.901Z",
+    "paymentMethod": "datafono"
+  },
+  {
+    "id": 8,
+    "invoiceNumber": "PM-20251213-0008",
+    "orderId": 9,
+    "userId": 5,
+    "customerName": "Veterinario Prueba",
+    "customerEmail": "veterinariopetmatch@gmail.com",
+    "items": [
+      {
+        "productId": 2,
+        "quantity": 1,
+        "price": 33600,
+        "productName": "Alimento Premium para Gatos"
+      },
+      {
+        "productId": 29,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Pechera Reflejante"
+      }
+    ],
+    "itemsTotal": 51600,
+    "shippingCost": 0,
+    "premiumDiscount": 5160,
+    "total": 44118,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:44:25.386Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 9,
+    "invoiceNumber": "PM-20251213-0009",
+    "orderId": 1,
+    "userId": 5,
+    "customerName": "Veterinario Prueba",
+    "customerEmail": "veterinariopetmatch@gmail.com",
+    "items": [
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000,
+        "productName": "Collar Antipulgas"
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      }
+    ],
+    "itemsTotal": 46000,
+    "shippingCost": 0,
+    "premiumDiscount": 4600,
+    "total": 39330,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:53:48.603Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 10,
+    "invoiceNumber": "PM-20251213-0010",
+    "orderId": 2,
+    "userId": 5,
+    "customerName": "Veterinario Prueba",
+    "customerEmail": "veterinariopetmatch@gmail.com",
+    "items": [
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000,
+        "productName": "Collar Antipulgas"
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      }
+    ],
+    "itemsTotal": 46000,
+    "shippingCost": 0,
+    "premiumDiscount": 4600,
+    "total": 39330,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T20:57:57.074Z",
+    "paymentMethod": "pse"
+  },
+  {
+    "id": 11,
+    "invoiceNumber": "PM-20251213-0011",
+    "orderId": 1,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 1,
+        "quantity": 1,
+        "price": 42500,
+        "productName": "Alimento Premium para Perros"
+      }
+    ],
+    "itemsTotal": 42500,
+    "shippingCost": 0,
+    "premiumDiscount": 4250,
+    "total": 38250,
+    "status": "emitida",
+    "issuedAt": "2025-12-13T21:00:57.862Z",
+    "paymentMethod": "tarjeta"
   }
 ]

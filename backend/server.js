@@ -1396,7 +1396,7 @@ app.post('/api/veterinarians/:userId/coupons', authenticateToken, (req, res) => 
 
 // Crear una orden
 app.post('/api/orders', authenticateToken, (req, res) => {
-  const { items, customerInfo, shippingCost = null, premiumDiscount = 0, total } = req.body;
+  const { items, customerInfo, shippingCost = null, premiumDiscount = 0, couponDiscount = 0, couponCode = null, total } = req.body;
   
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'La orden debe contener al menos un producto' });
@@ -1437,12 +1437,13 @@ app.post('/api/orders', authenticateToken, (req, res) => {
 
   const itemsTotal = itemsWithResolvedPrice.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const premiumDiscountValue = Number.isFinite(Number(premiumDiscount)) ? Number(premiumDiscount) : 0;
+  const couponValue = Number.isFinite(Number(couponDiscount)) ? Number(couponDiscount) : 0;
   const shippingValue = Number.isFinite(Number(shippingCost))
     ? Number(shippingCost)
     : (isPremiumUser ? 0 : 8000);
   const orderTotal = typeof total === 'number'
     ? total
-    : itemsTotal - premiumDiscountValue + shippingValue;
+    : itemsTotal - premiumDiscountValue + shippingValue - couponValue;
 
   // Crear la orden
   const newOrder = {
@@ -1454,6 +1455,8 @@ app.post('/api/orders', authenticateToken, (req, res) => {
     itemsTotal,
     shippingCost: shippingValue,
     premiumDiscount: premiumDiscountValue,
+    couponDiscount: couponValue,
+    couponCode: couponCode,
     status: 'pendiente',
     date: new Date().toISOString()
   };
@@ -1485,6 +1488,32 @@ app.post('/api/orders', authenticateToken, (req, res) => {
       products[productIndex].stock -= item.quantity;
     }
   });
+
+  // Si hay cupón de veterinario, marcarlo como usado
+  if (couponValue > 0 && orderUser?.isVeterinarian) {
+    const coupons = readCoupons();
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+    const monthlyCoupon = coupons.find(c => c.userId === orderUser.id && c.type === 'veterinarian-monthly-5' && c.monthKey === monthKey && c.used !== true);
+    if (monthlyCoupon) {
+      monthlyCoupon.used = true;
+      monthlyCoupon.usedAt = new Date().toISOString();
+      writeCoupons(coupons);
+      // Actualizar flag en el perfil de usuario si existe
+      const userCouponList = Array.isArray(orderUser.coupons) ? orderUser.coupons : [];
+      const idx = userCouponList.findIndex(c => c.id === monthlyCoupon.id || c.monthKey === monthKey);
+      if (idx !== -1) {
+        userCouponList[idx] = { ...userCouponList[idx], redeemed: true, usedAt: monthlyCoupon.usedAt };
+        orderUser.coupons = userCouponList;
+        const usersUpdated = readUsers();
+        const uidx = usersUpdated.findIndex(u => u.id === orderUser.id);
+        if (uidx !== -1) {
+          usersUpdated[uidx] = { ...orderUser };
+          writeUsers(usersUpdated);
+        }
+      }
+    }
+  }
 
   orders.push(newOrder);
   invoices.push(newInvoice);

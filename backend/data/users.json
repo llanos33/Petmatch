@@ -77,7 +77,62 @@
         "type": "veterinarian-monthly-5",
         "discountPercent": 5,
         "issuedAt": "2025-12-12T21:48:37.296Z",
+        "monthKey": "2025-12",
+        "redeemed": true,
+        "usedAt": "2025-12-13T20:57:57.074Z"
+      },
+      {
+        "id": 1765659201792,
+        "code": "VET5-2025-12-CXQXGW",
+        "type": "veterinarian-monthly-5",
+        "discountPercent": 5,
+        "issuedAt": "2025-12-13T20:53:21.792Z",
         "monthKey": "2025-12"
+      },
+      {
+        "id": 1765659462344,
+        "code": "VET5-2025-12-ES44SF",
+        "type": "veterinarian-monthly-5",
+        "discountPercent": 5,
+        "issuedAt": "2025-12-13T20:57:42.344Z",
+        "monthKey": "2025-12"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Veterinario Prueba 2",
+    "email": "veterinariopetmatch2@gmail.com",
+    "password": "$2a$10$ESvCHvTJcZaQyAdXWCkM..IVmESlkbV4jqS6nPnXU4YPlafjptdKu",
+    "phone": "3136914054",
+    "createdAt": "2025-12-13T20:21:53.857Z",
+    "isPremium": true,
+    "premiumSince": "2025-12-13T20:21:59.397Z",
+    "subscription": {
+      "plan": "yearly",
+      "price": 420000
+    },
+    "isAdmin": false,
+    "isVeterinarian": true,
+    "isVerifiedVeterinarian": true,
+    "veterinarianDetails": {
+      "professionalLicense": "Universidad Tecnologica de pereira",
+      "licenseNumber": "1006533909",
+      "clinic": "PetVet",
+      "specialties": "Cirugia",
+      "submittedAt": "2025-12-13T20:22:13.859Z",
+      "approvedAt": "2025-12-13T20:22:32.300Z"
+    },
+    "coupons": [
+      {
+        "id": 1765657529720,
+        "code": "VET5-2025-12-EGO989",
+        "type": "veterinarian-monthly-5",
+        "discountPercent": 5,
+        "issuedAt": "2025-12-13T20:25:29.720Z",
+        "monthKey": "2025-12",
+        "redeemed": true,
+        "usedAt": "2025-12-13T20:43:13.901Z"
       }
     ]
   }
