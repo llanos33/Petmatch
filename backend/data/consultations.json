@@ -1,3 +1,38 @@
 [
-  
+  {
+    "id": 1,
+    "userId": 2,
+    "userName": "Kevin Arias",
+    "title": "assasf",
+    "question": "fasf",
+    "petType": "gato",
+    "petId": 2,
+    "petName": "Luna",
+    "petPhoto": "https://upload.wikimedia.org/wikipedia/commons/6/60/Neighbours_Siamese.jpg",
+    "createdAt": "2025-12-15T02:56:35.442Z",
+    "status": "answered",
+    "answer": "aaa",
+    "answeredAt": "2025-12-15T02:57:02.267Z",
+    "answeredBy": "Administrador",
+    "answeredByType": "admin",
+    "answeredByUserId": 4
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "userName": "Juan Camilo Arias",
+    "title": "vfdv",
+    "question": "csdcd",
+    "petType": "perro",
+    "petId": 1,
+    "petName": "max",
+    "petPhoto": "https://images.unsplash.com/photo-1697722454841-75f9a1fdd8a5?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGluc2NoZXJ8ZW58MHx8MHx8fDA%3D",
+    "createdAt": "2025-12-15T12:53:37.867Z",
+    "status": "answered",
+    "answer": "adsad",
+    "answeredAt": "2025-12-15T12:54:20.090Z",
+    "answeredBy": "Veterinario Prueba",
+    "answeredByType": "veterinarian",
+    "answeredByUserId": 5
+  }
 ]

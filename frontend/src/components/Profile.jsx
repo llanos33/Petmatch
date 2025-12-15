@@ -336,10 +336,35 @@ function Profile() {
 
               {!user.isVerifiedVeterinarian && (
                 <div className="vet-info-card">
-                  <p>Tu cuenta de veterinario está pendiente de verificación. Completa el proceso para acceder a todas las funcionalidades.</p>
-                  <Link to="/veterinarian-verification" className="verify-button">
-                    Verificar Cuenta
-                  </Link>
+                  {user.rejectedRequests && user.rejectedRequests.length > 0 ? (
+                    <>
+                      <p style={{ color: '#dc2626', fontWeight: '600' }}>Tu solicitud fue rechazada</p>
+                      <p style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>{user.rejectedRequests[user.rejectedRequests.length - 1].reason}</p>
+                      {(() => {
+                        const lastRejection = user.rejectedRequests[user.rejectedRequests.length - 1];
+                        const rejectedDate = new Date(lastRejection.rejectedAt);
+                        const now = new Date();
+                        const canReapply = new Date(rejectedDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+                        const daysRemaining = Math.ceil((canReapply - now) / (24 * 60 * 60 * 1000));
+                        if (daysRemaining > 0) {
+                          return <p style={{ fontSize: '0.85rem', opacity: 0.9 }}>Podrás volver a intentar en <strong>{daysRemaining} días</strong></p>;
+                        } else {
+                          return (
+                            <Link to="/veterinarian-verification" className="verify-button">
+                              Intentar de Nuevo
+                            </Link>
+                          );
+                        }
+                      })()}
+                    </>
+                  ) : (
+                    <>
+                      <p>Tu cuenta de veterinario está pendiente de verificación. Completa el proceso para acceder a todas las funcionalidades.</p>
+                      <Link to="/veterinarian-verification" className="verify-button">
+                        Verificar Cuenta
+                      </Link>
+                    </>
+                  )}
                 </div>
               )}
 

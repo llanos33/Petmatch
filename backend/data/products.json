@@ -32,7 +32,7 @@
     "category": "Alimentos",
     "petType": "perro",
     "image": "https://laikapp.s3.amazonaws.com/dev_images_products/d7ef6dac7abc43935522d31298a91d91_1756849549.png",
-    "stock": 31
+    "stock": 28
   },
   {
     "id": 4,
@@ -42,7 +42,7 @@
     "category": "Alimentos",
     "petType": "gato",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/f3ccdd27d2000e3f9255a7e3e2c48800_1687988660.jpg",
-    "stock": 76,
+    "stock": 73,
     "exclusive": false,
     "isOnSale": false,
     "updatedAt": "2025-12-11T20:07:34.154Z",
@@ -117,7 +117,7 @@
     "category": "Juguetes",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/c9f63fa19b6a6720c39e41b2a4d66b90_1696261507.jpg",
-    "stock": 25
+    "stock": 22
   },
   {
     "id": 12,
@@ -127,7 +127,7 @@
     "category": "Juguetes",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/5197_117956_Kong___Squeak_Air_Pelota_1637950218_500x500.png",
-    "stock": 46
+    "stock": 43
   },
   {
     "id": 13,
@@ -208,7 +208,7 @@
     "category": "Juguetes",
     "petType": "gato",
     "image": "https://img.kwcdn.com/product/open/7125fcf170874e37a39d24cd528b142b-goods.jpeg?imageView2/2/w/1300/q/80/format/avif",
-    "stock": 22
+    "stock": 21
   },
   {
     "id": 21,
@@ -229,7 +229,7 @@
     "category": "Accesorios",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/75986_201630_Elanco___Seresto_Collar_Para_Perros_De_Hasta_8_kg_1666977465_800x800.jpg",
-    "stock": 45
+    "stock": 43
   },
   {
     "id": 23,
@@ -320,7 +320,7 @@
     "category": "Medicamentos",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/10958_144692_Endogard_10___Antiparasitorio_para_perros__1647352066_500x500.jpg",
-    "stock": 37
+    "stock": 35
   },
   {
     "id": 32,
@@ -420,7 +420,7 @@
     "category": "Higiene",
     "petType": "ambos",
     "image": "https://laikapp.s3.amazonaws.com/dev_images_products/4ebd6071d17aeb594fcb35f9f47ba756_1743697769.jpg",
-    "stock": 52
+    "stock": 50
   },
   {
     "id": 42,
@@ -520,7 +520,7 @@
     "category": "Camas y Casas",
     "petType": "perro",
     "image": "https://d23qt3x1ychzdy.cloudfront.net/dev_images_products/313d824f327e18ac57ca976c7559436f_1705677205.jpg",
-    "stock": 12
+    "stock": 10
   },
   {
     "id": 52,
@@ -633,9 +633,10 @@
     "image": "https://exitocol.vteximg.com.br/arquivos/ids/26956948/Alimento-Gato-Filetes-De-Salmon-En-Salsa-Lata-X-156-gr-695841_a.jpg?v=638767286704070000",
     "stock": 84,
     "exclusive": false,
-    "isOnSale": false,
-    "updatedAt": "2025-12-11T20:06:40.945Z",
-    "createdAt": "2025-12-11T20:06:40.945Z"
+    "isOnSale": true,
+    "updatedAt": "2025-12-15T02:54:28.777Z",
+    "createdAt": "2025-12-11T20:06:40.945Z",
+    "salePrice": 5000
   },
   {
     "id": 63,
@@ -939,7 +940,7 @@
     "category": "Alimentos",
     "petType": "perro",
     "image": "//ceba.com.co/cdn/shop/products/VHN-GASTROINTESTINAL_DOG_LOAF_CAN_400GR-PACKSHOT_Med._Res.___Basic_400x.png?v=1686151506 400w, //ceba.com.co/cdn/shop/products/VHN-GASTROINTESTINAL_DOG_LOAF_CAN_400GR-PACKSHOT_Med._Res.___Basic_500x.png?v=1686151506 500w",
-    "stock": 59,
+    "stock": 58,
     "id": 92
   },
   {
@@ -1220,7 +1221,11 @@
     "petType": "gato",
     "image": "https://m.media-amazon.com/images/I/71UQ0QH3vUL._AC_SX679_.jpg",
     "stock": 29,
-    "id": 120
+    "id": 120,
+    "exclusive": true,
+    "isOnSale": false,
+    "updatedAt": "2025-12-15T02:55:30.456Z",
+    "createdAt": "2025-12-15T02:55:30.456Z"
   },
   {
     "name": "Pala Sanitaria Resistente",

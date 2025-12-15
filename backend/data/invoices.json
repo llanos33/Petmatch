@@ -1,67 +1,105 @@
 [
   {
     "id": 1,
-    "invoiceNumber": "PM-20251212-0001",
-    "orderId": 2,
-    "userId": 1,
-    "customerName": "Juan Camilo Arias",
-    "customerEmail": "juancamilo.arias@utp.edu.co",
+    "invoiceNumber": "PM-20251215-0001",
+    "orderId": 1,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
     "items": [
       {
-        "productId": 120,
+        "productId": 3,
         "quantity": 1,
-        "price": 45000
+        "price": 36000,
+        "productName": "Alimento para Cachorros"
       },
       {
-        "productId": 29,
+        "productId": 11,
         "quantity": 1,
-        "price": 18000
+        "price": 17500,
+        "productName": "Juguete Interactivo para Perros"
       },
-      {
-        "productId": 7,
-        "quantity": 1,
-        "price": 39600
-      }
-    ],
-    "itemsTotal": 102600,
-    "shippingCost": 0,
-    "premiumDiscount": 10260,
-    "total": 92340,
-    "status": "emitida",
-    "issuedAt": "2025-12-12T19:25:33.337Z",
-    "paymentMethod": "tarjeta"
-  },
-  {
-    "id": 2,
-    "invoiceNumber": "PM-20251212-0002",
-    "orderId": 3,
-    "userId": 2,
-    "customerName": "Kevin Arias",
-    "customerEmail": "ariasjuancamilo14@gmail.com",
-    "items": [
       {
         "productId": 22,
         "quantity": 1,
-        "price": 28000
+        "price": 28000,
+        "productName": "Collar Antipulgas"
       },
       {
-        "productId": 4,
+        "productId": 31,
         "quantity": 1,
-        "price": 5950
+        "price": 25000,
+        "productName": "Desparasitante Oral para Perros"
       },
       {
         "productId": 12,
         "quantity": 1,
-        "price": 12000
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 51,
+        "quantity": 1,
+        "price": 120000,
+        "productName": "Cama Ortopédica para Perros"
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
       }
     ],
-    "itemsTotal": 45950,
-    "shippingCost": 8000,
-    "premiumDiscount": 0,
-    "total": 53950,
+    "itemsTotal": 262450,
+    "shippingCost": 0,
+    "premiumDiscount": 26245,
+    "couponDiscount": 0,
+    "total": 236205,
     "status": "emitida",
-    "issuedAt": "2025-12-12T19:49:57.361Z",
-    "paymentMethod": "efectivo"
+    "issuedAt": "2025-12-15T13:30:58.914Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 2,
+    "invoiceNumber": "PM-20251215-0002",
+    "orderId": 2,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 11,
+        "quantity": 1,
+        "price": 17500,
+        "productName": "Juguete Interactivo para Perros"
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      }
+    ],
+    "itemsTotal": 35450,
+    "shippingCost": 0,
+    "premiumDiscount": 3545,
+    "couponDiscount": 0,
+    "total": 31905,
+    "status": "emitida",
+    "issuedAt": "2025-12-15T13:32:40.353Z",
+    "paymentMethod": "tarjeta"
   },
   {
     "id": 3,
@@ -324,6 +362,206 @@
     "total": 38250,
     "status": "emitida",
     "issuedAt": "2025-12-13T21:00:57.862Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 12,
+    "invoiceNumber": "PM-20251215-0012",
+    "orderId": 1,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 3,
+        "quantity": 1,
+        "price": 36000,
+        "productName": "Alimento para Cachorros"
+      },
+      {
+        "productId": 11,
+        "quantity": 1,
+        "price": 17500,
+        "productName": "Juguete Interactivo para Perros"
+      },
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000,
+        "productName": "Collar Antipulgas"
+      },
+      {
+        "productId": 31,
+        "quantity": 1,
+        "price": 25000,
+        "productName": "Desparasitante Oral para Perros"
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 51,
+        "quantity": 1,
+        "price": 120000,
+        "productName": "Cama Ortopédica para Perros"
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      }
+    ],
+    "itemsTotal": 262450,
+    "shippingCost": 0,
+    "premiumDiscount": 26245,
+    "total": 241205,
+    "status": "emitida",
+    "issuedAt": "2025-12-15T12:45:47.675Z",
+    "paymentMethod": "efectivo"
+  },
+  {
+    "id": 13,
+    "invoiceNumber": "PM-20251215-0013",
+    "orderId": 2,
+    "userId": 1,
+    "customerName": "Juan Camilo Arias",
+    "customerEmail": "juancamilo.arias@utp.edu.co",
+    "items": [
+      {
+        "productId": 3,
+        "quantity": 1,
+        "price": 36000,
+        "productName": "Alimento para Cachorros"
+      },
+      {
+        "productId": 20,
+        "quantity": 1,
+        "price": 38000,
+        "productName": "Puzzle Interactivo para Gatos"
+      },
+      {
+        "productId": 92,
+        "quantity": 1,
+        "price": 28400,
+        "productName": "Lata Medicada Gastrointestinal para Perros 385 gr"
+      }
+    ],
+    "itemsTotal": 102400,
+    "shippingCost": 0,
+    "premiumDiscount": 10240,
+    "total": 92160,
+    "status": "emitida",
+    "issuedAt": "2025-12-15T12:56:17.146Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 14,
+    "invoiceNumber": "PM-20251215-0014",
+    "orderId": 1,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 3,
+        "quantity": 1,
+        "price": 36000,
+        "productName": "Alimento para Cachorros"
+      },
+      {
+        "productId": 11,
+        "quantity": 1,
+        "price": 17500,
+        "productName": "Juguete Interactivo para Perros"
+      },
+      {
+        "productId": 22,
+        "quantity": 1,
+        "price": 28000,
+        "productName": "Collar Antipulgas"
+      },
+      {
+        "productId": 31,
+        "quantity": 1,
+        "price": 25000,
+        "productName": "Desparasitante Oral para Perros"
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      },
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 51,
+        "quantity": 1,
+        "price": 120000,
+        "productName": "Cama Ortopédica para Perros"
+      },
+      {
+        "productId": 41,
+        "quantity": 1,
+        "price": 18000,
+        "productName": "Shampoo para Mascotas"
+      }
+    ],
+    "itemsTotal": 262450,
+    "shippingCost": 0,
+    "premiumDiscount": 26245,
+    "total": 236205,
+    "status": "emitida",
+    "issuedAt": "2025-12-15T13:30:58.914Z",
+    "paymentMethod": "tarjeta"
+  },
+  {
+    "id": 15,
+    "invoiceNumber": "PM-20251215-0015",
+    "orderId": 2,
+    "userId": 4,
+    "customerName": "Admin PetMatch",
+    "customerEmail": "admin@petmatch.com",
+    "items": [
+      {
+        "productId": 4,
+        "quantity": 1,
+        "price": 5950,
+        "productName": "Alimento Húmedo para Gatos 100 gr"
+      },
+      {
+        "productId": 11,
+        "quantity": 1,
+        "price": 17500,
+        "productName": "Juguete Interactivo para Perros"
+      },
+      {
+        "productId": 12,
+        "quantity": 1,
+        "price": 12000,
+        "productName": "Pelota de Tenis para Perros"
+      }
+    ],
+    "itemsTotal": 35450,
+    "shippingCost": 0,
+    "premiumDiscount": 3545,
+    "total": 31905,
+    "status": "emitida",
+    "issuedAt": "2025-12-15T13:32:40.353Z",
     "paymentMethod": "tarjeta"
   }
 ]

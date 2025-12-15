@@ -376,7 +376,7 @@ const AdminDashboard = () => {
                 <div className="admin-dashboard__chart-container">
                   {salesTrendData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={450}>
-                      <LineChart data={salesTrendData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                      <LineChart data={salesTrendData} margin={{ top: 5, right: 30, left: 30, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                         <XAxis dataKey="date" />
                         <YAxis />
@@ -388,8 +388,8 @@ const AdminDashboard = () => {
                         <Line 
                           type="monotone" 
                           dataKey="total" 
-                          stroke="#FF6B6B" 
-                          dot={{ fill: '#FF6B6B', r: 5 }}
+                          stroke="#4f59b4ff" 
+                          dot={{ fill: '#364497ff', r: 5 }}
                           activeDot={{ r: 7 }}
                           name="Ventas"
                         />
@@ -416,7 +416,7 @@ const AdminDashboard = () => {
                           cy="50%"
                           labelLine={false}
                           label={({ name, value }) => `${name}: ${value}`}
-                          outerRadius={80}
+                          outerRadius={180}
                           fill="#8884d8"
                           dataKey="value"
                         >
@@ -732,9 +732,9 @@ const AdminDashboard = () => {
                     <span>Precio</span>
                     <span>Subtotal</span>
                   </div>
-                  {invoiceModal.invoice.items?.map(item => (
-                    <div key={`${item.productId}-${item.price}`} className="admin-dashboard__item-row">
-                      <span>{item.productId}</span>
+                  {invoiceModal.invoice.items?.map((item, idx) => (
+                    <div key={`${item.productId}-${idx}`} className="admin-dashboard__item-row">
+                      <span>{item.productName || `Producto #${item.productId}`}</span>
                       <span>x{item.quantity}</span>
                       <span>{formatCurrency(item.price)}</span>
                       <span>{formatCurrency(item.price * item.quantity)}</span>
@@ -751,10 +751,18 @@ const AdminDashboard = () => {
                     <span>Envío</span>
                     <strong>{formatCurrency(invoiceModal.invoice.shippingCost || 0)}</strong>
                   </div>
-                  <div>
-                    <span>Descuento Premium</span>
-                    <strong>-{formatCurrency(invoiceModal.invoice.premiumDiscount || 0)}</strong>
-                  </div>
+                  {invoiceModal.invoice.premiumDiscount > 0 && (
+                    <div>
+                      <span>Descuento Premium</span>
+                      <strong>-{formatCurrency(invoiceModal.invoice.premiumDiscount || 0)}</strong>
+                    </div>
+                  )}
+                  {invoiceModal.invoice.couponDiscount > 0 && (
+                    <div>
+                      <span>Cupón Veterinario (5%)</span>
+                      <strong>-{formatCurrency(invoiceModal.invoice.couponDiscount || 0)}</strong>
+                    </div>
+                  )}
                   <div className="admin-dashboard__total-line">
                     <span>Total</span>
                     <strong>{formatCurrency(invoiceModal.invoice.total || 0)}</strong>

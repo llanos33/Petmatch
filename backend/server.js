@@ -1972,6 +1972,20 @@ app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
       return res.status(500).json({ error: 'Error al guardar el certificado: ' + fileError.message });
     }
 
+    // Validar que no haya sido rechazado recientemente (cooldown de 1 mes)
+    if (user.rejectedRequests && Array.isArray(user.rejectedRequests)) {
+      const lastRejection = user.rejectedRequests[user.rejectedRequests.length - 1];
+      if (lastRejection && lastRejection.rejectedAt) {
+        const rejectedDate = new Date(lastRejection.rejectedAt);
+        const now = new Date();
+        const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        if (rejectedDate > monthAgo) {
+          const daysRemaining = Math.ceil((new Date(rejectedDate.getTime() + 30 * 24 * 60 * 60 * 1000) - now) / (24 * 60 * 60 * 1000));
+          return res.status(429).json({ error: `Tu solicitud anterior fue rechazada. Podrás volver a intentar en ${daysRemaining} días.` });
+        }
+      }
+    }
+
     // Crear solicitud de verificación
     const requests = readVeterinarianRequests();
     const requestId = requests.length > 0 ? Math.max(...requests.map(r => r.id)) + 1 : 1;
@@ -2062,6 +2076,20 @@ app.put('/api/admin/veterinarian-requests/:requestId', authenticateToken, requir
         submittedAt: request.submittedAt,
         approvedAt: new Date().toISOString()
       };
+    } else if (status === 'rejected') {
+      // Guardar timestamp de rechazo para bloquear nuevas solicitudes por 1 mes
+      const { reason = 'Documentación incompleta o no válida' } = req.body;
+      requests[requestIndex].rejectedAt = new Date().toISOString();
+      requests[requestIndex].rejectionReason = reason;
+      // Marcar en el usuario que fue rechazado recientemente
+      if (!users[userIndex].rejectedRequests) {
+        users[userIndex].rejectedRequests = [];
+      }
+      users[userIndex].rejectedRequests.push({
+        requestId: request.id,
+        rejectedAt: new Date().toISOString(),
+        reason
+      });
     }
 
     writeVeterinarianRequests(requests);

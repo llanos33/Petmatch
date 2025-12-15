@@ -24,11 +24,13 @@
     "licenseNumber": "1006533909",
     "clinic": "PetVet",
     "specialties": "Cirugia",
-    "certificatePath": "/uploads/veterinary-documents/vet_6_1765657333856.pdf",
+    "certificatePath": "/uploads/veterinary-documents/vet_6_1765802092064.pdf",
     "certificateFileName": "CC Fotocopia.pdf",
-    "submittedAt": "2025-12-13T20:22:13.859Z",
-    "status": "approved",
-    "reviewedAt": "2025-12-13T20:22:32.300Z",
-    "reviewedBy": 4
+    "submittedAt": "2025-12-15T12:34:52.069Z",
+    "status": "rejected",
+    "reviewedAt": "2025-12-15T12:42:01.168Z",
+    "reviewedBy": 4,
+    "rejectedAt": "2025-12-15T12:42:01.168Z",
+    "rejectionReason": "Documentación incompleta o no válida"
   }
 ]
