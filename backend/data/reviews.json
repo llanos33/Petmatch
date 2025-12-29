@@ -1,3 +1,20 @@
 [
-
+  {
+    "id": 1,
+    "productId": 4,
+    "userId": 5,
+    "userName": "Veterinario Prueba",
+    "rating": 5,
+    "comment": "Excelente!",
+    "date": "2025-12-20T22:06:25.605Z"
+  },
+  {
+    "id": 2,
+    "productId": 4,
+    "userId": 4,
+    "userName": "Admin PetMatch",
+    "rating": 1,
+    "comment": "Mala Calidad",
+    "date": "2025-12-20T22:10:19.995Z"
+  }
 ]
