@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { apiPath } from '../config/api'
 import Breadcrumb from './Breadcrumb'
 import './Cart.css'
 import {
@@ -23,7 +24,7 @@ function Cart({ cart, products, removeFromCart, updateQuantity }) {
       try {
         if (!user?.isVeterinarian || !user?.id) return
         const token = localStorage.getItem('token')
-        const res = await fetch(`/api/veterinarians/${user.id}/rewards`, {
+        const res = await fetch(apiPath(`/api/veterinarians/${user.id}/rewards`), {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         if (res.ok) {
@@ -257,7 +258,7 @@ function Cart({ cart, products, removeFromCart, updateQuantity }) {
                 onClick={async () => {
                   try {
                     const token = localStorage.getItem('token')
-                    const res = await fetch(`/api/veterinarians/${user.id}/coupons`, {
+                    const res = await fetch(apiPath(`/api/veterinarians/${user.id}/coupons`), {
                       method: 'POST',
                       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                     })

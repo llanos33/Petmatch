@@ -44,6 +44,7 @@ import PuntosInteres from "./pages/PuntosInteres";
 import PetProfiles from "./pages/PetProfiles";
 import PetProfileForm from "./components/PetProfileForm";
 import PetProfile from "./components/PetProfile";
+import { apiPath } from './config/api'
 
 const CART_STORAGE_KEY = 'petmatch_cart_v1'
 
@@ -324,10 +325,10 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("/api/products")
+      const response = await fetch(apiPath('/api/products'))
       const data = await response.json()
       // Log para depuración
-      console.log('fetch /api/products', { status: response.status, ok: response.ok, data })
+      console.log('fetch products', { status: response.status, ok: response.ok, data })
 
       // El backend puede devolver un array directo o un objeto { success, data }
       let productsArray = []
