@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
 import { useAuth } from '../context/AuthContext'
+import { apiPath } from '../config/api'
 
 function ProductList({ products, addToCart, searchTerm = '' }) {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -26,7 +27,7 @@ function ProductList({ products, addToCart, searchTerm = '' }) {
   useEffect(() => {
     const fetchBestsellers = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/products/bestsellers/monthly')
+        const response = await fetch(apiPath('/api/products/bestsellers/monthly'))
         if (response.ok) {
           const data = await response.json()
           setBestsellerProducts(data)

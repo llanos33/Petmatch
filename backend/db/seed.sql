@@ -1,0 +1,8 @@
+-- PetMatch seed data
+-- Intentionally empty.
+--
+-- This file is safe to commit/deploy because it does not contain real users,
+-- password hashes, emails, orders, invoices, or other sensitive data.
+--
+-- Run backend/db/schema.sql in Supabase to create the database structure.
+-- Add only demo/non-sensitive INSERT statements here if you need sample data.

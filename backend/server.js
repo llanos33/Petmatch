@@ -5,6 +5,29 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import {
+  initializeDatabase,
+  readProducts as dbReadProducts,
+  writeProducts as dbWriteProducts,
+  readOrders as dbReadOrders,
+  writeOrders as dbWriteOrders,
+  readInvoices as dbReadInvoices,
+  writeInvoices as dbWriteInvoices,
+  readUsers as dbReadUsers,
+  writeUsers as dbWriteUsers,
+  readReviews as dbReadReviews,
+  writeReviews as dbWriteReviews,
+  readConsultations as dbReadConsultations,
+  writeConsultations as dbWriteConsultations,
+  readCoupons as dbReadCoupons,
+  writeCoupons as dbWriteCoupons,
+  readPets as dbReadPets,
+  writePets as dbWritePets,
+  readVeterinarianRequests as dbReadVeterinarianRequests,
+  writeVeterinarianRequests as dbWriteVeterinarianRequests,
+  readSiteContent as dbReadSiteContent,
+  writeSiteContent as dbWriteSiteContent,
+} from './db/database.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +53,13 @@ const petsFile = path.join(dataDir, 'pets.json');
 const veterinarianRequestsFile = path.join(dataDir, 'veterinarian-requests.json');
 const couponsFile = path.join(dataDir, 'coupons.json');
 
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// El backend usa PostgreSQL. Este bloque queda solo como escape hatch
+// para reconstruir archivos JSON locales antiguos si se activa explicitamente.
+if (process.env.LEGACY_JSON_BOOTSTRAP === 'true') {
 // Asegurar que los directorios existen
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -685,6 +715,7 @@ if (!fs.existsSync(consultationsFile)) {
 if (!fs.existsSync(petsFile)) {
   fs.writeFileSync(petsFile, JSON.stringify([], null, 2));
 }
+}
 
 // Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
@@ -746,135 +777,117 @@ function requireVerifiedVeterinarian(req, res, next) {
 
 // Helper para leer productos
 function readProducts() {
-  try {
-    const data = fs.readFileSync(productsFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadProducts();
 }
 
 // Helper para escribir productos
 function writeProducts(products) {
-  fs.writeFileSync(productsFile, JSON.stringify(products, null, 2));
+  dbWriteProducts(products);
 }
 
 // Helper para leer órdenes
 function readOrders() {
-  try {
-    const data = fs.readFileSync(ordersFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadOrders();
 }
 
 // Helper para escribir órdenes
 function writeOrders(orders) {
-  fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
+  dbWriteOrders(orders);
 }
 
 // Helper para leer facturas
 function readInvoices() {
-  try {
-    const data = fs.readFileSync(invoicesFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadInvoices();
 }
 
 // Helper para escribir facturas
 function writeInvoices(invoices) {
-  fs.writeFileSync(invoicesFile, JSON.stringify(invoices, null, 2));
+  dbWriteInvoices(invoices);
 }
 
 // Helper para leer usuarios
 function readUsers() {
-  try {
-    const data = fs.readFileSync(usersFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadUsers();
 }
 
 // Helper para escribir usuarios
 function writeUsers(users) {
-  fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+  dbWriteUsers(users);
 }
 
 // Helper para leer reseñas
 function readReviews() {
-  try {
-    const data = fs.readFileSync(reviewsFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadReviews();
 }
 
 // Helper para escribir reseñas
 function writeReviews(reviews) {
-  fs.writeFileSync(reviewsFile, JSON.stringify(reviews, null, 2));
+  dbWriteReviews(reviews);
 }
 
 // Helper para leer consultas
 function readConsultations() {
-  try {
-    const data = fs.readFileSync(consultationsFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadConsultations();
 }
 
 // Helper para escribir consultas
 function writeConsultations(consultations) {
-  fs.writeFileSync(consultationsFile, JSON.stringify(consultations, null, 2));
+  dbWriteConsultations(consultations);
 }
 
 function readCoupons() {
-  const data = fs.readFileSync(couponsFile, 'utf8');
-  try {
-    return JSON.parse(data);
-  } catch (e) {
-    return [];
-  }
+  return dbReadCoupons();
 }
 
 function writeCoupons(coupons) {
-  fs.writeFileSync(couponsFile, JSON.stringify(coupons, null, 2));
+  dbWriteCoupons(coupons);
 }
 
   // Helper para leer mascotas
   function readPets() {
-    try {
-      const data = fs.readFileSync(petsFile, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      return [];
-    }
+    return dbReadPets();
   }
 
   // Helper para escribir mascotas
   function writePets(pets) {
-    fs.writeFileSync(petsFile, JSON.stringify(pets, null, 2));
+    dbWritePets(pets);
   }
 
 // Helper para leer solicitudes de veterinarios
 function readVeterinarianRequests() {
-  try {
-    const data = fs.readFileSync(veterinarianRequestsFile, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  return dbReadVeterinarianRequests();
 }
 
 // Helper para escribir solicitudes de veterinarios
 function writeVeterinarianRequests(requests) {
-  fs.writeFileSync(veterinarianRequestsFile, JSON.stringify(requests, null, 2));
+  dbWriteVeterinarianRequests(requests);
+}
+
+function getDefaultSiteContent() {
+  return {
+    categories: [
+      { id: 'alimentos', name: 'Alimentos', description: '', image: '', enabled: true },
+      { id: 'juguetes', name: 'Juguetes', description: '', image: '', enabled: true },
+      { id: 'accesorios', name: 'Accesorios', description: '', image: '', enabled: true },
+      { id: 'medicamentos', name: 'Medicamentos', description: '', image: '', enabled: true },
+      { id: 'higiene', name: 'Higiene', description: '', image: '', enabled: true },
+      { id: 'camas-y-casas', name: 'Camas y Casas', description: '', image: '', enabled: true },
+    ],
+    homepageFeatured: {
+      categories: ['alimentos', 'juguetes', 'accesorios'],
+      products: [],
+    },
+    promotionalSliders: [],
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function readSiteContent() {
+  return dbReadSiteContent() || getDefaultSiteContent();
+}
+
+function writeSiteContent(content) {
+  dbWriteSiteContent(content);
 }
 
 function normalizeEmail(email) {
@@ -1604,6 +1617,26 @@ app.get('/api/admin/orders/:orderId/invoice', authenticateToken, requireAdmin, (
 app.get('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {
   const products = readProducts();
   res.json({ success: true, data: products });
+});
+
+app.get('/api/admin/site-content', authenticateToken, requireAdmin, (req, res) => {
+  res.json({ success: true, data: readSiteContent() });
+});
+
+app.put('/api/admin/site-content', authenticateToken, requireAdmin, (req, res) => {
+  const payload = req.body || {};
+  const updatedContent = {
+    categories: Array.isArray(payload.categories) ? payload.categories : [],
+    promotionalSliders: Array.isArray(payload.promotionalSliders) ? payload.promotionalSliders : [],
+    homepageFeatured: {
+      categories: Array.isArray(payload.homepageFeatured?.categories) ? payload.homepageFeatured.categories : [],
+      products: Array.isArray(payload.homepageFeatured?.products) ? payload.homepageFeatured.products : [],
+    },
+    updatedAt: new Date().toISOString(),
+  };
+
+  writeSiteContent(updatedContent);
+  res.json({ success: true, data: updatedContent });
 });
 
 app.post('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {
@@ -2367,6 +2400,7 @@ if (fs.existsSync(clientBuildPath)) {
   });
 }
 
+await initializeDatabase();
 await ensureAdminUser();
 
 app.listen(PORT, () => {

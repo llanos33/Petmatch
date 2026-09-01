@@ -7,6 +7,7 @@
     "start": "npm run start --prefix backend",
     "dev": "npm run dev --prefix backend",
     "build": "npm run build --prefix frontend",
+    "db:generate-sql": "node scripts/json-to-postgres.mjs",
     "heroku-postbuild": "npm run build --prefix frontend && node scripts/sync-frontend.js"
   },
   "engines": {
