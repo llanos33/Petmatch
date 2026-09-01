@@ -2393,10 +2393,11 @@ app.use('/uploads/veterinary-documents', express.static(uploadsDir));
 
 // Servir frontend estatico si existe el build en /public
 const clientBuildPath = path.join(__dirname, 'public');
-if (fs.existsSync(clientBuildPath)) {
+const clientIndexPath = path.join(clientBuildPath, 'index.html');
+if (fs.existsSync(clientIndexPath)) {
   app.use(express.static(clientBuildPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    res.sendFile(clientIndexPath);
   });
 }
 
