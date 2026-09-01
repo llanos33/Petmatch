@@ -1,8 +1,221 @@
--- PetMatch seed data
--- Intentionally empty.
+-- PetMatch demo seed data
+-- Safe to commit/deploy: contains only demo products, no users, passwords,
+-- emails, orders, invoices, or other sensitive data.
 --
--- This file is safe to commit/deploy because it does not contain real users,
--- password hashes, emails, orders, invoices, or other sensitive data.
---
--- Run backend/db/schema.sql in Supabase to create the database structure.
--- Add only demo/non-sensitive INSERT statements here if you need sample data.
+-- Run backend/db/schema.sql first, then this file in Supabase SQL Editor.
+
+begin;
+
+insert into products (
+  id, name, description, price, category, pet_type, image, stock,
+  exclusive, is_on_sale, sale_price, created_at, updated_at, raw_data
+) values
+(
+  1,
+  'Alimento Premium para Perros Adultos 3kg',
+  'Croquetas balanceadas con proteina de pollo, omega 3 y fibra digestiva para perros adultos.',
+  50000,
+  'Alimentos',
+  'perro',
+  'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=900',
+  40,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  2,
+  'Alimento Completo para Gatos 1.5kg',
+  'Formula con taurina, proteina de pescado y vitaminas para gatos adultos.',
+  42000,
+  'Alimentos',
+  'gato',
+  'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=900',
+  35,
+  false,
+  true,
+  36000,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  3,
+  'Snacks Dentales para Perros',
+  'Premios crujientes que ayudan a reducir sarro y mantener el aliento fresco.',
+  18000,
+  'Alimentos',
+  'perro',
+  'https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=900',
+  60,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  4,
+  'Pelota Interactiva Resistente',
+  'Juguete de goma para morder, perseguir y mantener activo a tu perro.',
+  25000,
+  'Juguetes',
+  'perro',
+  'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=900',
+  30,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  5,
+  'Rascador para Gatos con Plataforma',
+  'Rascador compacto con poste de sisal y base estable para juego y descanso.',
+  85000,
+  'Juguetes',
+  'gato',
+  'https://images.unsplash.com/photo-1545249390-6bdfa286032f?w=900',
+  12,
+  true,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  6,
+  'Varita con Plumas para Gatos',
+  'Varita flexible con plumas suaves para estimular el instinto de caza.',
+  12000,
+  'Juguetes',
+  'gato',
+  'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=900',
+  45,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  7,
+  'Correa Ajustable para Perros',
+  'Correa liviana y resistente con broche metalico para paseos diarios.',
+  32000,
+  'Accesorios',
+  'perro',
+  'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=900',
+  28,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  8,
+  'Bebedero Automatico 2L',
+  'Fuente de agua para perros y gatos pequenos, ideal para hidratacion continua.',
+  65000,
+  'Accesorios',
+  'ambos',
+  'https://images.unsplash.com/photo-1601758177266-bc599de87707?w=900',
+  18,
+  true,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  9,
+  'Shampoo Hipoalergenico 250ml',
+  'Shampoo suave con avena para piel sensible, apto para perros y gatos.',
+  22000,
+  'Higiene',
+  'ambos',
+  'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=900',
+  50,
+  false,
+  true,
+  18000,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  10,
+  'Arena Sanitaria Aglomerante 10kg',
+  'Arena para gatos con control de olores y alta absorcion.',
+  38000,
+  'Higiene',
+  'gato',
+  'https://images.unsplash.com/photo-1571566882372-1598d88abd90?w=900',
+  32,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  11,
+  'Cama Suave para Mascotas',
+  'Cama acolchada y lavable para perros pequenos o gatos.',
+  58000,
+  'Camas y Casas',
+  'ambos',
+  'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900',
+  20,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+),
+(
+  12,
+  'Suplemento Omega 3 para Mascotas',
+  'Suplemento nutricional para apoyar piel, pelaje y bienestar general.',
+  34000,
+  'Medicamentos',
+  'ambos',
+  'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=900',
+  24,
+  false,
+  false,
+  null,
+  now(),
+  now(),
+  '{}'::jsonb
+)
+on conflict (id) do update set
+  name = excluded.name,
+  description = excluded.description,
+  price = excluded.price,
+  category = excluded.category,
+  pet_type = excluded.pet_type,
+  image = excluded.image,
+  stock = excluded.stock,
+  exclusive = excluded.exclusive,
+  is_on_sale = excluded.is_on_sale,
+  sale_price = excluded.sale_price,
+  updated_at = excluded.updated_at,
+  raw_data = excluded.raw_data;
+
+select setval(pg_get_serial_sequence('products', 'id'), coalesce((select max(id) from products), 1), true);
+
+commit;
