@@ -5,6 +5,7 @@ import { Stethoscope, User as UserIcon } from 'lucide-react'
 import './Auth.css'
 
 function Register() {
+  const maxNameLength = 30
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -75,8 +76,9 @@ function Register() {
     setError('')
 
     const trimmedName = name.trim()
-    if (trimmedName.length === 0 || trimmedName.length > 20) {
+    if (trimmedName.length === 0 || trimmedName.length > maxNameLength) {
       setError('El nombre debe tener máximo 20 caracteres')
+      setError(`El nombre debe tener máximo ${maxNameLength} caracteres`)
       return
     }
 
@@ -168,7 +170,7 @@ function Register() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                maxLength={30}
+                maxLength={maxNameLength}
                 placeholder="Nombre y apellido"
               />
             </div>

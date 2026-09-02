@@ -89,6 +89,12 @@ form button {
   color: #aaa;
 }
 
+.newsletter-message {
+  margin-top: 0.45rem;
+  color: #f9fafb;
+  font-size: 0.82rem;
+}
+
 .footer-security {
   display: flex;
   flex-wrap: wrap;

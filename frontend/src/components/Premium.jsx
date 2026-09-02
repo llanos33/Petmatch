@@ -9,6 +9,7 @@ import { apiPath } from '../config/api'
 export default function Premium() {
   const { user, getAuthToken, refreshProfile, markPremium } = useAuth()
   const [paymentMethod, setPaymentMethod] = useState(null)
+  const [isPaymentDetailsValid, setIsPaymentDetailsValid] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
   const [billingCycle, setBillingCycle] = useState('monthly')
@@ -99,11 +100,12 @@ export default function Premium() {
 
   const handlePaymentSelect = (method) => {
     setPaymentMethod(method)
+    setIsPaymentDetailsValid(false)
   }
 
   const handleSubscribe = async () => {
-    if (!paymentMethod) {
-      alert('Selecciona un método de pago para continuar')
+    if (!paymentMethod || !isPaymentDetailsValid) {
+      alert('Completa los datos de pago para continuar')
       return
     }
 
@@ -191,7 +193,7 @@ export default function Premium() {
               <button
                 className="premium-cta-btn"
                 onClick={handleSubscribe}
-                disabled={isProcessing || !paymentMethod}
+                disabled={isProcessing || !paymentMethod || !isPaymentDetailsValid}
               >
                 {isProcessing ? 'Procesando...' : 'Unirme a Premium'}
               </button>
@@ -199,6 +201,7 @@ export default function Premium() {
               <div className="premium-payment-inline">
                 <PaymentMethods
                   onPaymentSelect={handlePaymentSelect}
+                  onPaymentValidityChange={setIsPaymentDetailsValid}
                   showCod={false}
                   variant="compact"
                 />

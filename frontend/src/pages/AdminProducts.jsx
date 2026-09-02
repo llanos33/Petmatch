@@ -414,6 +414,8 @@ const AdminProducts = () => {
                   name="price"
                   value={form.price}
                   onChange={handleInputChange}
+                  min="1"
+                  step="1"
                   required
                 />
               </label>
@@ -464,6 +466,8 @@ const AdminProducts = () => {
                     name="salePrice"
                     value={form.salePrice}
                     onChange={handleInputChange}
+                    min="1"
+                    step="1"
                     required={form.isOnSale}
                   />
                 </div>

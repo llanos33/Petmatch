@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { CreditCard, Banknote, Wallet, PiggyBank, ChevronDown } from "lucide-react";
 import "./PaymentMethods.css";
 
-export default function PaymentMethods({ onPaymentSelect, showCod = true, variant = "default" }) {
+export default function PaymentMethods({ onPaymentSelect, onPaymentValidityChange, showCod = true, variant = "default" }) {
   const [selected, setSelected] = useState(null);
   const [cardData, setCardData] = useState({
     cardNumber: "",
@@ -43,6 +43,28 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
     return matches ? matches.map((match) => match.match(/\d{1,4}/g).join(" ")).join(" ") : v;
   };
 
+  const isPaymentValid = useMemo(() => {
+    if (selected === "tarjeta") {
+      const digits = cardData.cardNumber.replace(/\D/g, "");
+      const [month, year] = cardData.expiryDate.split("/").map(Number);
+      const expiryValid = month >= 1 && month <= 12 && Number.isInteger(year);
+      return digits.length === 16 &&
+        cardData.cardHolder.trim().length >= 3 &&
+        expiryValid &&
+        /^\d{3,4}$/.test(cardData.cvv);
+    }
+
+    if (selected === "pse") {
+      return Boolean(pseData.bank) && /^\d{5,20}$/.test(pseData.docNumber.trim());
+    }
+
+    return selected === "efectivo" || selected === "datafono";
+  }, [cardData, pseData, selected]);
+
+  useEffect(() => {
+    onPaymentValidityChange?.(isPaymentValid);
+  }, [isPaymentValid, onPaymentValidityChange]);
+
   const containerClass = `payment-container${variant === "compact" ? " payment-container-compact" : ""}`;
 
   return (
@@ -82,7 +104,7 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
               <ChevronDown size={18} />
               <span>Ingresa los datos de tu tarjeta</span>
             </div>
-            <form className="card-form">
+            <div className="card-form">
               <div className="card-input-group full-width">
                 <label htmlFor="cardNumber">Número de Tarjeta</label>
                 <input
@@ -98,6 +120,8 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                     }
                   }}
                   maxLength="19"
+                  inputMode="numeric"
+                  required
                 />
               </div>
 
@@ -110,6 +134,7 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                   placeholder="Nombre Apellido"
                   value={cardData.cardHolder}
                   onChange={handleCardChange}
+                  required
                 />
               </div>
 
@@ -130,6 +155,8 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                       handleCardChange({ target: { name: "expiryDate", value } });
                     }}
                     maxLength="5"
+                    inputMode="numeric"
+                    required
                   />
                 </div>
 
@@ -148,6 +175,8 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                       }
                     }}
                     maxLength="4"
+                    inputMode="numeric"
+                    required
                   />
                 </div>
               </div>
@@ -155,7 +184,7 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
               <div className="card-form-note">
                 ✓ Tus datos están protegidos con encriptación de 256 bits
               </div>
-            </form>
+            </div>
           </div>
         )}
 
@@ -186,7 +215,7 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
               <ChevronDown size={18} />
               <span>Datos para pago por PSE</span>
             </div>
-            <form className="pse-form">
+            <div className="pse-form">
               <div className="card-input-group full-width">
                 <label htmlFor="pseBank">Banco</label>
                 <select
@@ -194,6 +223,7 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                   name="bank"
                   value={pseData.bank}
                   onChange={handlePseChange}
+                  required
                 >
                   <option value="">Selecciona tu banco</option>
                   <option value="bancolombia">Bancolombia</option>
@@ -224,17 +254,22 @@ export default function PaymentMethods({ onPaymentSelect, showCod = true, varian
                     type="text"
                     id="docNumber"
                     name="docNumber"
-                    placeholder="12345678"
-                    value={pseData.docNumber}
-                    onChange={(e) => handlePseChange(e)}
-                  />
+                  placeholder="12345678"
+                  value={pseData.docNumber}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 20);
+                    handlePseChange({ target: { name: "docNumber", value } });
+                  }}
+                  inputMode="numeric"
+                  required
+                />
                 </div>
               </div>
 
               <div className="card-form-note">
                 Serás redirigido al portal de tu banco para completar el pago.
               </div>
-            </form>
+            </div>
           </div>
         )}
       </section>

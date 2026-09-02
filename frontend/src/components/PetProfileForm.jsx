@@ -81,6 +81,12 @@ function PetProfileForm() {
       return;
     }
 
+    const parsedWeight = formData.weight ? parseFloat(formData.weight) : null;
+    if (parsedWeight !== null && (!Number.isFinite(parsedWeight) || parsedWeight < 0)) {
+      alert('El peso debe ser un número igual o mayor a cero');
+      return;
+    }
+
     setSubmitting(true);
 
     // Convertir strings separados por comas en arrays
@@ -90,7 +96,7 @@ function PetProfileForm() {
       breed: formData.breed.trim(),
       birthDate: formData.birthDate || null,
       gender: formData.gender,
-      weight: formData.weight ? parseFloat(formData.weight) : null,
+      weight: parsedWeight,
       photo: formData.photo.trim(),
       activityLevel: formData.activityLevel,
       specialNeeds: formData.specialNeeds.trim(),

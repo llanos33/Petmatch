@@ -8,6 +8,7 @@ const ProductReviews = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { user, getAuthToken, logout } = useAuth();
 
@@ -32,8 +33,14 @@ const ProductReviews = ({ productId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return;
+    const comment = newReview.comment.trim();
+    if (!comment) {
+      setError('Escribe un comentario para publicar tu reseña.');
+      return;
+    }
 
     try {
+      setSubmitting(true);
       const token = getAuthToken();
       const response = await fetch(apiPath(`/api/products/${productId}/reviews`), {
         method: 'POST',
@@ -41,7 +48,7 @@ const ProductReviews = ({ productId }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(newReview)
+        body: JSON.stringify({ ...newReview, comment })
       });
 
       if (response.ok) {
@@ -60,6 +67,8 @@ const ProductReviews = ({ productId }) => {
       }
     } catch (err) {
       setError('Error submitting review');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -127,7 +136,9 @@ const ProductReviews = ({ productId }) => {
             />
           </div>
 
-          <button type="submit" className="submit-review-btn">Publicar Reseña</button>
+          <button type="submit" className="submit-review-btn" disabled={submitting}>
+            {submitting ? 'Publicando...' : 'Publicar Reseña'}
+          </button>
         </form>
       ) : (
         <div className="login-prompt">

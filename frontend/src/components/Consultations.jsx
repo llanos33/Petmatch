@@ -46,6 +46,12 @@ function Consultations() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return;
+    const cleanTitle = title.trim();
+    const cleanQuestion = question.trim();
+    if (!cleanTitle || !cleanQuestion) {
+      alert('Completa el título y la pregunta.');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -56,7 +62,7 @@ function Consultations() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ title, question, petType, petId: petId || null })
+        body: JSON.stringify({ title: cleanTitle, question: cleanQuestion, petType, petId: petId || null })
       });
 
       if (!response.ok) throw new Error('Error al enviar consulta');
@@ -75,7 +81,7 @@ function Consultations() {
   };
 
   const handleReply = async (consultationId) => {
-    const answer = replyText[consultationId];
+    const answer = replyText[consultationId]?.trim();
     if (!answer) return;
 
     try {

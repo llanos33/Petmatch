@@ -34,11 +34,13 @@ function VeterinarianVerification() {
       // Validar que sea un archivo válido (PDF, JPG, PNG)
       const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']
       if (!validTypes.includes(file.type)) {
+        setFormData(prev => ({ ...prev, certificate: null }))
         setError('Por favor sube un archivo en formato PDF, JPG o PNG')
         return
       }
       // Validar tamaño máximo (2MB para archivos base64)
       if (file.size > 2 * 1024 * 1024) {
+        setFormData(prev => ({ ...prev, certificate: null }))
         setError('El archivo debe ser menor a 2MB. Por favor comprime tu imagen o reduce el tamaño del PDF.')
         return
       }
@@ -55,7 +57,7 @@ function VeterinarianVerification() {
     setError(null)
     setLoading(true)
 
-    if (!formData.licenseNumber || !formData.clinic) {
+    if (!formData.professionalLicense.trim() || !formData.licenseNumber.trim() || !formData.clinic.trim()) {
       setError('Por favor completa todos los campos requeridos')
       setLoading(false)
       return
@@ -69,6 +71,11 @@ function VeterinarianVerification() {
 
     try {
       const token = getAuthToken()
+      if (!token) {
+        setError('Tu sesión expiró. Inicia sesión nuevamente.')
+        setLoading(false)
+        return
+      }
       
       // Convertir archivo a base64 usando Promise
       const base64 = await new Promise((resolve, reject) => {
@@ -90,10 +97,10 @@ function VeterinarianVerification() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          professionalLicense: formData.professionalLicense,
-          licenseNumber: formData.licenseNumber,
-          clinic: formData.clinic,
-          specialties: formData.specialties,
+          professionalLicense: formData.professionalLicense.trim(),
+          licenseNumber: formData.licenseNumber.trim(),
+          clinic: formData.clinic.trim(),
+          specialties: formData.specialties.trim(),
           certificateFile: base64,
           certificateFileName: fileName,
           certificateFileType: fileType

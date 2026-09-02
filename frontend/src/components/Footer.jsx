@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 import { 
@@ -13,6 +13,24 @@ import {
 } from 'lucide-react';
 
 export default function Footer() {
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+  const [newsletterMessage, setNewsletterMessage] = useState("");
+
+  const handleNewsletterSubmit = (event) => {
+    event.preventDefault();
+    const email = newsletterEmail.trim();
+
+    if (!email || !acceptPrivacy) {
+      setNewsletterMessage("Ingresa tu correo y acepta las políticas.");
+      return;
+    }
+
+    setNewsletterEmail("");
+    setAcceptPrivacy(false);
+    setNewsletterMessage("Gracias por suscribirte.");
+  };
+
   return (
     <footer className="footer">
       <div className="footer-main">
@@ -89,15 +107,33 @@ export default function Footer() {
         <div className="footer-col">
           <h4>SUSCRÍBETE</h4>
           <p>Recibe noticias y promociones al instante.</p>
-          <form>
-            <input type="email" placeholder="Correo electrónico" />
-            <button type="submit">
+          <form onSubmit={handleNewsletterSubmit}>
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              value={newsletterEmail}
+              onChange={(event) => {
+                setNewsletterEmail(event.target.value);
+                setNewsletterMessage("");
+              }}
+              required
+            />
+            <button type="submit" aria-label="Suscribirse al boletín">
               <Send size={18} />
             </button>
           </form>
           <label className="check">
-            <input type="checkbox" /> Acepto las políticas de privacidad
+            <input
+              type="checkbox"
+              checked={acceptPrivacy}
+              onChange={(event) => {
+                setAcceptPrivacy(event.target.checked);
+                setNewsletterMessage("");
+              }}
+              required
+            /> Acepto las políticas de privacidad
           </label>
+          {newsletterMessage && <p className="newsletter-message">{newsletterMessage}</p>}
         </div>
       </div>
 

@@ -25,6 +25,7 @@ function Checkout({ cart, products, clearCart }) {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [useVetCoupon, setUseVetCoupon] = useState(false);
   const [vetRewards, setVetRewards] = useState(null);
+  const [isPaymentDetailsValid, setIsPaymentDetailsValid] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -151,17 +152,38 @@ function Checkout({ cart, products, clearCart }) {
       ...prev,
       paymentMethod: method,
     }));
+    setIsPaymentDetailsValid(method === 'efectivo' || method === 'datafono');
   };
 
   const handleConfirmPayment = (e) => {
     e.preventDefault();
-    if (formData.paymentMethod) {
+    if (formData.paymentMethod && isPaymentDetailsValid) {
       setCurrentStep(3);
     }
   };
 
+  const handleCheckoutSubmit = (e) => {
+    if (currentStep === 1) {
+      handleNextStep(e);
+      return;
+    }
+
+    if (currentStep === 2) {
+      handleConfirmPayment(e);
+      return;
+    }
+
+    handleFinalSubmit(e);
+  };
+
   const handleFinalSubmit = async (e) => {
     e.preventDefault();
+    if (cart.length === 0) {
+      alert("Tu carrito está vacío.");
+      navigate("/cart");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -185,6 +207,7 @@ function Checkout({ cart, products, clearCart }) {
 
       const token = getAuthToken();
       if (!token) {
+        setIsSubmitting(false);
         navigate("/login?redirect=/checkout");
         return;
       }
@@ -265,7 +288,7 @@ function Checkout({ cart, products, clearCart }) {
       </div>
 
       <div className="checkout-content">
-        <form className="checkout-form">
+        <form className="checkout-form" onSubmit={handleCheckoutSubmit}>
           {currentStep === 1 && (
             <>
               <div className="step1-container">
@@ -351,7 +374,10 @@ function Checkout({ cart, products, clearCart }) {
             <>
               <div className="step2-container">
                 <div className="payment-methods-wrapper">
-                  <PaymentMethods onPaymentSelect={handlePaymentSelect} />
+                  <PaymentMethods
+                    onPaymentSelect={handlePaymentSelect}
+                    onPaymentValidityChange={setIsPaymentDetailsValid}
+                  />
                 </div>
 
                 <div className="step-buttons-container">
@@ -361,7 +387,7 @@ function Checkout({ cart, products, clearCart }) {
                   <button
                     type="button"
                     className="submit-order-btn"
-                    disabled={!formData.paymentMethod}
+                    disabled={!formData.paymentMethod || !isPaymentDetailsValid}
                     onClick={handleConfirmPayment}
                   >
                     Continuar a Confirmación →
