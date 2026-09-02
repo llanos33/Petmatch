@@ -11,6 +11,7 @@
     "test:forms": "node scripts/test-forms.mjs",
     "test:security": "node scripts/test-input-security.mjs",
     "test:responsive": "node scripts/test-responsive-viewports.mjs",
+    "test:dark-mode": "node scripts/test-dark-mode.mjs",
     "db:generate-sql": "node scripts/json-to-postgres.mjs",
     "heroku-postbuild": "npm run build --prefix frontend && node scripts/sync-frontend.js"
   },

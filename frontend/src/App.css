@@ -2,6 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 .main-content {
@@ -12,7 +14,7 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  background: #F8FAFC;
+  background: var(--bg-main);
 }
 
 .main-content-full {

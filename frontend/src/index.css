@@ -24,6 +24,39 @@
   
   /* Bordes */
   --border: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --input-bg: #FFFFFF;
+  --input-text: #1E293B;
+  --muted-surface: #F1F5F9;
+  --surface-elevated: #FFFFFF;
+}
+
+:root[data-theme="dark"] {
+  --color-yale-blue: #8AB4F8;
+  --color-air-force: #93C5FD;
+  --color-cambridge: #7DD3FC;
+  --color-sage: #86EFAC;
+  --color-mindaro: #FACC15;
+
+  --primary: #1D4ED8;
+  --primary-dark: #0F172A;
+  --primary-light: #111827;
+  --accent: #38BDF8;
+  --accent-hover: #60A5FA;
+  --highlight: #FACC15;
+
+  --text-main: #E5E7EB;
+  --text-secondary: #CBD5E1;
+  --bg-main: #0B1120;
+  --bg-card: #111827;
+  --surface-elevated: #172033;
+  --muted-surface: #1E293B;
+  --border: #334155;
+  --border-strong: #475569;
+  --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.45);
+  --input-bg: #0F172A;
+  --input-text: #F8FAFC;
 }
 
 * {
@@ -44,11 +77,155 @@ body {
   background-color: var(--bg-main);
   color: var(--text-main);
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root[data-theme="dark"] img {
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] .main-content,
+:root[data-theme="dark"] .main-content-full,
+:root[data-theme="dark"] .product-list-container,
+:root[data-theme="dark"] .category-page,
+:root[data-theme="dark"] .search-results-page,
+:root[data-theme="dark"] .exclusive-products-page,
+:root[data-theme="dark"] .pet-products-page,
+:root[data-theme="dark"] .cart-page,
+:root[data-theme="dark"] .checkout-page,
+:root[data-theme="dark"] .profile-page,
+:root[data-theme="dark"] .help-page,
+:root[data-theme="dark"] .consultations-page,
+:root[data-theme="dark"] .services-page,
+:root[data-theme="dark"] .premium-page,
+:root[data-theme="dark"] .pet-profile-page,
+:root[data-theme="dark"] .pet-profile-form-page,
+:root[data-theme="dark"] .pet-profile-list-page,
+:root[data-theme="dark"] .wishlist-page,
+:root[data-theme="dark"] .about-page,
+:root[data-theme="dark"] .legal-page,
+:root[data-theme="dark"] .admin-dashboard,
+:root[data-theme="dark"] .admin-products,
+:root[data-theme="dark"] .admin-content-manager,
+:root[data-theme="dark"] .admin-vet-requests,
+:root[data-theme="dark"] .puntos-interes-page {
+  background: var(--bg-main) !important;
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] [class*="card"],
+:root[data-theme="dark"] [class*="panel"],
+:root[data-theme="dark"] [class*="section"],
+:root[data-theme="dark"] [class*="summary"],
+:root[data-theme="dark"] [class*="form"],
+:root[data-theme="dark"] [class*="modal"],
+:root[data-theme="dark"] [class*="dropdown"],
+:root[data-theme="dark"] [class*="results"],
+:root[data-theme="dark"] [class*="filters"],
+:root[data-theme="dark"] [class*="empty"],
+:root[data-theme="dark"] aside,
+:root[data-theme="dark"] article,
+:root[data-theme="dark"] table {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] [class*="card"],
+:root[data-theme="dark"] [class*="panel"],
+:root[data-theme="dark"] [class*="summary"],
+:root[data-theme="dark"] [class*="form-container"],
+:root[data-theme="dark"] [class*="content-card"],
+:root[data-theme="dark"] [class*="info-card"],
+:root[data-theme="dark"] [class*="product-card"],
+:root[data-theme="dark"] [class*="post-card"],
+:root[data-theme="dark"] [class*="request-card"],
+:root[data-theme="dark"] [class*="order-card"],
+:root[data-theme="dark"] [class*="pet-card"],
+:root[data-theme="dark"] [class*="review"],
+:root[data-theme="dark"] [class*="filters"],
+:root[data-theme="dark"] [class*="empty"],
+:root[data-theme="dark"] .breadcrumb,
+:root[data-theme="dark"] .search-results,
+:root[data-theme="dark"] .mega-panel,
+:root[data-theme="dark"] .payment-methods,
+:root[data-theme="dark"] .checkout-form,
+:root[data-theme="dark"] .order-summary,
+:root[data-theme="dark"] .newsletter-form {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  box-shadow: var(--shadow-soft);
+}
+
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] h5,
+:root[data-theme="dark"] h6,
+:root[data-theme="dark"] label,
+:root[data-theme="dark"] strong,
+:root[data-theme="dark"] .product-name,
+:root[data-theme="dark"] .post-title,
+:root[data-theme="dark"] .section-title,
+:root[data-theme="dark"] .category-title,
+:root[data-theme="dark"] .info-value {
+  color: var(--text-main) !important;
+}
+
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] span,
+:root[data-theme="dark"] li,
+:root[data-theme="dark"] small,
+:root[data-theme="dark"] .product-description,
+:root[data-theme="dark"] .post-excerpt,
+:root[data-theme="dark"] .subtitle,
+:root[data-theme="dark"] .text-muted,
+:root[data-theme="dark"] .info-label {
+  color: inherit;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--border-strong) !important;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] button:not([class*="primary"]):not([class*="add-to-cart"]):not([class*="checkout"]):not([class*="earn"]):not([class*="active"]),
+:root[data-theme="dark"] .filter-chip:not(.active),
+:root[data-theme="dark"] .filter-btn:not(.active),
+:root[data-theme="dark"] .category-btn:not(.active) {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] table,
+:root[data-theme="dark"] thead,
+:root[data-theme="dark"] tbody,
+:root[data-theme="dark"] tr,
+:root[data-theme="dark"] td,
+:root[data-theme="dark"] th {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] [class*="skeleton"] {
+  background-color: #1E293B;
+}
+
+:root[data-theme="dark"] a {
+  color: #93C5FD;
 }
 
 

@@ -47,6 +47,16 @@ import PetProfile from "./components/PetProfile";
 import { apiPath } from './config/api'
 
 const CART_STORAGE_KEY = 'petmatch_cart_v1'
+const THEME_STORAGE_KEY = 'petmatch_theme_v1'
+
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return 'light'
+
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+  if (storedTheme === 'dark' || storedTheme === 'light') return storedTheme
+
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 const serializeProductForCart = (product) => {
   if (!product || typeof product !== 'object') return null
@@ -123,7 +133,9 @@ function AppContent({
   removeFromCart, 
   updateQuantity, 
   clearCart,
-  getCartItemCount 
+  getCartItemCount,
+  theme,
+  toggleTheme
 }) {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
@@ -135,6 +147,8 @@ function AppContent({
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         products={products}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
       <main className={isAuthPage ? "main-content-full" : "main-content"}>
         <Routes>
@@ -298,10 +312,18 @@ function App() {
   const [products, setProducts] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [theme, setTheme] = useState(getInitialTheme)
 
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -410,6 +432,7 @@ function App() {
   }
 
   const clearCart = () => setCart([])
+  const toggleTheme = () => setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark')
 
   return (
     <AuthProvider clearCart={clearCart}>
@@ -427,6 +450,8 @@ function App() {
               updateQuantity={updateQuantity}
               clearCart={clearCart}
               getCartItemCount={getCartItemCount}
+              theme={theme}
+              toggleTheme={toggleTheme}
             />
           </Router>
         </PetProvider>

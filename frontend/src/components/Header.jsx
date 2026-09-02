@@ -26,7 +26,9 @@ import {
   Gift,
   FileText,
   LayoutDashboard,
-  Boxes
+  Boxes,
+  Moon,
+  Sun
 } from 'lucide-react'
 
 const loadEditedPosts = () => {
@@ -39,7 +41,7 @@ const loadEditedPosts = () => {
   }
 }
 
-function Header({ cartItemCount, searchTerm, setSearchTerm, products = [] }) {
+function Header({ cartItemCount, searchTerm, setSearchTerm, products = [], theme = 'light', toggleTheme }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -264,6 +266,16 @@ function Header({ cartItemCount, searchTerm, setSearchTerm, products = [] }) {
           </div>
 
           <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+              title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
             {user && (
               <Link to="/pets" className="wishlist-link" aria-label="Mis mascotas">
                 <Dog size={22} />
