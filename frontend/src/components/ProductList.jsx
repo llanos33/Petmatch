@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './ProductList.css'
 import WishlistToggle from './WishlistToggle'
+import ProductGridSkeleton from './ProductGridSkeleton'
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -17,7 +18,7 @@ import { applyDiscountToProduct } from '../utils/productDiscounts'
 import { useAuth } from '../context/AuthContext'
 import { apiPath } from '../config/api'
 
-function ProductList({ products, addToCart, searchTerm = '' }) {
+function ProductList({ products, addToCart, searchTerm = '', isLoading = false }) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [bestsellerProducts, setBestsellerProducts] = useState([])
   const [loadingBestsellers, setLoadingBestsellers] = useState(true)
@@ -349,6 +350,10 @@ function ProductList({ products, addToCart, searchTerm = '' }) {
           // Si está buscando o no hay datos de bestsellers, usar featured
           if (!isSearching && bestsellerProducts.length === 0 && !loadingBestsellers) {
             productsToShow = featuredProducts
+          }
+
+          if (isLoading || (!isSearching && loadingBestsellers)) {
+            return <ProductGridSkeleton count={8} />
           }
 
           if (productsToShow.length === 0) {

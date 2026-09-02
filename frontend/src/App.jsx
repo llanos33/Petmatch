@@ -116,6 +116,7 @@ const loadStoredCart = () => {
 function AppContent({ 
   cart, 
   products, 
+  productsLoading,
   searchTerm, 
   setSearchTerm, 
   addToCart, 
@@ -139,7 +140,7 @@ function AppContent({
         <Routes>
           <Route
             path="/"
-            element={<ProductList products={products} addToCart={addToCart} searchTerm={searchTerm} />}
+            element={<ProductList products={products} addToCart={addToCart} searchTerm={searchTerm} isLoading={productsLoading} />}
           />
           <Route
             path="/product/:id"
@@ -206,7 +207,7 @@ function AppContent({
           />
           <Route
             path="/category/:categoryName"
-            element={<CategoryPage products={products} addToCart={addToCart} />}
+            element={<CategoryPage products={products} addToCart={addToCart} isLoading={productsLoading} />}
           />
           <Route
             path="/promociones"
@@ -295,6 +296,7 @@ function AppContent({
 function App() {
   const [cart, setCart] = useState(() => loadStoredCart())
   const [products, setProducts] = useState([])
+  const [productsLoading, setProductsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
@@ -325,6 +327,7 @@ function App() {
 
   const fetchProducts = async () => {
     try {
+      setProductsLoading(true)
       const response = await fetch(apiPath('/api/products'))
       const data = await response.json()
       // Log para depuración
@@ -349,6 +352,8 @@ function App() {
       setProducts(productsArray)
     } catch (error) {
       console.error('Error al cargar productos:', error)
+    } finally {
+      setProductsLoading(false)
     }
   }
 
@@ -414,6 +419,7 @@ function App() {
             <AppContent 
               cart={cart}
               products={products}
+              productsLoading={productsLoading}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               addToCart={addToCart}

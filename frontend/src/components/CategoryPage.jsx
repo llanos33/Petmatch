@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom'
 import './CategoryPage.css'
 import WishlistToggle from './WishlistToggle'
 import Breadcrumb from './Breadcrumb'
+import ProductGridSkeleton from './ProductGridSkeleton'
 import { applyDiscountToProduct } from '../utils/productDiscounts'
 import {
   UtensilsCrossed,
@@ -13,7 +14,7 @@ import {
   BedDouble
 } from 'lucide-react'
 
-function CategoryPage({ products, addToCart }) {
+function CategoryPage({ products, addToCart, isLoading = false }) {
   const { categoryName } = useParams()
   const location = useLocation()
   const [sortBy, setSortBy] = useState('recomendados')
@@ -280,7 +281,9 @@ function CategoryPage({ products, addToCart }) {
           </div>
         </div>
         <div className="category-hero-count">
-          <span>{sortedProducts.length}</span>
+          <span className={isLoading ? 'category-count-skeleton' : ''}>
+            {isLoading ? '' : sortedProducts.length}
+          </span>
           <span>productos</span>
         </div>
       </div>
@@ -392,7 +395,9 @@ function CategoryPage({ products, addToCart }) {
       </div>
 
       {/* Grid de productos */}
-      {paginatedProducts.length === 0 ? (
+      {isLoading ? (
+        <ProductGridSkeleton count={8} variant="category" />
+      ) : paginatedProducts.length === 0 ? (
         <div className="no-products">
           <h2>No hay productos en esta categoría</h2>
           <Link to="/" className="back-button">Volver a productos</Link>

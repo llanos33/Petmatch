@@ -94,6 +94,25 @@
   color: #FFFFFF;
 }
 
+.category-hero-count .category-count-skeleton {
+  width: 2.6rem;
+  height: 1.75rem;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0.22) 100%);
+  background-size: 220% 100%;
+  animation: category-count-loading 1.15s ease-in-out infinite;
+}
+
+@keyframes category-count-loading {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
+  }
+}
+
 .filter-bar {
   display: flex;
   justify-content: space-between;
