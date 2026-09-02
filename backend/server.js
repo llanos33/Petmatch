@@ -36,10 +36,43 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'petmatch_secret_key_change_in_production'; // En produccion, usar variable de entorno
+if (!process.env.JWT_SECRET) {
+  console.warn('JWT_SECRET no configurado. Define una clave segura en variables de entorno antes de desplegar.');
+}
 
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.CORS_ORIGINS || '').split(','),
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:4173'
+].map(origin => origin?.trim()).filter(Boolean);
+
+const isAllowedOrigin = (origin) => (
+  !origin ||
+  allowedOrigins.includes(origin) ||
+  /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)
+);
+
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+app.use(cors({
+  origin(origin, callback) {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error('Origen no permitido por CORS'));
+  }
+}));
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
 const dataDir = path.join(__dirname, 'data');
 const uploadsDir = path.join(__dirname, 'uploads', 'veterinary-documents');
@@ -894,6 +927,113 @@ function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
+}
+
+function isValidPassword(password) {
+  return typeof password === 'string' &&
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /\d/.test(password) &&
+    !/\s/.test(password) &&
+    !/["'`]/.test(password);
+}
+
+function cleanString(value, maxLength = 500) {
+  if (typeof value !== 'string') return '';
+  return value.trim().slice(0, maxLength);
+}
+
+function cleanStringArray(value, maxItems = 20, maxLength = 120) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(item => typeof item === 'string')
+    .map(item => cleanString(item, maxLength))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
+function parsePositiveInt(value) {
+  const num = Number(value);
+  if (!Number.isInteger(num) || num <= 0) return null;
+  return num;
+}
+
+function parsePositiveNumber(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num) || num <= 0) return null;
+  return num;
+}
+
+function parseNonNegativeNumber(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num) || num < 0) return null;
+  return num;
+}
+
+function parseIdParam(value) {
+  const id = Number(value);
+  return Number.isInteger(id) && id > 0 ? id : null;
+}
+
+function isValidUrl(value) {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return ['http:', 'https:'].includes(url.protocol);
+  } catch (error) {
+    return false;
+  }
+}
+
+function safeUserResponse(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone || '',
+    createdAt: user.createdAt,
+    isPremium: !!user.isPremium,
+    premiumSince: user.premiumSince || null,
+    isAdmin: !!user.isAdmin,
+    isVeterinarian: !!user.isVeterinarian,
+    isVerifiedVeterinarian: !!user.isVerifiedVeterinarian,
+    veterinarianDetails: user.veterinarianDetails || null
+  };
+}
+
+const authAttempts = new Map();
+function rateLimitAuth(req, res, next) {
+  const key = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+  const now = Date.now();
+  const windowMs = 15 * 60 * 1000;
+  const maxAttempts = 20;
+  const bucket = authAttempts.get(key) || { count: 0, resetAt: now + windowMs };
+
+  if (bucket.resetAt <= now) {
+    bucket.count = 0;
+    bucket.resetAt = now + windowMs;
+  }
+
+  bucket.count += 1;
+  authAttempts.set(key, bucket);
+
+  if (bucket.count > maxAttempts) {
+    return res.status(429).json({ error: 'Demasiados intentos. Intenta nuevamente en unos minutos.' });
+  }
+
+  next();
+}
+
+function isValidDateString(value) {
+  if (!value) return true;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
 function parseBoolean(value, fallback = false) {
   if (value === undefined) return fallback;
   if (typeof value === 'boolean') return value;
@@ -936,7 +1076,7 @@ function buildProductPayload(existingProduct, payload, { requireAll = false } = 
       errors.push(`${label || key} no puede estar vacío`);
       return;
     }
-    result[key] = value;
+    result[key] = cleanString(value, key === 'description' ? 2000 : 120);
   };
 
   assignString('name', 'Nombre');
@@ -944,15 +1084,26 @@ function buildProductPayload(existingProduct, payload, { requireAll = false } = 
   assignString('category', 'Categoría');
   assignString('petType', 'Tipo de mascota');
 
+  if (result.category && !['Alimentos', 'Juguetes', 'Accesorios', 'Medicamentos', 'Higiene', 'Camas y Casas'].includes(result.category)) {
+    errors.push('Categoria invalida');
+  }
+
+  if (result.petType && !['perro', 'gato', 'ambos'].includes(result.petType)) {
+    errors.push('Tipo de mascota invalido');
+  }
+
   if (payload.image !== undefined) {
     result.image = typeof payload.image === 'string' ? payload.image.trim() : '';
+    if (!isValidUrl(result.image)) {
+      errors.push('URL de imagen invÃ¡lida');
+    }
   } else if (requireAll && !result.image) {
     result.image = '';
   }
 
   if (payload.tags !== undefined) {
     if (Array.isArray(payload.tags)) {
-      result.tags = payload.tags.map(tag => typeof tag === 'string' ? tag.trim() : tag).filter(Boolean);
+      result.tags = cleanStringArray(payload.tags, 20, 60);
     } else {
       errors.push('Tags debe ser un arreglo de texto');
     }
@@ -1014,6 +1165,94 @@ function buildProductPayload(existingProduct, payload, { requireAll = false } = 
   }
 
   return { product: result, errors };
+}
+
+function buildPetPayload(existingPet, payload, { requireAll = false } = {}) {
+  const errors = [];
+  const result = existingPet ? { ...existingPet } : {};
+
+  if (payload.name !== undefined || requireAll) {
+    const value = cleanString(payload.name ?? result.name, 60);
+    if (!value) errors.push('Nombre de mascota requerido');
+    else result.name = value;
+  }
+
+  if (payload.type !== undefined || requireAll) {
+    const value = cleanString(payload.type ?? result.type, 20).toLowerCase();
+    if (!['perro', 'gato'].includes(value)) errors.push('Tipo de mascota invalido');
+    else result.type = value;
+  }
+
+  if (payload.breed !== undefined) result.breed = cleanString(payload.breed, 80);
+  else if (!result.breed) result.breed = '';
+
+  if (payload.birthDate !== undefined) {
+    result.birthDate = payload.birthDate || null;
+    if (!isValidDateString(result.birthDate)) errors.push('Fecha de nacimiento invalida');
+  } else if (!Object.prototype.hasOwnProperty.call(result, 'birthDate')) {
+    result.birthDate = null;
+  }
+
+  if (payload.gender !== undefined) {
+    const gender = cleanString(payload.gender, 20);
+    if (gender && !['macho', 'hembra'].includes(gender)) errors.push('Genero invalido');
+    result.gender = gender;
+  } else if (!result.gender) {
+    result.gender = '';
+  }
+
+  if (payload.weight !== undefined) {
+    const weight = payload.weight === '' || payload.weight === null ? null : parseNonNegativeNumber(payload.weight);
+    if (weight === null && payload.weight !== '' && payload.weight !== null) errors.push('Peso invalido');
+    result.weight = weight;
+  } else if (!Object.prototype.hasOwnProperty.call(result, 'weight')) {
+    result.weight = null;
+  }
+
+  if (payload.photo !== undefined) {
+    const photo = cleanString(payload.photo, 500);
+    if (photo && !isValidUrl(photo)) errors.push('URL de foto invalida');
+    result.photo = photo;
+  } else if (!result.photo) {
+    result.photo = '';
+  }
+
+  const medicalInfo = payload.medicalInfo || {};
+  const existingMedical = result.medicalInfo || {};
+  result.medicalInfo = {
+    allergies: payload.medicalInfo ? cleanStringArray(medicalInfo.allergies, 20, 80) : (existingMedical.allergies || []),
+    vaccinations: payload.medicalInfo ? cleanStringArray(medicalInfo.vaccinations, 20, 80) : (existingMedical.vaccinations || []),
+    medications: payload.medicalInfo ? cleanStringArray(medicalInfo.medications, 20, 80) : (existingMedical.medications || []),
+    conditions: payload.medicalInfo ? cleanStringArray(medicalInfo.conditions, 20, 80) : (existingMedical.conditions || []),
+    veterinarian: payload.medicalInfo ? cleanString(medicalInfo.veterinarian, 120) : (existingMedical.veterinarian || ''),
+    lastCheckup: payload.medicalInfo && medicalInfo.lastCheckup !== undefined ? medicalInfo.lastCheckup || null : (existingMedical.lastCheckup || null),
+    nextCheckup: payload.medicalInfo && medicalInfo.nextCheckup !== undefined ? medicalInfo.nextCheckup || null : (existingMedical.nextCheckup || null)
+  };
+
+  if (!isValidDateString(result.medicalInfo.lastCheckup) || !isValidDateString(result.medicalInfo.nextCheckup)) {
+    errors.push('Fecha medica invalida');
+  }
+
+  const preferences = payload.preferences || {};
+  const existingPreferences = result.preferences || {};
+  result.preferences = {
+    favoriteFood: payload.preferences ? cleanStringArray(preferences.favoriteFood, 20, 80) : (existingPreferences.favoriteFood || []),
+    favoriteToys: payload.preferences ? cleanStringArray(preferences.favoriteToys, 20, 80) : (existingPreferences.favoriteToys || []),
+    dislikes: payload.preferences ? cleanStringArray(preferences.dislikes, 20, 80) : (existingPreferences.dislikes || [])
+  };
+
+  if (payload.activityLevel !== undefined) {
+    const activityLevel = cleanString(payload.activityLevel, 20) || 'medium';
+    if (!['low', 'medium', 'high'].includes(activityLevel)) errors.push('Nivel de actividad invalido');
+    result.activityLevel = activityLevel;
+  } else if (!result.activityLevel) {
+    result.activityLevel = 'medium';
+  }
+
+  if (payload.specialNeeds !== undefined) result.specialNeeds = cleanString(payload.specialNeeds, 500);
+  else if (!result.specialNeeds) result.specialNeeds = '';
+
+  return { pet: result, errors };
 }
 
 async function ensureAdminUser() {
@@ -1083,8 +1322,12 @@ app.get('/api/products', (req, res) => {
 
 // Obtener un producto por ID
 app.get('/api/products/:id', (req, res) => {
+  const productId = parseIdParam(req.params.id);
+  if (!productId) {
+    return res.status(400).json({ error: 'ID de producto invalido' });
+  }
   const products = readProducts();
-  const product = products.find(p => p.id === parseInt(req.params.id));
+  const product = products.find(p => p.id === productId);
   if (product) {
     res.json(product);
   } else {
@@ -1094,7 +1337,10 @@ app.get('/api/products/:id', (req, res) => {
 
 // Obtener reseñas de un producto
 app.get('/api/products/:id/reviews', (req, res) => {
-  const productId = parseInt(req.params.id);
+  const productId = parseIdParam(req.params.id);
+  if (!productId) {
+    return res.status(400).json({ error: 'ID de producto invalido' });
+  }
   const reviews = readReviews();
   const productReviews = reviews.filter(r => r.productId === productId);
   res.json(productReviews);
@@ -1142,13 +1388,25 @@ app.get('/api/products/bestsellers/monthly', (req, res) => {
 
 // Agregar una reseña
 app.post('/api/products/:id/reviews', authenticateToken, (req, res) => {
-  const productId = parseInt(req.params.id);
+  const productId = parseIdParam(req.params.id);
   const { rating, comment } = req.body;
   const users = readUsers();
   const user = users.find(u => u.id === req.user.userId);
+  const products = readProducts();
+  const product = products.find(p => p.id === productId);
+  const parsedRating = parsePositiveInt(rating);
+  const cleanComment = cleanString(comment, 1000);
 
-  if (!rating || !comment) {
-    return res.status(400).json({ error: 'Rating and comment are required' });
+  if (!productId) {
+    return res.status(400).json({ error: 'ID de producto invalido' });
+  }
+
+  if (!product) {
+    return res.status(404).json({ error: 'Producto no encontrado' });
+  }
+
+  if (!parsedRating || parsedRating > 5 || !cleanComment) {
+    return res.status(400).json({ error: 'Rating entre 1 y 5 y comentario son requeridos' });
   }
 
   const reviews = readReviews();
@@ -1158,8 +1416,8 @@ app.post('/api/products/:id/reviews', authenticateToken, (req, res) => {
     productId,
     userId: req.user.userId,
     userName: user ? user.name : 'Anonymous',
-    rating: Number(rating),
-    comment,
+    rating: parsedRating,
+    comment: cleanComment,
     date: new Date().toISOString()
   };
 
@@ -1179,14 +1437,11 @@ app.get('/api/consultations', (req, res) => {
 
 // Obtener consultas del usuario autenticado
 app.get('/api/auth/consultations', authenticateToken, (req, res) => {
-  console.log('GET /api/auth/consultations - User ID:', req.user.userId);
   const consultations = readConsultations();
   console.log('Total consultations in DB:', consultations.length);
   
   // Filtrar solo las consultas del usuario
   const userConsultations = consultations.filter(c => c.userId === req.user.userId);
-  console.log('User consultations found:', userConsultations.length);
-  console.log('User consultations:', userConsultations);
   
   // Ordenar por fecha descendente
   userConsultations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1196,8 +1451,11 @@ app.get('/api/auth/consultations', authenticateToken, (req, res) => {
 // Crear una nueva consulta (pregunta)
 app.post('/api/consultations', authenticateToken, (req, res) => {
   const { title, question, petType, petId } = req.body;
+  const cleanTitle = cleanString(title, 120);
+  const cleanQuestion = cleanString(question, 3000);
+  const cleanPetType = cleanString(petType, 40) || 'General';
   
-  if (!title || !question) {
+  if (!cleanTitle || !cleanQuestion) {
     return res.status(400).json({ error: 'Título y pregunta son requeridos' });
   }
 
@@ -1221,9 +1479,9 @@ app.post('/api/consultations', authenticateToken, (req, res) => {
     id: consultations.length > 0 ? Math.max(...consultations.map(c => c.id)) + 1 : 1,
     userId: req.user.userId,
     userName: user ? user.name : 'Usuario',
-    title,
-    question,
-    petType: linkedPet?.type || petType || 'General',
+    title: cleanTitle,
+    question: cleanQuestion,
+    petType: linkedPet?.type || cleanPetType,
     petId: linkedPet?.id || null,
     petName: linkedPet?.name || null,
     petPhoto: linkedPet?.photo || null,
@@ -1242,10 +1500,15 @@ app.post('/api/consultations', authenticateToken, (req, res) => {
 
 // Responder una consulta (Admin o Veterinario Verificado)
 app.post('/api/consultations/:id/answer', authenticateToken, (req, res) => {
-  const consultationId = parseInt(req.params.id);
+  const consultationId = parseIdParam(req.params.id);
   const { answer } = req.body;
+  const cleanAnswer = cleanString(answer, 3000);
 
-  if (!answer) {
+  if (!consultationId) {
+    return res.status(400).json({ error: 'ID de consulta invalido' });
+  }
+
+  if (!cleanAnswer) {
     return res.status(400).json({ error: 'La respuesta es requerida' });
   }
 
@@ -1268,7 +1531,7 @@ app.post('/api/consultations/:id/answer', authenticateToken, (req, res) => {
   const responderName = currentUser.isAdmin ? 'Administrador' : currentUser.name;
   const responderType = currentUser.isAdmin ? 'admin' : 'veterinarian';
 
-  consultations[index].answer = answer;
+  consultations[index].answer = cleanAnswer;
   consultations[index].status = 'answered';
   consultations[index].answeredAt = new Date().toISOString();
   consultations[index].answeredBy = responderName;
@@ -1285,7 +1548,10 @@ app.post('/api/consultations/:id/answer', authenticateToken, (req, res) => {
 
 // Eliminar una consulta (Solo Admin)
 app.delete('/api/consultations/:id', authenticateToken, requireAdmin, (req, res) => {
-  const consultationId = parseInt(req.params.id);
+  const consultationId = parseIdParam(req.params.id);
+  if (!consultationId) {
+    return res.status(400).json({ error: 'ID de consulta invalido' });
+  }
   const consultations = readConsultations();
   const index = consultations.findIndex(c => c.id === consultationId);
 
@@ -1302,7 +1568,10 @@ app.delete('/api/consultations/:id', authenticateToken, requireAdmin, (req, res)
 // Recompensas para veterinarios: progreso mensual y emisión de cupón 5%
 app.get('/api/veterinarians/:userId/rewards', authenticateToken, (req, res) => {
   const { userId } = req.params;
-  const requestedId = parseInt(userId, 10);
+  const requestedId = parseIdParam(userId);
+  if (!requestedId) {
+    return res.status(400).json({ success: false, error: 'ID de usuario invalido' });
+  }
   if (requestedId !== req.user.userId) {
     return res.status(403).json({ success: false, error: 'No autorizado' });
   }
@@ -1349,7 +1618,10 @@ app.get('/api/veterinarians/:userId/rewards', authenticateToken, (req, res) => {
 
 app.post('/api/veterinarians/:userId/coupons', authenticateToken, (req, res) => {
   const { userId } = req.params;
-  const requestedId = parseInt(userId, 10);
+  const requestedId = parseIdParam(userId);
+  if (!requestedId) {
+    return res.status(400).json({ success: false, error: 'ID de usuario invalido' });
+  }
   if (requestedId !== req.user.userId) {
     return res.status(403).json({ success: false, error: 'No autorizado' });
   }
@@ -1415,8 +1687,28 @@ app.post('/api/orders', authenticateToken, (req, res) => {
     return res.status(400).json({ error: 'La orden debe contener al menos un producto' });
   }
 
-  if (!customerInfo || !customerInfo.name || !customerInfo.email || !customerInfo.address) {
+  const cleanCustomerInfo = {
+    name: cleanString(customerInfo?.name, 80),
+    email: normalizeEmail(customerInfo?.email),
+    phone: cleanString(customerInfo?.phone, 20),
+    address: cleanString(customerInfo?.address, 200),
+    paymentMethod: cleanString(customerInfo?.paymentMethod, 30)
+  };
+
+  if (!cleanCustomerInfo.name || !cleanCustomerInfo.email || !cleanCustomerInfo.address) {
     return res.status(400).json({ error: 'Información del cliente incompleta' });
+  }
+
+  if (!isValidEmail(cleanCustomerInfo.email)) {
+    return res.status(400).json({ error: 'Email del cliente invalido' });
+  }
+
+  if (cleanCustomerInfo.phone && !/^[0-9+\-\s()]{7,20}$/.test(cleanCustomerInfo.phone)) {
+    return res.status(400).json({ error: 'Telefono del cliente invalido' });
+  }
+
+  if (!['tarjeta', 'pse', 'efectivo', 'datafono'].includes(cleanCustomerInfo.paymentMethod)) {
+    return res.status(400).json({ error: 'Metodo de pago invalido' });
   }
 
   const products = readProducts();
@@ -1425,51 +1717,79 @@ app.post('/api/orders', authenticateToken, (req, res) => {
   const isPremiumUser = !!orderUser?.isPremium;
   const orders = readOrders();
   const invoices = readInvoices();
+  const normalizedItems = [];
 
   // Validar que los productos existan y haya stock
   for (const item of items) {
-    const product = products.find(p => p.id === item.productId);
-    if (!product) {
-      return res.status(400).json({ error: `Producto con ID ${item.productId} no encontrado` });
+    const productId = parsePositiveInt(item?.productId);
+    const quantity = parsePositiveInt(item?.quantity);
+    if (!productId || !quantity || quantity > 99) {
+      return res.status(400).json({ error: 'Items de orden invalidos' });
     }
-    if (product.stock < item.quantity) {
+
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      return res.status(400).json({ error: `Producto con ID ${productId} no encontrado` });
+    }
+    if (Number(product.stock) < quantity) {
       return res.status(400).json({ error: `Stock insuficiente para ${product.name}` });
+    }
+
+    const resolvedPrice = Number(product.isOnSale && product.salePrice ? product.salePrice : product.price);
+    if (!Number.isFinite(resolvedPrice) || resolvedPrice <= 0) {
+      return res.status(400).json({ error: `Precio invalido para ${product.name}` });
+    }
+
+    normalizedItems.push({
+      productId,
+      quantity,
+      price: Math.round(resolvedPrice),
+      productName: product.name
+    });
+  }
+
+  const itemsWithResolvedPrice = normalizedItems;
+
+  const itemsTotal = itemsWithResolvedPrice.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const premiumDiscountValue = isPremiumUser ? Math.round(itemsTotal * 0.1) : 0;
+  const shippingValue = isPremiumUser ? 0 : 8000;
+  const paymentHandlingFee = ['efectivo', 'datafono'].includes(cleanCustomerInfo.paymentMethod) ? 5000 : 0;
+  let couponValue = 0;
+  let monthlyCoupon = null;
+
+  if (couponCode && orderUser?.isVeterinarian) {
+    const coupons = readCoupons();
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const cleanCouponCode = cleanString(couponCode, 80);
+    monthlyCoupon = coupons.find(c =>
+      c.userId === orderUser.id &&
+      c.code === cleanCouponCode &&
+      c.type === 'veterinarian-monthly-5' &&
+      c.monthKey === monthKey &&
+      c.used !== true &&
+      c.redeemed !== true
+    );
+
+    if (monthlyCoupon) {
+      couponValue = Math.round((itemsTotal - premiumDiscountValue + shippingValue + paymentHandlingFee) * 0.05);
     }
   }
 
-  // Calcular totales usando el precio enviado (que ya puede tener descuentos aplicados)
-  const itemsWithResolvedPrice = items.map(item => {
-    const product = products.find(p => p.id === item.productId);
-    const priceToUse = typeof item.price === 'number' ? item.price : (product?.price || 0);
-    return { 
-      ...item, 
-      price: priceToUse,
-      productName: product?.name || `Producto #${item.productId}`
-    };
-  });
-
-  const itemsTotal = itemsWithResolvedPrice.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const premiumDiscountValue = Number.isFinite(Number(premiumDiscount)) ? Number(premiumDiscount) : 0;
-  const couponValue = Number.isFinite(Number(couponDiscount)) ? Number(couponDiscount) : 0;
-  const shippingValue = Number.isFinite(Number(shippingCost))
-    ? Number(shippingCost)
-    : (isPremiumUser ? 0 : 8000);
-  const orderTotal = typeof total === 'number'
-    ? total
-    : itemsTotal - premiumDiscountValue + shippingValue - couponValue;
+  const orderTotal = itemsTotal - premiumDiscountValue + shippingValue + paymentHandlingFee - couponValue;
 
   // Crear la orden
   const newOrder = {
     id: orders.length > 0 ? Math.max(...orders.map(o => o.id)) + 1 : 1,
     userId: req.user.userId,
     items: itemsWithResolvedPrice,
-    customerInfo: customerInfo,
+    customerInfo: cleanCustomerInfo,
     total: orderTotal,
     itemsTotal,
     shippingCost: shippingValue,
     premiumDiscount: premiumDiscountValue,
     couponDiscount: couponValue,
-    couponCode: couponCode,
+    couponCode: monthlyCoupon?.code || null,
     status: 'pendiente',
     date: new Date().toISOString()
   };
@@ -1482,20 +1802,21 @@ app.post('/api/orders', authenticateToken, (req, res) => {
     invoiceNumber,
     orderId: newOrder.id,
     userId: newOrder.userId,
-    customerName: customerInfo?.name || orderUser?.name || '',
-    customerEmail: customerInfo?.email || orderUser?.email || '',
+    customerName: cleanCustomerInfo.name || orderUser?.name || '',
+    customerEmail: cleanCustomerInfo.email || orderUser?.email || '',
     items: itemsWithResolvedPrice,
     itemsTotal,
     shippingCost: shippingValue,
     premiumDiscount: premiumDiscountValue,
+    couponDiscount: couponValue,
     total: orderTotal,
     status: 'emitida',
     issuedAt: new Date().toISOString(),
-    paymentMethod: customerInfo?.paymentMethod || null
+    paymentMethod: cleanCustomerInfo.paymentMethod || null
   };
 
   // Actualizar stock
-  items.forEach(item => {
+  itemsWithResolvedPrice.forEach(item => {
     const productIndex = products.findIndex(p => p.id === item.productId);
     if (productIndex !== -1) {
       products[productIndex].stock -= item.quantity;
@@ -1503,18 +1824,20 @@ app.post('/api/orders', authenticateToken, (req, res) => {
   });
 
   // Si hay cupón de veterinario, marcarlo como usado
-  if (couponValue > 0 && orderUser?.isVeterinarian) {
+  if (couponValue > 0 && orderUser?.isVeterinarian && monthlyCoupon) {
     const coupons = readCoupons();
-    const now = new Date();
-    const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
-    const monthlyCoupon = coupons.find(c => c.userId === orderUser.id && c.type === 'veterinarian-monthly-5' && c.monthKey === monthKey && c.used !== true);
-    if (monthlyCoupon) {
+    const couponIndex = coupons.findIndex(c => c.id === monthlyCoupon.id);
+    if (couponIndex !== -1) {
+      coupons[couponIndex].used = true;
+      coupons[couponIndex].redeemed = true;
+      coupons[couponIndex].usedAt = new Date().toISOString();
       monthlyCoupon.used = true;
-      monthlyCoupon.usedAt = new Date().toISOString();
+      monthlyCoupon.redeemed = true;
+      monthlyCoupon.usedAt = coupons[couponIndex].usedAt;
       writeCoupons(coupons);
       // Actualizar flag en el perfil de usuario si existe
       const userCouponList = Array.isArray(orderUser.coupons) ? orderUser.coupons : [];
-      const idx = userCouponList.findIndex(c => c.id === monthlyCoupon.id || c.monthKey === monthKey);
+      const idx = userCouponList.findIndex(c => c.id === monthlyCoupon.id || c.code === monthlyCoupon.code);
       if (idx !== -1) {
         userCouponList[idx] = { ...userCouponList[idx], redeemed: true, usedAt: monthlyCoupon.usedAt };
         orderUser.coupons = userCouponList;
@@ -1566,7 +1889,10 @@ app.get('/api/admin/invoices', authenticateToken, requireAdmin, (req, res) => {
 });
 
 app.get('/api/admin/invoices/:id', authenticateToken, requireAdmin, (req, res) => {
-  const invoiceId = parseInt(req.params.id, 10);
+  const invoiceId = parseIdParam(req.params.id);
+  if (!invoiceId) {
+    return res.status(400).json({ success: false, error: 'ID de factura invalido' });
+  }
   const invoices = readInvoices();
   const products = readProducts();
   const invoice = invoices.find(inv => inv.id === invoiceId);
@@ -1589,8 +1915,8 @@ app.get('/api/admin/invoices/:id', authenticateToken, requireAdmin, (req, res) =
 
 // Obtener factura por ID de orden
 app.get('/api/admin/orders/:orderId/invoice', authenticateToken, requireAdmin, (req, res) => {
-  const orderId = parseInt(req.params.orderId, 10);
-  if (!Number.isFinite(orderId)) {
+  const orderId = parseIdParam(req.params.orderId);
+  if (!orderId) {
     return res.status(400).json({ success: false, error: 'ID de orden inválido' });
   }
 
@@ -1673,7 +1999,10 @@ app.post('/api/admin/products', authenticateToken, requireAdmin, (req, res) => {
 });
 
 app.put('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
-  const productId = parseInt(req.params.id, 10);
+  const productId = parseIdParam(req.params.id);
+  if (!productId) {
+    return res.status(400).json({ success: false, error: 'ID de producto invalido' });
+  }
   const products = readProducts();
   const index = products.findIndex(p => p.id === productId);
 
@@ -1706,7 +2035,10 @@ app.put('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) =
 });
 
 app.patch('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
-  const productId = parseInt(req.params.id, 10);
+  const productId = parseIdParam(req.params.id);
+  if (!productId) {
+    return res.status(400).json({ success: false, error: 'ID de producto invalido' });
+  }
   const products = readProducts();
   const index = products.findIndex(p => p.id === productId);
 
@@ -1739,7 +2071,10 @@ app.patch('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res)
 });
 
 app.delete('/api/admin/products/:id', authenticateToken, requireAdmin, (req, res) => {
-  const productId = parseInt(req.params.id, 10);
+  const productId = parseIdParam(req.params.id);
+  if (!productId) {
+    return res.status(400).json({ success: false, error: 'ID de producto invalido' });
+  }
   const products = readProducts();
   const index = products.findIndex(p => p.id === productId);
 
@@ -1808,12 +2143,30 @@ app.get('/api/admin/dashboard', authenticateToken, requireAdmin, (req, res) => {
 // Rutas de autenticación
 
 // Registrar nuevo usuario
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', rateLimitAuth, async (req, res) => {
   const { name, email, password, phone, userType = 'normal' } = req.body || {};
+  const cleanName = cleanString(name, 30);
   const normalizedEmail = normalizeEmail(email);
+  const cleanPhone = cleanString(phone, 20);
 
-  if (!name || !normalizedEmail || !password) {
+  if (!cleanName || !normalizedEmail || !password) {
     return res.status(400).json({ error: 'Nombre, email y contraseña son requeridos' });
+  }
+
+  if (!isValidEmail(normalizedEmail)) {
+    return res.status(400).json({ error: 'Email invalido' });
+  }
+
+  if (!isValidPassword(password)) {
+    return res.status(400).json({ error: 'La contrasena debe tener minimo 8 caracteres, mayuscula, minuscula y numero' });
+  }
+
+  if (cleanPhone && !/^[0-9+\-\s()]{7,20}$/.test(cleanPhone)) {
+    return res.status(400).json({ error: 'Telefono invalido' });
+  }
+
+  if (!['normal', 'veterinarian'].includes(userType)) {
+    return res.status(400).json({ error: 'Tipo de usuario invalido' });
   }
 
   const users = readUsers();
@@ -1829,10 +2182,10 @@ app.post('/api/auth/register', async (req, res) => {
   // Crear nuevo usuario
   const newUser = {
     id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
-    name,
+    name: cleanName,
     email: normalizedEmail,
     password: hashedPassword,
-    phone: phone || '',
+    phone: cleanPhone || '',
     createdAt: new Date().toISOString(),
     isPremium: false,
     premiumSince: null,
@@ -1855,27 +2208,21 @@ app.post('/api/auth/register', async (req, res) => {
 
   res.status(201).json({
     token,
-    user: {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      phone: newUser.phone,
-      isPremium: newUser.isPremium,
-      premiumSince: newUser.premiumSince,
-      isAdmin: newUser.isAdmin,
-      isVeterinarian: newUser.isVeterinarian,
-      isVerifiedVeterinarian: newUser.isVerifiedVeterinarian
-    }
+    user: safeUserResponse(newUser)
   });
 });
 
 // Iniciar sesión
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', rateLimitAuth, async (req, res) => {
   const { email, password } = req.body || {};
   const normalizedEmail = normalizeEmail(email);
 
   if (!normalizedEmail || !password) {
     return res.status(400).json({ error: 'Email y contraseña son requeridos' });
+  }
+
+  if (!isValidEmail(normalizedEmail)) {
+    return res.status(400).json({ error: 'Email invalido' });
   }
 
   const users = readUsers();
@@ -1901,18 +2248,7 @@ app.post('/api/auth/login', async (req, res) => {
 
   res.json({
     token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      isPremium: !!user.isPremium,
-      premiumSince: user.premiumSince || null,
-      isAdmin: !!user.isAdmin,
-      isVeterinarian: !!user.isVeterinarian,
-      isVerifiedVeterinarian: !!user.isVerifiedVeterinarian,
-      veterinarianDetails: user.veterinarianDetails || null
-    }
+    user: safeUserResponse(user)
   });
 });
 
@@ -1925,84 +2261,75 @@ app.get('/api/auth/profile', authenticateToken, (req, res) => {
     return res.status(404).json({ error: 'Usuario no encontrado' });
   }
 
-  res.json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    createdAt: user.createdAt,
-    isPremium: !!user.isPremium,
-    premiumSince: user.premiumSince || null,
-    isAdmin: !!user.isAdmin,
-    isVeterinarian: !!user.isVeterinarian,
-    isVerifiedVeterinarian: !!user.isVerifiedVeterinarian,
-    veterinarianDetails: user.veterinarianDetails || null
-  });
+  res.json(safeUserResponse(user));
 });
 
 // Verificación de veterinario
 app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
   try {
-    console.log('POST /api/veterinarian/verify - Iniciando...')
-    
     const { professionalLicense, licenseNumber, clinic, specialties, certificateFile, certificateFileName, certificateFileType } = req.body;
+    const cleanProfessionalLicense = cleanString(professionalLicense, 120);
+    const cleanLicenseNumber = cleanString(licenseNumber, 40);
+    const cleanClinic = cleanString(clinic, 120);
+    const cleanSpecialties = cleanString(specialties, 300);
+    const cleanCertificateFileName = cleanString(certificateFileName, 180);
+    const cleanCertificateFileType = cleanString(certificateFileType, 120);
 
-    console.log('Datos recibidos:', {
-      licenseNumber,
-      clinic,
-      hasCertificateFile: !!certificateFile,
-      certificateFileName,
-      certificateFileType
-    })
-
-    if (!licenseNumber || !clinic) {
-      console.log('Error: Faltan campos requeridos')
+    if (!cleanProfessionalLicense || !cleanLicenseNumber || !cleanClinic) {
       return res.status(400).json({ error: 'Número de cédula y clínica son requeridos' });
     }
 
-    if (!certificateFile || !certificateFileName) {
-      console.log('Error: Falta certificado')
+    if (!certificateFile || !cleanCertificateFileName) {
       return res.status(400).json({ error: 'El certificado es requerido' });
+    }
+
+    if (typeof certificateFile !== 'string' || certificateFile.length > 3_000_000) {
+      return res.status(400).json({ error: 'Certificado invalido o demasiado grande' });
+    }
+
+    const allowedCertificateTypes = new Set(['application/pdf', 'image/jpeg', 'image/png']);
+    if (cleanCertificateFileType && !allowedCertificateTypes.has(cleanCertificateFileType)) {
+      return res.status(400).json({ error: 'Tipo de certificado no permitido' });
     }
 
     const users = readUsers();
     const userIndex = users.findIndex(u => u.id === req.user.userId);
 
     if (userIndex === -1) {
-      console.log('Error: Usuario no encontrado')
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
     const user = users[userIndex];
-    console.log('Usuario encontrado:', user.name)
 
     // Procesar y guardar el certificado
     let certificatePath = null;
     try {
-      console.log('Procesando certificado...')
       // Extraer base64 data
       const base64Data = certificateFile.split(',')[1] || certificateFile;
       const buffer = Buffer.from(base64Data, 'base64');
+      if (buffer.length === 0 || buffer.length > 2 * 1024 * 1024) {
+        return res.status(400).json({ error: 'El certificado debe pesar maximo 2MB' });
+      }
       
-      console.log('Tamaño del buffer:', buffer.length, 'bytes')
       
       // Generar nombre único para el archivo
       const timestamp = Date.now();
       const userId = req.user.userId;
-      const fileExtension = certificateFileName.split('.').pop() || 'pdf';
+      const fileExtension = cleanCertificateFileName.split('.').pop()?.toLowerCase() || 'pdf';
+      if (!['pdf', 'jpg', 'jpeg', 'png'].includes(fileExtension)) {
+        return res.status(400).json({ error: 'Extension de certificado no permitida' });
+      }
       const fileName = `vet_${userId}_${timestamp}.${fileExtension}`;
       const filePath = path.join(uploadsDir, fileName);
       
-      console.log('Guardando archivo en:', filePath)
       
       // Guardar archivo
       fs.writeFileSync(filePath, buffer);
       certificatePath = `/uploads/veterinary-documents/${fileName}`;
       
-      console.log('Archivo guardado exitosamente')
     } catch (fileError) {
       console.error('Error al guardar certificado:', fileError);
-      return res.status(500).json({ error: 'Error al guardar el certificado: ' + fileError.message });
+      return res.status(500).json({ error: 'Error al guardar el certificado' });
     }
 
     // Validar que no haya sido rechazado recientemente (cooldown de 1 mes)
@@ -2028,12 +2355,12 @@ app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
       userId: req.user.userId,
       userName: user.name,
       userEmail: user.email,
-      professionalLicense: professionalLicense || '',
-      licenseNumber,
-      clinic,
-      specialties: specialties || '',
+      professionalLicense: cleanProfessionalLicense,
+      licenseNumber: cleanLicenseNumber,
+      clinic: cleanClinic,
+      specialties: cleanSpecialties,
       certificatePath,
-      certificateFileName,
+      certificateFileName: cleanCertificateFileName,
       submittedAt: new Date().toISOString(),
       status: 'pending' // pending, approved, rejected
     };
@@ -2041,7 +2368,6 @@ app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
     requests.push(newRequest);
     writeVeterinarianRequests(requests);
 
-    console.log('Solicitud creada exitosamente:', requestId)
 
     res.json({
       success: true,
@@ -2049,7 +2375,7 @@ app.post('/api/veterinarian/verify', authenticateToken, (req, res) => {
     });
   } catch (error) {
     console.error('Error en verificación de veterinario:', error);
-    res.status(500).json({ error: 'Error al procesar la solicitud: ' + error.message });
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 });
 
@@ -2070,15 +2396,19 @@ app.get('/api/admin/veterinarian-requests', authenticateToken, requireAdmin, (re
 // Endpoint para aprobar/rechazar solicitud de veterinario (admin)
 app.put('/api/admin/veterinarian-requests/:requestId', authenticateToken, requireAdmin, (req, res) => {
   try {
-    const { requestId } = req.params;
+    const requestId = parseIdParam(req.params.requestId);
     const { status } = req.body; // 'approved' o 'rejected'
+
+    if (!requestId) {
+      return res.status(400).json({ error: 'ID de solicitud invalido' });
+    }
 
     if (!['approved', 'rejected'].includes(status)) {
       return res.status(400).json({ error: 'Estado inválido. Debe ser "approved" o "rejected"' });
     }
 
     const requests = readVeterinarianRequests();
-    const requestIndex = requests.findIndex(r => r.id === parseInt(requestId));
+    const requestIndex = requests.findIndex(r => r.id === requestId);
 
     if (requestIndex === -1) {
       return res.status(404).json({ error: 'Solicitud no encontrada' });
@@ -2156,12 +2486,19 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    // Opcional: recibir plan en body
-    const { plan = 'monthly', price = 5 } = req.body || {};
+    const { plan = 'monthly' } = req.body || {};
+    const premiumPlans = {
+      monthly: 42000,
+      yearly: 420000
+    };
+
+    if (!Object.prototype.hasOwnProperty.call(premiumPlans, plan)) {
+      return res.status(400).json({ error: 'Plan premium invalido' });
+    }
 
     users[userIndex].isPremium = true;
     users[userIndex].premiumSince = new Date().toISOString();
-    users[userIndex].subscription = { plan, price };
+    users[userIndex].subscription = { plan, price: premiumPlans[plan] };
 
     writeUsers(users);
 
@@ -2198,7 +2535,10 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
   // Obtener una mascota específica por ID
   app.get('/api/pets/:id', authenticateToken, (req, res) => {
     try {
-      const petId = parseInt(req.params.id);
+      const petId = parseIdParam(req.params.id);
+      if (!petId) {
+        return res.status(400).json({ error: 'ID de mascota invalido' });
+      }
       const pets = readPets();
       const users = readUsers();
       const requestUser = users.find(u => u.id === req.user.userId);
@@ -2258,37 +2598,16 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
         specialNeeds
       } = req.body;
     
-      if (!name || !type) {
-        return res.status(400).json({ error: 'Nombre y tipo de mascota son requeridos' });
+      const { pet: petPayload, errors } = buildPetPayload(null, req.body || {}, { requireAll: true });
+      if (errors.length > 0) {
+        return res.status(400).json({ error: errors.join(', ') });
       }
     
       const pets = readPets();
       const newPet = {
         id: pets.length > 0 ? Math.max(...pets.map(p => p.id)) + 1 : 1,
         userId: req.user.userId,
-        name: name.trim(),
-        type: type.trim(), // 'perro' o 'gato'
-        breed: breed?.trim() || '',
-        birthDate: birthDate || null,
-        gender: gender || '',
-        weight: weight || null,
-        photo: photo || '',
-        medicalInfo: {
-          allergies: medicalInfo?.allergies || [],
-          vaccinations: medicalInfo?.vaccinations || [],
-          medications: medicalInfo?.medications || [],
-          conditions: medicalInfo?.conditions || [],
-          veterinarian: medicalInfo?.veterinarian || '',
-          lastCheckup: medicalInfo?.lastCheckup || null,
-          nextCheckup: medicalInfo?.nextCheckup || null
-        },
-        preferences: {
-          favoriteFood: preferences?.favoriteFood || [],
-          favoriteToys: preferences?.favoriteToys || [],
-          dislikes: preferences?.dislikes || []
-        },
-        activityLevel: activityLevel || 'medium', // 'low', 'medium', 'high'
-        specialNeeds: specialNeeds || '',
+        ...petPayload,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -2306,7 +2625,10 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
   // Actualizar una mascota existente
   app.put('/api/pets/:id', authenticateToken, (req, res) => {
     try {
-      const petId = parseInt(req.params.id);
+      const petId = parseIdParam(req.params.id);
+      if (!petId) {
+        return res.status(400).json({ error: 'ID de mascota invalido' });
+      }
       const pets = readPets();
       const petIndex = pets.findIndex(p => p.id === petId && p.userId === req.user.userId);
     
@@ -2328,32 +2650,13 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
         specialNeeds
       } = req.body;
     
-      // Actualizar solo los campos proporcionados
+      const { pet: updatedPayload, errors } = buildPetPayload(pets[petIndex], req.body || {}, { requireAll: false });
+      if (errors.length > 0) {
+        return res.status(400).json({ error: errors.join(', ') });
+      }
+
       const updatedPet = {
-        ...pets[petIndex],
-        name: name?.trim() || pets[petIndex].name,
-        type: type?.trim() || pets[petIndex].type,
-        breed: breed !== undefined ? breed.trim() : pets[petIndex].breed,
-        birthDate: birthDate !== undefined ? birthDate : pets[petIndex].birthDate,
-        gender: gender !== undefined ? gender : pets[petIndex].gender,
-        weight: weight !== undefined ? weight : pets[petIndex].weight,
-        photo: photo !== undefined ? photo : pets[petIndex].photo,
-        medicalInfo: medicalInfo ? {
-          allergies: medicalInfo.allergies || pets[petIndex].medicalInfo.allergies,
-          vaccinations: medicalInfo.vaccinations || pets[petIndex].medicalInfo.vaccinations,
-          medications: medicalInfo.medications || pets[petIndex].medicalInfo.medications,
-          conditions: medicalInfo.conditions || pets[petIndex].medicalInfo.conditions,
-          veterinarian: medicalInfo.veterinarian !== undefined ? medicalInfo.veterinarian : pets[petIndex].medicalInfo.veterinarian,
-          lastCheckup: medicalInfo.lastCheckup !== undefined ? medicalInfo.lastCheckup : pets[petIndex].medicalInfo.lastCheckup,
-          nextCheckup: medicalInfo.nextCheckup !== undefined ? medicalInfo.nextCheckup : pets[petIndex].medicalInfo.nextCheckup
-        } : pets[petIndex].medicalInfo,
-        preferences: preferences ? {
-          favoriteFood: preferences.favoriteFood || pets[petIndex].preferences.favoriteFood,
-          favoriteToys: preferences.favoriteToys || pets[petIndex].preferences.favoriteToys,
-          dislikes: preferences.dislikes || pets[petIndex].preferences.dislikes
-        } : pets[petIndex].preferences,
-        activityLevel: activityLevel || pets[petIndex].activityLevel,
-        specialNeeds: specialNeeds !== undefined ? specialNeeds : pets[petIndex].specialNeeds,
+        ...updatedPayload,
         updatedAt: new Date().toISOString()
       };
     
@@ -2370,7 +2673,10 @@ app.post('/api/auth/subscribe', authenticateToken, (req, res) => {
   // Eliminar una mascota
   app.delete('/api/pets/:id', authenticateToken, (req, res) => {
     try {
-      const petId = parseInt(req.params.id);
+      const petId = parseIdParam(req.params.id);
+      if (!petId) {
+        return res.status(400).json({ error: 'ID de mascota invalido' });
+      }
       const pets = readPets();
       const petIndex = pets.findIndex(p => p.id === petId && p.userId === req.user.userId);
     
