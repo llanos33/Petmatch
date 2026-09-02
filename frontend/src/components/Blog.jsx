@@ -111,7 +111,14 @@ export default function Blog() {
               {filteredPosts.map(post => (
                 <article key={post.id} className={`blog-post-card ${post.isPremium ? 'premium-post' : ''}`}>
                   <div className="post-image">
-                    <img src={post.image} alt={post.title} />
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      onError={(event) => {
+                        event.currentTarget.onerror = null
+                        event.currentTarget.src = '/images/petmatch-logo.png'
+                      }}
+                    />
                     <div className="post-category-badge">{
                       categories.find(c => c.id === post.category)?.name || post.category
                     }</div>

@@ -180,7 +180,14 @@ export default function PuntosInteres() {
         {puntosFiltrados.map(punto => (
           <div key={punto.id} className="punto-card">
             <div className="punto-imagen">
-              <img src={punto.imagen} alt={punto.nombre} />
+              <img
+                src={punto.imagen}
+                alt={punto.nombre}
+                onError={(event) => {
+                  event.currentTarget.onerror = null
+                  event.currentTarget.src = '/images/petmatch-logo.png'
+                }}
+              />
               <div className="punto-tipo-badge">{TIPO_LABELS[punto.tipo]}</div>
             </div>
             

@@ -197,7 +197,16 @@ function Servicios() {
             {filteredPoints.map((point) => (
               <article key={point.name} className="poi-card">
                 <div className="poi-image-wrapper">
-                  <img src={point.image} alt={`Foto de ${point.name}`} className="poi-image" loading="lazy" />
+                  <img
+                    src={point.image}
+                    alt={`Foto de ${point.name}`}
+                    className="poi-image"
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null
+                      event.currentTarget.src = '/images/petmatch-logo.png'
+                    }}
+                  />
                   <span className="poi-type-badge">{point.type}</span>
                 </div>
 

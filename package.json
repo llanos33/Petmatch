@@ -10,6 +10,7 @@
     "test:loading-states": "node scripts/test-loading-states.mjs",
     "test:forms": "node scripts/test-forms.mjs",
     "test:security": "node scripts/test-input-security.mjs",
+    "test:responsive": "node scripts/test-responsive-viewports.mjs",
     "db:generate-sql": "node scripts/json-to-postgres.mjs",
     "heroku-postbuild": "npm run build --prefix frontend && node scripts/sync-frontend.js"
   },
